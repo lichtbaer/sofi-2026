@@ -155,3 +155,132 @@ input[type="range"] { accent-color: var(--color-accent); }
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Klassenschicht
+
+   Abgeleitet aus dem, was sich im Markup tatsaechlich wiederholt hat, nicht
+   aus einer gedachten Komponentenliste: 71-mal derselbe Fliesstext, 70-mal
+   dieselbe Auszeichnungsschrift, 58-mal dieselbe Flaeche, 23-mal dieselbe
+   Trennlinie. Was nur einmal vorkommt, bleibt ein style-Attribut — eine
+   Klasse mit einem Verwender erklaert nichts.
+   ══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Vier Radien (24, 22, 20, 18) lagen ohne erkennbare Regel nebeneinander.
+     Zwei genuegen: die Flaeche und die kleinere Kachel darin. */
+  --radius-panel: 24px;
+  --radius-tile:  20px;
+}
+
+/* ── Seitenbreite ──────────────────────────────────────────────────────────
+   Die Breite variiert nach Textsorte — 1180 fuer Karten- und Datenseiten,
+   860 fuer Fliesstext, 720 fuer die Rechtstexte. Eine Klasse, die Breite als
+   Variable, damit die Ausnahme sichtbar bleibt statt sich zu verstecken. */
+.page { max-width: var(--wrap, 1180px); margin: 0 auto; padding: 36px 20px 64px; }
+
+/* ── Flaechen ─────────────────────────────────────────────────────────────── */
+.panel     { background: var(--color-surface); border-radius: var(--radius-panel); }
+.panel-ink { background: var(--color-text); color: var(--on-ink); border-radius: var(--radius-panel); }
+.tile      { background: var(--color-surface); border-radius: var(--radius-tile); }
+
+/* ── Fliesstext ───────────────────────────────────────────────────────────
+   Drei Abstaende, weil der letzte Absatz vor einer Ueberschrift mehr Luft
+   braucht als der zwischen zweien. Kein :last-child: die Sprachfassungen
+   stehen paarweise im DOM, die versteckte zaehlt fuer den Selektor mit. */
+.prose       { font-size: 15px; line-height: 1.65; color: var(--text-body); margin: 0 0 12px; }
+.prose-end   { font-size: 15px; line-height: 1.65; color: var(--text-body); margin: 0 0 28px; }
+.prose-flush { font-size: 15px; line-height: 1.6;  color: var(--text-body); margin: 0; }
+.prose-sm    { font-size: 13px; line-height: 1.5;  color: var(--text-body); }
+.prose-ink   { font-size: 15px; line-height: 1.6;  color: var(--on-ink-body); margin: 0; }
+.lede        { font-size: 17px; line-height: 1.6;  color: var(--text-body); margin: 0 0 28px; text-wrap: pretty; }
+
+/* ── Auszeichnungsschrift ─────────────────────────────────────────────────
+   Auf h1–h6 liefert das Design-System sie ueber --font-heading; dort stand
+   font-family bisher 70-mal ueberfluessig im Markup. .display ist fuer die
+   Stellen, an denen kein Ueberschriftenelement richtig waere — Kennzahlen,
+   Kartentitel, Zeitangaben in der Zeitleiste. */
+.display { font-family: var(--font-heading); font-weight: var(--font-heading-weight); }
+
+/* ── Versalzeile ──────────────────────────────────────────────────────────── */
+.kicker        { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+.kicker-ink    { font-size: 11px; letter-spacing: 0.1em;  text-transform: uppercase; color: var(--on-ink-accent); }
+.kicker-accent { font-size: 10px; letter-spacing: 0.11em; text-transform: uppercase; color: var(--text-link); }
+
+/* ── Zeile mit Trennlinie ─────────────────────────────────────────────────── */
+.row     { padding: 13px 0; border-bottom: 1px solid var(--line-soft); }
+.row-lg  { padding: 20px 0; border-bottom: 1px solid var(--line-soft); }
+.row:last-child, .row-lg:last-child { border-bottom: 0; }
+
+/* ── Verweise auf dunklem Grund ───────────────────────────────────────────── */
+.link-ink { color: var(--on-ink-body); text-decoration: none; }
+.link-ink:hover { color: var(--on-ink); text-decoration: underline; }
+
+/* ── Typografische Skala der Inhaltsseiten ───────────────────────────────────
+   Die Groessen standen 35-mal einzeln im Markup, und sie waren nicht zufaellig
+   verschieden: die Essayseiten setzen h2 auf 26 px, die Rechtstexte auf 22 px.
+   Diese eine echte Variation traegt jetzt eine Variable, der Rest ist Regel.
+   Die untere Marge war zwischen 8 und 14 px gedriftet — ohne Absicht, die man
+   benennen koennte. */
+.page h1 { font-size: clamp(30px, 5vw, 44px); letter-spacing: -0.02em; margin: 0 0 8px; }
+.page h2 { font-size: var(--h2, 26px); margin: 0 0 12px; }
+.page h3 { font-size: var(--h3, 19px); margin: 0 0 8px; }
+
+/* ── Tabellen ─────────────────────────────────────────────────────────────── */
+.td { padding: 12px 8px; border-bottom: 1px solid var(--line-soft); }
+.td-num { font-variant-numeric: tabular-nums; }
+.th {
+  padding: 12px 8px; text-align: left; font-weight: 600;
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-muted); border-bottom: 1px solid var(--line);
+}
+
+/* ── Navigation ─────────────────────────────────────────────────────────────
+   Die Beschriftungen standen in Kopfzeile, Mobilmenue und Fusszeile in drei
+   Fassungen fuer dieselben Ziele; die Groessen ebenso. */
+.nav-link-mobile {
+  text-decoration: none; color: var(--color-text);
+  font-size: 16px; font-weight: 500; padding: 12px 0;
+}
+.nav-link-mobile:hover { color: var(--text-link); }
+.u-nav-link { font-size: 14px; font-weight: 500; white-space: nowrap; text-decoration: none; color: var(--color-text); }
+
+/* ── Kacheltitel und Kleintext ──────────────────────────────────────────────── */
+.tile-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.prose-14 { font-size: 14px; line-height: 1.55; color: var(--text-body); margin: 0; }
+
+/* ── Weitere Versalzeilen ───────────────────────────────────────────────────── */
+.kicker-muted-ink { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--on-ink-muted); }
+
+/* ── Leere Wertungsspur ──────────────────────────────────────────────────────
+   Ohne Horizontwert stand der Balken auf 0 % und las sich als Wertung Null.
+   Eine schraffierte Spur sagt „hier fehlt eine Messung" statt „hier ist der
+   Wert schlecht". */
+.bar-track[data-empty="1"] {
+  background: repeating-linear-gradient(
+    -45deg,
+    color-mix(in srgb, currentColor 22%, transparent) 0 3px,
+    transparent 3px 6px) !important;
+}
+.bar-track[data-empty="1"] > * { display: none; }
+
+/* ── „Zeiten & Orte" ─────────────────────────────────────────────────────────
+   Vorher zwei gleich breite Spalten aus auto-fit: links endete die Karte bei
+   rund 830 px Hoehe, rechts lief die Datenspalte bis 1320 px, darunter stand
+   eine grosse Leerflaeche. Die Karte ist die Kerninteraktion der Seite und
+   bekommt jetzt mehr Breite und mehr Hoehe; das Verlaufsdiagramm sitzt unter
+   beiden Spalten, wo seine Zeitachse Platz hat. */
+.zeiten-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+.zeiten-curve { margin-top: 18px; }
+
+@media (max-width: 900px) {
+  .zeiten-grid { grid-template-columns: minmax(0, 1fr); }
+  /* Auf dem Handy stand die Karte vor allen Zahlen — also vor dem, wonach die
+     meisten Besucher suchen. Sie rutscht hinter Ort, Wolken und Kontaktzeiten. */
+  .zeiten-map { order: 2; --map-h: 46vh; }
+}

@@ -1,6 +1,6 @@
 # Oberfläche und Bedienung — Befund und Plan
 
-Stand: 11. August 2026. **Stufe 0 ist umgesetzt** — was sich dadurch
+Stand: 11. August 2026. **Stufe 0 und Stufe 1 sind umgesetzt** — was sich dadurch
 geändert hat, steht bei den jeweiligen Befunden und am Ende unter „Stand der
 Umsetzung". Grundlage ist die ausgelieferte Seite, nicht der
 Quelltext allein: `frontend/` wurde statisch serviert und in Chromium auf
@@ -296,29 +296,47 @@ die Kontrastreparatur, statt dass diese von Hand 200-fach ausgeführt wird.
 8. **Menü-Button:** `aria-expanded`, `aria-controls`, Escape schließt Menü und
    Vorschlagsliste.
 
-### Stufe 1 — Substanz (zwei bis drei Tage)
+### Stufe 1 — Substanz · **umgesetzt**
 
-9. **Die Klassenschicht nachziehen.** Die Tokens sitzen, die 463
-   `style`-Attribute stehen noch. Als Nächstes die wiederkehrenden Muster in
-   Klassen fassen (`.card`, `.stat`, `.row`, `.chip`, `.bar`, `.panel`) und die
-   Größen- und Abstandswerte auf `--space-*` und `--radius-*` umstellen — die
-   Farben sind bereits durch.
-10. **Diagramme responsiv.** Beschriftungen aus dem SVG-Koordinatensystem
-    lösen (`vector-effect` beziehungsweise HTML-Overlay), auf schmalen
-    Breiten weniger Achsenmarken, Mindestschriftgröße 11 px am Gerät. Behebt
-    Befund 6, zweiter Teil.
-11. **Leerzustände, die die Haltung zeigen.** Statt „—" über „SCORE" ein
-    ruhiger Hinweis auf der Karte („Horizont fehlt — ohne ihn keine
-    Bewertung"), das Horizontdiagramm bei fehlendem Profil gar nicht erst
-    zeichnen, sondern eine erklärte Leerfläche zeigen. Ladeskelette in
-    Kartenform. Behebt Befund 8.
-12. **„Zeiten & Orte" neu ausbalancieren.** Karte größer und auf Desktop
-    sticky, Kontaktzeiten auf dem Handy vor die Karte, Verlaufsdiagramm über
-    die volle Breite unter beide Spalten. Behebt Befund 7.
-13. **Navigation vereinheitlichen**, FAQ in die Kopfzeile. Behebt Befund 11.
-14. **Grafiken beschriften.** Sichel, Horizontprofil und Verlaufskurve
-    bekommen `<title>`/`<desc>` und eine Textfassung der Kernaussage.
-    Überschriftenebenen korrigieren. Rest von Befund 3.
+9. **Klassenschicht.** Zehn Klassen, abgeleitet aus dem, was sich im Markup
+   tatsächlich wiederholt hat — 71-mal derselbe Fließtext, 70-mal dieselbe
+   Auszeichnungsschrift, 58-mal dieselbe Fläche, 23-mal dieselbe Trennlinie:
+   `.page`, `.panel`/`.panel-ink`/`.tile`, `.prose*`, `.kicker*`, `.row*`,
+   `.display`, `.td`/`.th`, `.link-ink`, `.nav-link-mobile`. Auf echten
+   Überschriften ist `font-family:'Caprasimo'` ersatzlos gestrichen — das
+   liefert das Design-System über `--font-heading`. Vier Radien ohne
+   erkennbare Regel (24/22/20/18) sind auf zwei zusammengezogen. Die
+   Schriftgrößen der Inhaltsseiten standen 35-mal einzeln im Markup und sind
+   jetzt eine Regel mit einer Ausnahme: die Rechtstexte setzen h2 auf 22 px
+   statt 26, und das steht als `--h2` an genau den zwei Seiten.
+   **465 → 267 `style`-Attribute (−43 %)**, dabei pixelneutral: 0 px
+   Höhenänderung auf Start, Zeiten und Standorte, −1 bis −10 px auf den
+   Textseiten durch die vereinheitlichte Überschriftenmarge.
+10. **Diagramme responsiv.** Statt die Beschriftung aus dem
+    SVG-Koordinatensystem zu lösen, wird die Gegenrechnung geführt: ein
+    `ResizeObserver` misst die Containerbreite, die Schriftgröße wird in
+    Nutzereinheiten als `px · viewBox / gemessene Breite` gesetzt. Unter
+    460 px fallen zwei von fünf Achsenmarken je Achse weg. Gemessen: 12 px am
+    Gerät bei Containerbreiten von 310, 688 und 1100 px — vorher 7,5 / 16,6 /
+    26,6 px. Behebt Befund 6, zweiter Teil.
+11. **Leerzustände.** Statt „—" über „SCORE" steht ein Feld „ohne Wertung"
+    mit der Begründung als Titel; der Horizontbalken zeigt eine schraffierte
+    Spur statt eines Nullbalkens. Ohne gemessenes Profil zeichnet das
+    Horizontdiagramm gar nicht mehr — vorher standen dort Achsen, Gitternetz
+    und Sonnenbahn vollständig da, während darunter „kein Profil verfügbar"
+    zu lesen war. Behebt Befund 8.
+12. **„Zeiten & Orte" ausbalanciert.** Die Karte trägt jetzt 1,3 der beiden
+    Spaltenanteile und mehr Höhe; das Verlaufsdiagramm sitzt über die volle
+    Breite unter beiden Spalten, wo seine Zeitachse Platz hat. Auf dem Handy
+    rutscht die Karte hinter Ort, Wolken und Kontaktzeiten — also hinter das,
+    wonach die meisten Besucher suchen. Behebt Befund 7.
+13. **Navigation vereinheitlicht**, FAQ in die Kopfzeile, aktive Seite über
+    `aria-current` sichtbar. Behebt Befund 11.
+14. **Grafiken beschriftet.** Hero-Sichel, Ortssichel, Verlaufskurve und
+    Horizontprofil tragen `role="img"` und einen aus den Daten gebildeten
+    Namen („Die Sonne im Maximum, 88,2 % bedeckt, 4,6° über dem Horizont");
+    Zierde ist als `aria-hidden` markiert. Überschriftenebenen laufen jetzt
+    auf allen neun Seiten ohne Sprung. Rest von Befund 3.
 
 ### Stufe 2 — Ausbau (danach)
 
@@ -387,21 +405,31 @@ WCAG-2-Formel für 15 Farbpaare der Seite.
 | --- | --- | --- |
 | 1 Kein Titel, keine Vorschau | 0 | behoben |
 | 2 Kontrast unter dem Schwellenwert | 0 | behoben, am DOM aller neun Seiten nachgemessen |
-| 3 Tastatur und Fokus | 0 | behoben bis auf die Grafikbeschriftungen (Stufe 1) |
+| 3 Tastatur und Fokus | 0 / 1 | behoben |
 | 4 Doppeltes Sprachmarkup | 2 | offen |
 | 5 Erster Frame doppelsprachig | 0 | behoben |
-| 6 Mobiles Antippen ohne Wirkung | 0 / 1 | Detailsprung behoben, Diagrammbeschriftung offen |
-| 7 Desktop-Balance „Zeiten & Orte" | 1 | offen |
-| 8 Leerzustände lesen sich als Fehler | 1 | offen |
+| 6 Mobiles Antippen ohne Wirkung | 0 / 1 | behoben |
+| 7 Desktop-Balance „Zeiten & Orte" | 1 | behoben |
+| 8 Leerzustände lesen sich als Fehler | 1 | behoben |
 | 9 Karte folgt der Auswahl nicht | 0 | behoben |
 | 10 Countdown kennt nur „davor" | 0 | behoben |
-| 11 Navigation uneinheitlich | 1 | offen |
-| 12 Design-System ungenutzt | 0 | Tokens durch, Klassenschicht offen |
+| 11 Navigation uneinheitlich | 1 | behoben |
+| 12 Design-System ungenutzt | 0 / 1 | behoben |
+
+Offen bleibt damit Stufe 2: das doppelte Sprachmarkup (Befund 4), der
+Dunkelmodus, die Wolkenprognose auf der Standorte-Seite und der
+Adherence-Linter.
 
 Gegengeprüft wurde mit demselben Aufbau wie der Befund: Kopfdaten,
 Tab-Reihenfolge über 16 Stationen, Tastaturauswahl einer Standortkarte,
 Menü mit Escape, Countdown in vier gestellten Zeitpunkten, Kartenschwenk
 nach Ortswahl, mobiler Detailsprung, Rendering ohne JavaScript und die
 Kontrastverhältnisse am gerenderten DOM aller neun Seiten samt SVG-Text.
+
+Für Stufe 1 kamen dazu: Seitenhöhen aller neun Seiten vor und nach der
+Klassenschicht, die effektive Schriftgröße der Diagrammbeschriftung bei drei
+Containerbreiten, ein gestelltes Horizontprofil, um auch den Normalfall und
+nicht nur den Ausfall zu sehen, und eine Zählung der erzeugten
+`ResizeObserver` über sechs Sekundentakte.
 
 Die Seite kontaktiert weiterhin genau einen Fremdhost: `tile.openstreetmap.org`.

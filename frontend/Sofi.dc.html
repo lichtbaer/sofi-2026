@@ -71,32 +71,33 @@
         <circle cx="13" cy="13" r="9" fill="var(--color-accent)"></circle>
         <circle cx="8.5" cy="11" r="9" fill="var(--color-bg)"></circle>
       </svg>
-      <span style="font-family:'Caprasimo',serif;font-size:18px;letter-spacing:-0.01em;white-space:nowrap">SoFi 2026</span>
+      <span class="display" style="font-size:18px;letter-spacing:-0.01em;white-space:nowrap">SoFi 2026</span>
     </a>
     <nav aria-label="Hauptnavigation" style="display:flex;align-items:center;gap:18px" data-nav-desktop="1">
-      <a href="#/zeiten" class="u-nav-link" aria-current="{{ curZeiten }}" style="text-decoration:none;color:var(--color-text);font-size:14px;font-weight:500;white-space:nowrap"><span data-l="de">Zeiten &amp; Orte</span><span data-l="en">Times &amp; Places</span></a>
-      <a href="#/standorte" class="u-nav-link" aria-current="{{ curStandorte }}" style="text-decoration:none;color:var(--color-text);font-size:14px;font-weight:500;white-space:nowrap"><span data-l="de">Standorte</span><span data-l="en">Locations</span></a>
-      <a href="#/tipps" class="u-nav-link" aria-current="{{ curTipps }}" style="text-decoration:none;color:var(--color-text);font-size:14px;font-weight:500;white-space:nowrap"><span data-l="de">Beobachten</span><span data-l="en">Observing</span></a>
-      <a href="#/foto" class="u-nav-link" aria-current="{{ curFoto }}" style="text-decoration:none;color:var(--color-text);font-size:14px;font-weight:500;white-space:nowrap"><span data-l="de">Fotografie</span><span data-l="en">Photography</span></a>
-      <a href="#/sicherheit" class="u-nav-link" aria-current="{{ curSicherheit }}" style="text-decoration:none;color:var(--color-text);font-size:14px;font-weight:500;white-space:nowrap"><span data-l="de">Sicherheit</span><span data-l="en">Safety</span></a>
+      <a href="#/zeiten" class="u-nav-link" aria-current="{{ curZeiten }}"><span data-l="de">Zeiten &amp; Orte</span><span data-l="en">Times &amp; Places</span></a>
+      <a href="#/standorte" class="u-nav-link" aria-current="{{ curStandorte }}"><span data-l="de">Standorte</span><span data-l="en">Locations</span></a>
+      <a href="#/tipps" class="u-nav-link" aria-current="{{ curTipps }}"><span data-l="de">Beobachten</span><span data-l="en">Observing</span></a>
+      <a href="#/foto" class="u-nav-link" aria-current="{{ curFoto }}"><span data-l="de">Fotografie</span><span data-l="en">Photography</span></a>
+      <a href="#/sicherheit" class="u-nav-link" aria-current="{{ curSicherheit }}"><span data-l="de">Sicherheit</span><span data-l="en">Safety</span></a>
+      <a href="#/faq" class="u-nav-link" aria-current="{{ curFaq }}">FAQ</a>
       <span style="display:inline-flex;border:1px solid var(--line-strong);border-radius:999px;overflow:hidden;font-size:12px;flex:none">
         <button onClick="{{ setDe }}" class="u-btn" lang="de" aria-pressed="{{ dePressed }}" style="padding:5px 11px;border:none;cursor:pointer;font:inherit;font-weight:600;background:{{ deBg }};color:{{ deFg }}">DE</button>
         <button onClick="{{ setEn }}" class="u-btn" lang="en" aria-pressed="{{ enPressed }}" style="padding:5px 11px;border:none;cursor:pointer;font:inherit;font-weight:600;background:{{ enBg }};color:{{ enFg }}">EN</button>
       </span>
     </nav>
     <button onClick="{{ toggleNav }}" aria-label="{{ navLabel }}" aria-expanded="{{ navExpanded }}" aria-controls="hauptmenue" style="display:none;width:40px;height:40px;border:1px solid var(--line-strong);background:transparent;border-radius:999px;cursor:pointer;align-items:center;justify-content:center;flex:none" data-nav-toggle="1">
-      <svg width="18" height="14" viewBox="0 0 18 14" fill="none" stroke="var(--color-text)" stroke-width="1.8"><path d="M0 1h18M0 7h18M0 13h18"></path></svg>
+      <svg width="18" height="14" viewBox="0 0 18 14" aria-hidden="true" fill="none" stroke="var(--color-text)" stroke-width="1.8"><path d="M0 1h18M0 7h18M0 13h18"></path></svg>
     </button>
   </div>
   <sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}">
     <nav id="hauptmenue" aria-label="Hauptnavigation" style="display:flex;flex-direction:column;gap:2px;padding:8px 20px 18px;border-top:1px solid var(--line-soft)">
-      <a href="#/start" onClick="{{ closeNav }}" style="text-decoration:none;color:var(--color-text);font-size:16px;font-weight:500;padding:12px 0"><span data-l="de">Start</span><span data-l="en">Home</span></a>
-      <a href="#/zeiten" onClick="{{ closeNav }}" style="text-decoration:none;color:var(--color-text);font-size:16px;font-weight:500;padding:12px 0"><span data-l="de">Zeiten &amp; Orte</span><span data-l="en">Times &amp; Places</span></a>
-      <a href="#/standorte" onClick="{{ closeNav }}" style="text-decoration:none;color:var(--color-text);font-size:16px;font-weight:500;padding:12px 0"><span data-l="de">Beste Standorte</span><span data-l="en">Best Locations</span></a>
-      <a href="#/tipps" onClick="{{ closeNav }}" style="text-decoration:none;color:var(--color-text);font-size:16px;font-weight:500;padding:12px 0"><span data-l="de">Beobachtungstipps</span><span data-l="en">Observing Tips</span></a>
-      <a href="#/foto" onClick="{{ closeNav }}" style="text-decoration:none;color:var(--color-text);font-size:16px;font-weight:500;padding:12px 0"><span data-l="de">Fotografie</span><span data-l="en">Photography</span></a>
-      <a href="#/sicherheit" onClick="{{ closeNav }}" style="text-decoration:none;color:var(--color-text);font-size:16px;font-weight:500;padding:12px 0"><span data-l="de">Sicherheit</span><span data-l="en">Safety</span></a>
-      <a href="#/faq" onClick="{{ closeNav }}" style="text-decoration:none;color:var(--color-text);font-size:16px;font-weight:500;padding:12px 0">FAQ</a>
+      <a href="#/start" onClick="{{ closeNav }}" class="nav-link-mobile"><span data-l="de">Start</span><span data-l="en">Home</span></a>
+      <a href="#/zeiten" onClick="{{ closeNav }}" class="nav-link-mobile"><span data-l="de">Zeiten &amp; Orte</span><span data-l="en">Times &amp; Places</span></a>
+      <a href="#/standorte" onClick="{{ closeNav }}" class="nav-link-mobile"><span data-l="de">Standorte</span><span data-l="en">Locations</span></a>
+      <a href="#/tipps" onClick="{{ closeNav }}" class="nav-link-mobile"><span data-l="de">Beobachten</span><span data-l="en">Observing</span></a>
+      <a href="#/foto" onClick="{{ closeNav }}" class="nav-link-mobile"><span data-l="de">Fotografie</span><span data-l="en">Photography</span></a>
+      <a href="#/sicherheit" onClick="{{ closeNav }}" class="nav-link-mobile"><span data-l="de">Sicherheit</span><span data-l="en">Safety</span></a>
+      <a href="#/faq" onClick="{{ closeNav }}" class="nav-link-mobile">FAQ</a>
       <div style="display:flex;gap:8px;margin-top:10px">
         <button onClick="{{ setDe }}" style="padding:9px 18px;border:none;border-radius:999px;cursor:pointer;font:inherit;font-weight:600;background:{{ deBg }};color:{{ deFg }}">DE</button>
         <button onClick="{{ setEn }}" style="padding:9px 18px;border:none;border-radius:999px;cursor:pointer;font:inherit;font-weight:600;background:{{ enBg }};color:{{ enFg }}">EN</button>
@@ -111,7 +112,7 @@
 <sc-if value="{{ isStart }}" hint-placeholder-val="{{ true }}">
 <div>
   <section style="background:var(--color-text);color:var(--color-bg);position:relative;overflow:hidden">
-    <div style="position:absolute;inset:0;background:radial-gradient(120% 90% at 78% 92%, rgba(198,113,57,0.55) 0%, rgba(198,113,57,0.12) 42%, transparent 70%)"></div>
+    <div style="position:absolute;inset:0;background:radial-gradient(120% 90% at 78% 92%, color-mix(in srgb, var(--color-accent) 55%, transparent) 0%, color-mix(in srgb, var(--color-accent) 12%, transparent) 42%, transparent 70%)"></div>
     <div style="position:relative;max-width:1180px;margin:0 auto;padding:64px 20px 72px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:48px;align-items:center">
       <div>
         <div style="display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-accent-400);margin-bottom:18px">
@@ -121,7 +122,7 @@
             <span style="color:var(--color-text);background:var(--color-accent-400);border-radius:999px;padding:1px 9px;font-weight:700;letter-spacing:0.06em">{{ cdLiveWord }}</span>
           </sc-if>
         </div>
-        <h1 style="font-family:'Caprasimo',serif;font-size:clamp(38px,6.5vw,62px);line-height:1.02;letter-spacing:-0.02em;margin:0 0 18px">
+        <h1 style="font-size:clamp(38px,6.5vw,62px);line-height:1.02;letter-spacing:-0.02em;margin:0 0 18px">
           <span data-l="de">Die tief stehende Finsternis</span><span data-l="en">The low-standing eclipse</span>
         </h1>
         <p data-l="de" style="font-size:clamp(16px,2.2vw,19px);line-height:1.6;color:var(--on-ink-body);max-width:46ch;margin:0 0 28px;text-wrap:pretty">In Deutschland verfinstert sich die Sonne am Abend des 12. August 2026 zu <strong style="color:var(--color-bg);font-weight:600">83 bis 91 Prozent</strong> — kurz vor Sonnenuntergang, nur wenige Grad über dem Horizont. Wer sie sehen will, braucht vor allem eines: freie Sicht nach Westnordwest.</p>
@@ -132,7 +133,7 @@
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:16px;align-items:center">
-        <svg viewBox="0 0 220 220" style="width:min(280px,70vw);height:auto">
+        <svg viewBox="0 0 220 220" role="img" aria-label="{{ heroAlt }}" style="width:min(280px,70vw);height:auto">
           <defs>
             <mask id="sunmask">
               <rect x="0" y="0" width="220" height="220" fill="black"></rect>
@@ -140,27 +141,27 @@
               <circle cx="{{ heroMoonX }}" cy="{{ heroMoonY }}" r="74" fill="black"></circle>
             </mask>
           </defs>
-          <circle cx="110" cy="110" r="96" fill="rgba(246,160,107,0.12)"></circle>
+          <circle cx="110" cy="110" r="96" fill="color-mix(in srgb, var(--color-accent-400) 12%, transparent)"></circle>
           <circle cx="110" cy="110" r="72" fill="none" stroke="var(--line-ink)" stroke-width="1"></circle>
           <circle cx="110" cy="110" r="72" fill="var(--color-accent-400)" mask="url(#sunmask)"></circle>
         </svg>
         <sc-if value="{{ cdShow }}" hint-placeholder-val="{{ true }}">
         <div style="display:flex;gap:8px;text-align:center">
-          <div style="background:var(--track-ink);border-radius:16px;padding:12px 14px;min-width:70px">
-            <div style="font-family:'Caprasimo',serif;font-size:26px;line-height:1">{{ cdD }}</div>
-            <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--on-ink-muted);margin-top:4px"><span data-l="de">Tage</span><span data-l="en">Days</span></div>
+          <div style="background:var(--track-ink);border-radius:var(--radius-md);padding:12px 14px;min-width:70px">
+            <div class="display" style="font-size:26px;line-height:1">{{ cdD }}</div>
+            <div class="kicker-muted-ink" style="margin-top:4px"><span data-l="de">Tage</span><span data-l="en">Days</span></div>
           </div>
-          <div style="background:var(--track-ink);border-radius:16px;padding:12px 14px;min-width:70px">
-            <div style="font-family:'Caprasimo',serif;font-size:26px;line-height:1">{{ cdH }}</div>
-            <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--on-ink-muted);margin-top:4px"><span data-l="de">Std</span><span data-l="en">Hrs</span></div>
+          <div style="background:var(--track-ink);border-radius:var(--radius-md);padding:12px 14px;min-width:70px">
+            <div class="display" style="font-size:26px;line-height:1">{{ cdH }}</div>
+            <div class="kicker-muted-ink" style="margin-top:4px"><span data-l="de">Std</span><span data-l="en">Hrs</span></div>
           </div>
-          <div style="background:var(--track-ink);border-radius:16px;padding:12px 14px;min-width:70px">
-            <div style="font-family:'Caprasimo',serif;font-size:26px;line-height:1">{{ cdM }}</div>
-            <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--on-ink-muted);margin-top:4px"><span data-l="de">Min</span><span data-l="en">Min</span></div>
+          <div style="background:var(--track-ink);border-radius:var(--radius-md);padding:12px 14px;min-width:70px">
+            <div class="display" style="font-size:26px;line-height:1">{{ cdM }}</div>
+            <div class="kicker-muted-ink" style="margin-top:4px"><span data-l="de">Min</span><span data-l="en">Min</span></div>
           </div>
-          <div style="background:var(--track-ink);border-radius:16px;padding:12px 14px;min-width:70px">
-            <div style="font-family:'Caprasimo',serif;font-size:26px;line-height:1">{{ cdS }}</div>
-            <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--on-ink-muted);margin-top:4px"><span data-l="de">Sek</span><span data-l="en">Sec</span></div>
+          <div style="background:var(--track-ink);border-radius:var(--radius-md);padding:12px 14px;min-width:70px">
+            <div class="display" style="font-size:26px;line-height:1">{{ cdS }}</div>
+            <div class="kicker-muted-ink" style="margin-top:4px"><span data-l="de">Sek</span><span data-l="en">Sec</span></div>
           </div>
         </div>
         </sc-if>
@@ -173,47 +174,47 @@
   </section>
 
   <section style="max-width:1180px;margin:0 auto;padding:56px 20px 8px">
-    <h2 style="font-family:'Caprasimo',serif;font-size:clamp(26px,4vw,34px);margin:0 0 8px;letter-spacing:-0.015em"><span data-l="de">Worauf es diesmal ankommt</span><span data-l="en">What matters this time</span></h2>
+    <h2 style="font-size:clamp(26px,4vw,34px);margin:0 0 8px;letter-spacing:-0.015em"><span data-l="de">Worauf es diesmal ankommt</span><span data-l="en">What matters this time</span></h2>
     <p data-l="de" style="font-size:16px;color:var(--text-muted);max-width:60ch;margin:0 0 28px">Diese Finsternis ist kein Mittagsereignis. Die Sonne steht zum Maximum nur wenige Grad hoch — jeder Hügel, jede Baumreihe und jede Häuserzeile im Westen kann sie verdecken.</p>
     <p data-l="en" style="font-size:16px;color:var(--text-muted);max-width:60ch;margin:0 0 28px">This is not a midday event. At maximum the Sun stands only a few degrees high — any hill, tree line or row of houses to the west can hide it entirely.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
-      <div style="background:var(--color-surface);border-radius:24px;padding:22px">
+      <div class="panel" style="padding:22px">
         <div style="font-size:10px;letter-spacing:0.11em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:10px"><span data-l="de">Sonnenhöhe</span><span data-l="en">Sun altitude</span></div>
-        <div style="font-family:'Caprasimo',serif;font-size:36px;line-height:1;margin-bottom:8px">2–7°</div>
-        <p data-l="de" style="font-size:14px;line-height:1.55;color:var(--text-body);margin:0">So hoch steht die Sonne zum Maximum — im Norden und Osten noch flacher als im Südwesten. Eine freie Horizontlinie ist wichtiger als jedes Teleskop.</p>
-        <p data-l="en" style="font-size:14px;line-height:1.55;color:var(--text-body);margin:0">That is how high the Sun stands at maximum — even lower in the north and east than in the south-west. A clear horizon line matters more than any telescope.</p>
+        <div class="display" style="font-size:36px;line-height:1;margin-bottom:8px">2–7°</div>
+        <p data-l="de" class="prose-14">So hoch steht die Sonne zum Maximum — im Norden und Osten noch flacher als im Südwesten. Eine freie Horizontlinie ist wichtiger als jedes Teleskop.</p>
+        <p data-l="en" class="prose-14">That is how high the Sun stands at maximum — even lower in the north and east than in the south-west. A clear horizon line matters more than any telescope.</p>
       </div>
-      <div style="background:var(--color-surface);border-radius:24px;padding:22px">
+      <div class="panel" style="padding:22px">
         <div style="font-size:10px;letter-spacing:0.11em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:10px"><span data-l="de">Bedeckung</span><span data-l="en">Obscuration</span></div>
-        <div style="font-family:'Caprasimo',serif;font-size:36px;line-height:1;margin-bottom:8px">83–91 %</div>
-        <p data-l="de" style="font-size:14px;line-height:1.55;color:var(--text-body);margin:0">Der Flächenanteil der bedeckten Sonne steigt von Nordosten nach Südwesten. Totalität gibt es nur in Island und Nordspanien.</p>
-        <p data-l="en" style="font-size:14px;line-height:1.55;color:var(--text-body);margin:0">The covered fraction of the solar disc rises from north-east to south-west. Totality occurs only in Iceland and northern Spain.</p>
+        <div class="display" style="font-size:36px;line-height:1;margin-bottom:8px">83–91 %</div>
+        <p data-l="de" class="prose-14">Der Flächenanteil der bedeckten Sonne steigt von Nordosten nach Südwesten. Totalität gibt es nur in Island und Nordspanien.</p>
+        <p data-l="en" class="prose-14">The covered fraction of the solar disc rises from north-east to south-west. Totality occurs only in Iceland and northern Spain.</p>
       </div>
-      <div style="background:var(--color-surface);border-radius:24px;padding:22px">
+      <div class="panel" style="padding:22px">
         <div style="font-size:10px;letter-spacing:0.11em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:10px"><span data-l="de">Richtung</span><span data-l="en">Direction</span></div>
-        <div style="font-family:'Caprasimo',serif;font-size:36px;line-height:1;margin-bottom:8px">W–NW</div>
-        <p data-l="de" style="font-size:14px;line-height:1.55;color:var(--text-body);margin:0">Azimut rund 285–292°. Suchen Sie einen Platz mit offener Sicht in diese Richtung — Küste, Seeufer, Bergkuppe oder Feldrand nach Westen.</p>
-        <p data-l="en" style="font-size:14px;line-height:1.55;color:var(--text-body);margin:0">Azimuth around 285–292°. Look for a spot open in that direction — a coast, a lake shore, a summit or a field edge facing west.</p>
+        <div class="display" style="font-size:36px;line-height:1;margin-bottom:8px">W–NW</div>
+        <p data-l="de" class="prose-14">Azimut rund 285–292°. Suchen Sie einen Platz mit offener Sicht in diese Richtung — Küste, Seeufer, Bergkuppe oder Feldrand nach Westen.</p>
+        <p data-l="en" class="prose-14">Azimuth around 285–292°. Look for a spot open in that direction — a coast, a lake shore, a summit or a field edge facing west.</p>
       </div>
     </div>
   </section>
 
   <section style="max-width:1180px;margin:0 auto;padding:44px 20px">
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
-      <a href="#/zeiten" class="u-card-link" style="display:block;text-decoration:none;color:inherit;background:var(--color-surface);border-radius:24px;padding:26px">
-        <h3 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 8px"><span data-l="de">Zeiten &amp; Orte</span><span data-l="en">Times &amp; Places</span></h3>
+      <a href="#/zeiten" class="u-card-link" style="display:block;text-decoration:none;color:inherit;background:var(--color-surface);border-radius:var(--radius-panel);padding:26px">
+        <h3 style="font-size:22px;margin:0 0 8px"><span data-l="de">Zeiten &amp; Orte</span><span data-l="en">Times &amp; Places</span></h3>
         <p data-l="de" style="font-size:14px;line-height:1.55;color:var(--text-body);margin:0 0 14px">Kontaktzeiten C1 bis C4, Bedeckungsgrad, Sonnenhöhe und Azimut für jeden Punkt in Deutschland — mit Karte und Isolinien der Bedeckung.</p>
         <p data-l="en" style="font-size:14px;line-height:1.55;color:var(--text-body);margin:0 0 14px">Contact times C1 to C4, obscuration, sun altitude and azimuth for any point in Germany — with a map and obscuration contours.</p>
         <span style="font-size:14px;font-weight:600;color:var(--color-accent-700)"><span data-l="de">Ort suchen →</span><span data-l="en">Search a place →</span></span>
       </a>
-      <a href="#/standorte" class="u-card-link" style="display:block;text-decoration:none;color:inherit;background:var(--color-surface);border-radius:24px;padding:26px">
-        <h3 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 8px"><span data-l="de">Beste Standorte</span><span data-l="en">Best Locations</span></h3>
+      <a href="#/standorte" class="u-card-link" style="display:block;text-decoration:none;color:inherit;background:var(--color-surface);border-radius:var(--radius-panel);padding:26px">
+        <h3 style="font-size:22px;margin:0 0 8px"><span data-l="de">Beste Standorte</span><span data-l="en">Best Locations</span></h3>
         <p data-l="de" style="font-size:14px;line-height:1.55;color:var(--text-body);margin:0 0 14px">Horizontprofile aus hochaufgelösten Geländemodellen, kombiniert mit Wolkenklimatologie, Bedeckungsgrad und Zugänglichkeit.</p>
         <p data-l="en" style="font-size:14px;line-height:1.55;color:var(--text-body);margin:0 0 14px">Horizon profiles from high-resolution terrain models, combined with cloud climatology, obscuration and accessibility.</p>
         <span style="font-size:14px;font-weight:600;color:var(--color-accent-700)"><span data-l="de">Standorte vergleichen →</span><span data-l="en">Compare locations →</span></span>
       </a>
-      <a href="#/sicherheit" class="u-card-link-ink" style="display:block;text-decoration:none;background:var(--color-text);color:var(--color-bg);border-radius:24px;padding:26px">
-        <h3 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 8px"><span data-l="de">Sicher beobachten</span><span data-l="en">Observe safely</span></h3>
+      <a href="#/sicherheit" class="u-card-link-ink" style="display:block;text-decoration:none;background:var(--color-text);color:var(--color-bg);border-radius:var(--radius-panel);padding:26px">
+        <h3 style="font-size:22px;margin:0 0 8px"><span data-l="de">Sicher beobachten</span><span data-l="en">Observe safely</span></h3>
         <p data-l="de" style="font-size:14px;line-height:1.55;color:var(--on-ink-body);margin:0 0 14px">Auch eine zu 91 % bedeckte Sonne schädigt die Netzhaut in Sekunden. Was Sie brauchen und was auf keinen Fall funktioniert.</p>
         <p data-l="en" style="font-size:14px;line-height:1.55;color:var(--on-ink-body);margin:0 0 14px">Even a 91 per cent covered Sun damages the retina in seconds. What you need — and what definitely does not work.</p>
         <span style="font-size:14px;font-weight:600;color:var(--color-accent-400)"><span data-l="de">Zu den Regeln →</span><span data-l="en">The rules →</span></span>
@@ -225,8 +226,8 @@
 
 <!-- ══ ZEITEN & ORTE ══ -->
 <sc-if value="{{ isZeiten }}" hint-placeholder-val="{{ false }}">
-<div style="max-width:1180px;margin:0 auto;padding:36px 20px 64px">
-  <h1 style="font-family:'Caprasimo',serif;font-size:clamp(30px,5vw,44px);margin:0 0 8px;letter-spacing:-0.02em"><span data-l="de">Zeiten &amp; Orte</span><span data-l="en">Times &amp; Places</span></h1>
+<div class="page">
+  <h1><span data-l="de">Zeiten &amp; Orte</span><span data-l="en">Times &amp; Places</span></h1>
   <p data-l="de" style="font-size:16px;color:var(--text-muted);max-width:62ch;margin:0 0 24px">Ortsname oder Postleitzahl eingeben, den eigenen Standort verwenden oder direkt in die Karte klicken. Alle Zeiten in mitteleuropäischer Sommerzeit (MESZ).</p>
   <p data-l="en" style="font-size:16px;color:var(--text-muted);max-width:62ch;margin:0 0 24px">Enter a place name or postcode, use your own position, or click straight into the map. All times in Central European Summer Time (CEST).</p>
 
@@ -237,7 +238,7 @@
              role="combobox" aria-expanded="{{ sugExpanded }}" aria-controls="ortsvorschlaege" aria-activedescendant="{{ sugActiveId }}" aria-autocomplete="list" autocomplete="off"
              style="width:100%;min-height:48px;padding:10px 18px;font:inherit;font-size:16px;background:var(--color-surface);border:1px solid var(--line);border-radius:999px;color:var(--color-text)">
       <sc-if value="{{ hasSug }}" hint-placeholder-val="{{ false }}">
-        <ul id="ortsvorschlaege" role="listbox" class="sug-list" aria-label="{{ sugListLabel }}" style="position:absolute;top:78px;left:0;right:0;background:var(--color-neutral-100);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow-lg);overflow:hidden;z-index:10">
+        <ul id="ortsvorschlaege" role="listbox" class="sug-list" aria-label="{{ sugListLabel }}" style="position:absolute;top:78px;left:0;right:0;background:var(--color-neutral-100);border:1px solid var(--line);border-radius:var(--radius-tile);box-shadow:var(--shadow-lg);overflow:hidden;z-index:10">
           <sc-for list="{{ sug }}" as="s" hint-placeholder-count="3">
             <li role="option" id="{{ s.id }}" aria-selected="{{ s.selected }}" data-active="{{ s.active }}" onClick="{{ s.pick }}" onMouseEnter="{{ s.hover }}" class="sug-option">
               <span style="font-size:15px;font-weight:500">{{ s.name }}</span>
@@ -248,16 +249,16 @@
       </sc-if>
     </div>
     <button onClick="{{ useGeo }}" class="u-btn u-btn-primary" style="min-height:48px;padding:10px 20px;font:inherit;font-size:15px;font-weight:600;background:var(--color-accent);color:var(--color-text);border:none;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:8px">
-      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.5"></circle><path d="M8 1v2M8 13v2M1 8h2M13 8h2"></path><circle cx="8" cy="8" r="5.5"></circle></svg>
+      <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.5"></circle><path d="M8 1v2M8 13v2M1 8h2M13 8h2"></path><circle cx="8" cy="8" r="5.5"></circle></svg>
       <span data-l="de">Mein Standort</span><span data-l="en">My location</span>
     </button>
   </div>
 
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;align-items:start">
-    <div style="background:var(--color-surface);border-radius:24px;padding:14px">
-      <div ref="{{ mapRef }}" style="width:100%;height:min(58vh,460px);min-height:300px;border-radius:16px;overflow:hidden"></div>
+  <div class="zeiten-grid">
+    <div class="panel zeiten-map" style="padding:14px">
+      <div ref="{{ mapRef }}" role="region" aria-label="{{ mapLabel }}" style="width:100%;height:var(--map-h,min(64vh,560px));min-height:300px;border-radius:var(--radius-md);overflow:hidden"></div>
       <div style="display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding:12px 6px 4px">
-        <span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted)"><span data-l="de">Bedeckung im Maximum</span><span data-l="en">Obscuration at maximum</span></span>
+        <span class="kicker"><span data-l="de">Bedeckung im Maximum</span><span data-l="en">Obscuration at maximum</span></span>
         <sc-for list="{{ legend }}" as="l" hint-placeholder-count="4">
           <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px">
             <span style="width:16px;height:3px;border-radius:2px;background:{{ l.color }}"></span>{{ l.label }}
@@ -274,7 +275,7 @@
       <sc-if value="{{ overlayAvail }}" hint-placeholder-val="{{ true }}">
         <div style="border-top:1px solid var(--line-soft);margin-top:12px;padding:12px 6px 2px">
           <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
-            <span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted)"><span data-l="de">Wolkenfeld</span><span data-l="en">Cloud field</span></span>
+            <span class="kicker"><span data-l="de">Wolkenfeld</span><span data-l="en">Cloud field</span></span>
             <button onClick="{{ overlayToggle }}" style="padding:5px 14px;border:1px solid var(--line-strong);border-radius:999px;cursor:pointer;font:inherit;font-size:12px;font-weight:600;background:{{ overlayToggleBg }};color:{{ overlayToggleFg }}">{{ overlayToggleLabel }}</button>
             <span style="font-size:11px;color:var(--text-muted);font-variant-numeric:tabular-nums;margin-left:auto">{{ overlayRunLine }}</span>
           </div>
@@ -308,16 +309,16 @@
     </div>
 
     <div style="display:flex;flex-direction:column;gap:14px">
-      <div style="background:var(--color-text);color:var(--color-bg);border-radius:24px;padding:24px">
-        <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent-400);margin-bottom:6px"><span data-l="de">Gewählter Ort</span><span data-l="en">Selected place</span></div>
-        <div style="font-family:'Caprasimo',serif;font-size:26px;line-height:1.15;margin-bottom:2px">{{ locName }}</div>
+      <div class="panel-ink" style="padding:24px">
+        <div class="kicker-ink" style="margin-bottom:6px"><span data-l="de">Gewählter Ort</span><span data-l="en">Selected place</span></div>
+        <h2 style="font-size:26px;line-height:1.15;margin:0 0 2px">{{ locName }}</h2>
         <div style="font-size:12px;color:var(--on-ink-muted);margin-bottom:20px">{{ locCoords }}</div>
         <div style="display:flex;align-items:flex-end;gap:22px;flex-wrap:wrap">
           <div>
-            <div style="font-family:'Caprasimo',serif;font-size:48px;line-height:1;color:var(--color-accent-400)">{{ obsPct }}</div>
+            <div class="display" style="font-size:48px;line-height:1;color:var(--color-accent-400)">{{ obsPct }}</div>
             <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--on-ink-muted);margin-top:4px"><span data-l="de">bedeckte Fläche</span><span data-l="en">covered area</span></div>
           </div>
-          <svg viewBox="0 0 120 120" style="width:96px;height:96px">
+          <svg viewBox="0 0 120 120" role="img" aria-label="{{ crescentAlt }}" style="width:96px;height:96px">
             <defs>
               <mask id="crescent">
                 <rect width="120" height="120" fill="black"></rect>
@@ -336,14 +337,14 @@
            ändert — alles andere steht seit Jahrhunderten fest. Deshalb oben,
            direkt unter dem Ort, und nicht am Ende der Seite.               -->
       <sc-if value="{{ cloudsShow }}" hint-placeholder-val="{{ true }}">
-        <div style="background:var(--color-surface);border-radius:24px;padding:22px">
+        <div class="panel" style="padding:22px">
           <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:16px">
-            <h3 style="font-family:'Caprasimo',serif;font-size:18px;margin:0"><span data-l="de">Wolken zum Maximum</span><span data-l="en">Clouds at maximum</span></h3>
+            <h2 style="font-size:18px;margin:0"><span data-l="de">Wolken zum Maximum</span><span data-l="en">Clouds at maximum</span></h2>
             <span style="font-size:11px;color:var(--text-muted);font-variant-numeric:tabular-nums">{{ cloudRunLine }}</span>
           </div>
 
           <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px">
-            <div style="font-family:'Caprasimo',serif;font-size:42px;line-height:1;color:var(--color-accent-700)">{{ cloudFreePct }}</div>
+            <div class="display" style="font-size:42px;line-height:1;color:var(--color-accent-700)">{{ cloudFreePct }}</div>
             <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);line-height:1.5">
               <span data-l="de">freie Sicht</span><span data-l="en">clear view</span>
               <div style="text-transform:none;letter-spacing:0;font-size:12px;color:var(--text-muted)"><span data-l="de">auf die tiefstehende Sonne, {{ cloudMaxAt }}</span><span data-l="en">of the low-standing Sun, {{ cloudMaxAt }}</span></div>
@@ -385,13 +386,13 @@
       </sc-if>
 
       <sc-if value="{{ cloudsNote }}" hint-placeholder-val="{{ false }}">
-        <div style="background:var(--color-surface);border-radius:24px;padding:20px 22px">
-          <h3 style="font-family:'Caprasimo',serif;font-size:17px;margin:0 0 6px">{{ cloudsNoteTitle }}</h3>
+        <div class="panel" style="padding:20px 22px">
+          <h2 style="font-size:17px;margin:0 0 6px">{{ cloudsNoteTitle }}</h2>
           <p style="font-size:13px;line-height:1.55;color:var(--text-muted);margin:0">{{ cloudsNoteBody }}</p>
         </div>
       </sc-if>
 
-      <div style="background:var(--color-surface);border-radius:24px;padding:6px 20px 14px">
+      <div class="panel" style="padding:6px 20px 14px">
         <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
           <div style="display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:13px 0;border-bottom:1px solid var(--line-soft)">
             <div>
@@ -403,39 +404,44 @@
         </sc-for>
       </div>
 
-      <div style="background:var(--color-surface);border-radius:24px;padding:20px">
-        <h3 style="font-family:'Caprasimo',serif;font-size:18px;margin:0 0 2px"><span data-l="de">Verlauf der Bedeckung</span><span data-l="en">Obscuration over time</span></h3>
-        <p data-l="de" style="font-size:12px;color:var(--text-muted);margin:0 0 12px">Der schraffierte Bereich liegt nach Sonnenuntergang — dort ist die Finsternis von hier aus nicht mehr zu sehen.</p>
-        <p data-l="en" style="font-size:12px;color:var(--text-muted);margin:0 0 12px">The hatched area lies after sunset — from here the eclipse is no longer visible there.</p>
-        <svg viewBox="0 0 620 210" style="width:100%;height:auto;overflow:visible">
-          <defs>
-            <pattern id="hatch" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
-              <line x1="0" y1="0" x2="0" y2="7" stroke="var(--line-strong)" stroke-width="2"></line>
-            </pattern>
-          </defs>
-          <sc-for list="{{ yTicks }}" as="g" hint-placeholder-count="5">
-            <g>
-              <line x1="46" y1="{{ g.y }}" x2="614" y2="{{ g.y }}" stroke="var(--line-soft)" stroke-width="1"></line>
-              <text x="38" y="{{ g.ty }}" text-anchor="end" font-size="11" fill="var(--text-muted)">{{ g.label }}</text>
-            </g>
-          </sc-for>
-          <path d="{{ areaPath }}" fill="rgba(198,113,57,0.28)"></path>
-          <path d="{{ curvePath }}" fill="none" stroke="var(--color-accent)" stroke-width="2.5" stroke-linejoin="round"></path>
-          <sc-if value="{{ hasNightBox }}" hint-placeholder-val="{{ false }}">
-            <g>
-              <rect x="{{ nightX }}" y="12" width="{{ nightW }}" height="158" fill="url(#hatch)" opacity="0.5"></rect>
-              <line x1="{{ nightX }}" y1="12" x2="{{ nightX }}" y2="170" stroke="var(--color-text)" stroke-width="1.5" stroke-dasharray="4 3"></line>
-              <text x="{{ nightLabelX }}" y="26" font-size="11" font-weight="600" fill="var(--color-text)" text-anchor="{{ nightAnchor }}">{{ sunsetWord }}</text>
-            </g>
-          </sc-if>
-          <sc-for list="{{ xTicks }}" as="g" hint-placeholder-count="5">
-            <g>
-              <line x1="{{ g.x }}" y1="170" x2="{{ g.x }}" y2="175" stroke="var(--line-strong)" stroke-width="1"></line>
-              <text x="{{ g.x }}" y="192" text-anchor="middle" font-size="11" fill="var(--text-muted)">{{ g.label }}</text>
-            </g>
-          </sc-for>
-        </svg>
-      </div>
+    </div>
+  </div>
+
+  <!-- Volle Breite: in der schmalen Spalte hatte die Zeitachse am wenigsten
+       Platz, ausgerechnet dort, wo sie gelesen werden muss. -->
+  <div class="panel zeiten-curve" style="padding:20px">
+    <h2 style="font-size:18px;margin:0 0 2px"><span data-l="de">Verlauf der Bedeckung</span><span data-l="en">Obscuration over time</span></h2>
+    <p data-l="de" style="font-size:12px;color:var(--text-muted);margin:0 0 12px">Der schraffierte Bereich liegt nach Sonnenuntergang — dort ist die Finsternis von hier aus nicht mehr zu sehen.</p>
+    <p data-l="en" style="font-size:12px;color:var(--text-muted);margin:0 0 12px">The hatched area lies after sunset — from here the eclipse is no longer visible there.</p>
+    <div ref="{{ curveRef }}">
+    <svg viewBox="0 0 620 210" role="img" aria-label="{{ curveAlt }}" style="width:100%;height:auto;overflow:visible">
+      <defs>
+        <pattern id="hatch" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="0" x2="0" y2="7" stroke="var(--line-strong)" stroke-width="2"></line>
+        </pattern>
+      </defs>
+      <sc-for list="{{ yTicks }}" as="g" hint-placeholder-count="5">
+        <g>
+          <line x1="46" y1="{{ g.y }}" x2="614" y2="{{ g.y }}" stroke="var(--line-soft)" stroke-width="1"></line>
+          <text x="38" y="{{ g.ty }}" text-anchor="end" font-size="{{ curveFs }}" fill="var(--text-muted)">{{ g.label }}</text>
+        </g>
+      </sc-for>
+      <path d="{{ areaPath }}" fill="color-mix(in srgb, var(--color-accent) 28%, transparent)"></path>
+      <path d="{{ curvePath }}" fill="none" stroke="var(--color-accent)" stroke-width="2.5" stroke-linejoin="round"></path>
+      <sc-if value="{{ hasNightBox }}" hint-placeholder-val="{{ false }}">
+        <g>
+          <rect x="{{ nightX }}" y="12" width="{{ nightW }}" height="158" fill="url(#hatch)" opacity="0.5"></rect>
+          <line x1="{{ nightX }}" y1="12" x2="{{ nightX }}" y2="170" stroke="var(--color-text)" stroke-width="1.5" stroke-dasharray="4 3"></line>
+          <text x="{{ nightLabelX }}" y="26" font-size="{{ curveFsBold }}" font-weight="600" fill="var(--color-text)" text-anchor="{{ nightAnchor }}">{{ sunsetWord }}</text>
+        </g>
+      </sc-if>
+      <sc-for list="{{ xTicks }}" as="g" hint-placeholder-count="5">
+        <g>
+          <line x1="{{ g.x }}" y1="170" x2="{{ g.x }}" y2="175" stroke="var(--line-strong)" stroke-width="1"></line>
+          <text x="{{ g.x }}" y="192" text-anchor="middle" font-size="{{ curveFs }}" fill="var(--text-muted)">{{ g.label }}</text>
+        </g>
+      </sc-for>
+    </svg>
     </div>
   </div>
 </div>
@@ -443,8 +449,8 @@
 
 <!-- ══ BESTE STANDORTE ══ -->
 <sc-if value="{{ isStandorte }}" hint-placeholder-val="{{ false }}">
-<div style="max-width:1180px;margin:0 auto;padding:36px 20px 64px">
-  <h1 style="font-family:'Caprasimo',serif;font-size:clamp(30px,5vw,44px);margin:0 0 8px;letter-spacing:-0.02em"><span data-l="de">Beste Standorte</span><span data-l="en">Best Locations</span></h1>
+<div class="page">
+  <h1><span data-l="de">Beste Standorte</span><span data-l="en">Best Locations</span></h1>
   <p data-l="de" style="font-size:16px;color:var(--text-muted);max-width:64ch;margin:0 0 20px">Bewertet wird, was bei dieser Finsternis zählt: ob die Sonne zum Maximum über der realen Horizontlinie steht. Die Horizontprofile werden aus Copernicus GLO-30 gerechnet — einem Oberflächenmodell mit 30 m Rasterweite, das Bewuchs enthält, Gebäude aber nicht. Ein „frei“ ist deshalb eine Obergrenze, ein „verdeckt“ eine Aussage.</p>
   <p data-l="en" style="font-size:16px;color:var(--text-muted);max-width:64ch;margin:0 0 20px">The rating measures what counts for this eclipse: whether the Sun at maximum clears the real horizon line. Horizon profiles are computed from Copernicus GLO-30, a 30 m surface model that includes vegetation but not buildings. A “clear” is therefore an upper bound; a “blocked” is a statement.</p>
 
@@ -458,31 +464,36 @@
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;align-items:start">
     <div style="display:flex;flex-direction:column;gap:12px">
       <sc-for list="{{ sites }}" as="s" hint-placeholder-count="4">
-        <button type="button" onClick="{{ s.pick }}" class="site-card" aria-current="{{ s.current }}" style="background:{{ s.bg }};color:{{ s.fg }};border-radius:22px;padding:18px 20px;border:1px solid {{ s.border }}">
+        <button type="button" onClick="{{ s.pick }}" class="site-card" aria-current="{{ s.current }}" style="background:{{ s.bg }};color:{{ s.fg }};border-radius:var(--radius-panel);padding:18px 20px;border:1px solid {{ s.border }}">
           <div style="display:flex;justify-content:space-between;gap:14px;align-items:flex-start">
             <div>
-              <div style="font-family:'Caprasimo',serif;font-size:19px;line-height:1.2">{{ s.name }}</div>
-              <div style="font-size:12px;opacity:0.6;margin-top:2px">{{ s.sub }}</div>
+              <div class="display" style="font-size:19px;line-height:1.2">{{ s.name }}</div>
+              <div style="font-size:12px;opacity:0.8;margin-top:2px">{{ s.sub }}</div>
             </div>
             <div style="text-align:right;flex:none">
-              <div style="font-family:'Caprasimo',serif;font-size:26px;line-height:1;color:{{ s.scoreColor }}">{{ s.score }}</div>
-              <div style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;opacity:0.55;margin-top:3px">Score</div>
+              <sc-if value="{{ s.hasScore }}" hint-placeholder-val="{{ true }}">
+                <div class="display" style="font-size:26px;line-height:1;color:{{ s.scoreColor }}">{{ s.score }}</div>
+                <div style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;opacity:0.75;margin-top:3px">{{ scoreWord }}</div>
+              </sc-if>
+              <sc-if value="{{ s.noScore }}" hint-placeholder-val="{{ false }}">
+                <span title="{{ s.noScoreWhy }}" style="display:inline-block;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;border:1px dashed currentColor;border-radius:999px;padding:3px 9px;opacity:0.85">{{ s.noScoreLabel }}</span>
+              </sc-if>
             </div>
           </div>
           <div style="display:flex;gap:6px;margin-top:14px">
             <sc-for list="{{ s.bars }}" as="b" hint-placeholder-count="4">
               <div style="flex:1">
-                <div style="height:5px;border-radius:3px;background:{{ b.track }};overflow:hidden">
+                <div class="bar-track" data-empty="{{ b.empty }}" style="height:5px;border-radius:3px;background:{{ b.track }};overflow:hidden">
                   <div style="height:100%;width:{{ b.pct }}%;background:{{ b.color }};border-radius:3px"></div>
                 </div>
-                <div style="font-size:9px;letter-spacing:0.05em;text-transform:uppercase;opacity:0.55;margin-top:5px">{{ b.short }}</div>
+                <div style="font-size:10px;letter-spacing:0.05em;text-transform:uppercase;opacity:0.75;margin-top:5px">{{ b.short }}</div>
               </div>
             </sc-for>
           </div>
         </button>
       </sc-for>
       <sc-if value="{{ noSites }}" hint-placeholder-val="{{ false }}">
-        <div style="background:var(--color-surface);border-radius:22px;padding:22px;font-size:14px;color:var(--text-body)">
+        <div style="background:var(--color-surface);border-radius:var(--radius-panel);padding:22px;font-size:14px;color:var(--text-body)">
           <span data-l="de">Im gewählten Umkreis liegt kein bewerteter Standort. Vergrößern Sie den Radius.</span>
           <span data-l="en">No rated location within this radius. Try a larger one.</span>
         </div>
@@ -490,34 +501,54 @@
     </div>
 
     <div ref="{{ detailRef }}" tabindex="-1" style="display:flex;flex-direction:column;gap:14px;position:sticky;top:80px;scroll-margin-top:78px">
-      <div style="background:var(--color-text);color:var(--color-bg);border-radius:24px;padding:24px">
-        <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent-400);margin-bottom:6px"><span data-l="de">Horizontprofil</span><span data-l="en">Horizon profile</span></div>
-        <div style="font-family:'Caprasimo',serif;font-size:24px;line-height:1.15">{{ detName }}</div>
+      <div class="panel-ink" style="padding:24px">
+        <div class="kicker-ink" style="margin-bottom:6px"><span data-l="de">Horizontprofil</span><span data-l="en">Horizon profile</span></div>
+        <h2 style="font-size:24px;line-height:1.15;margin:0">{{ detName }}</h2>
         <div style="font-size:12px;color:var(--on-ink-muted);margin-bottom:16px">{{ detSub }}</div>
-        <svg viewBox="0 0 600 230" style="width:100%;height:auto">
+        <sc-if value="{{ hasHorizon }}" hint-placeholder-val="{{ true }}">
+        <div ref="{{ horizonRef }}">
+        <svg viewBox="0 0 600 230" role="img" aria-label="{{ horizonAlt }}" style="width:100%;height:auto;overflow:visible">
           <sc-for list="{{ hzY }}" as="g" hint-placeholder-count="4">
             <g>
               <line x1="34" y1="{{ g.y }}" x2="592" y2="{{ g.y }}" stroke="{{ g.stroke }}" stroke-width="{{ g.width }}"></line>
-              <text x="28" y="{{ g.ty }}" text-anchor="end" font-size="10" fill="var(--on-ink-muted)">{{ g.label }}</text>
+              <text x="28" y="{{ g.ty }}" text-anchor="end" font-size="{{ horizonFs }}" fill="var(--on-ink-muted)">{{ g.label }}</text>
             </g>
           </sc-for>
-          <!-- Die Nulllinie ist der Bezugspunkt, nicht der Boden: darunter liegt
-               Gelände, das tiefer steht als der Beobachter. Ohne diese
-               Beschriftung liest sich eine Fläche am unteren Rand als „flaches
-               Land" statt als „von hier fällt alles ab". -->
-          <text x="40" y="{{ eyeY }}" font-size="9" letter-spacing="0.06em" fill="var(--on-ink-muted)">{{ eyeLabel }}</text>
-          <path d="{{ hzPath }}" fill="rgba(122,138,94,0.85)" stroke="var(--color-accent-2-500)" stroke-width="1.5"></path>
-          <path d="{{ sunPath }}" fill="none" stroke="rgba(246,160,107,0.55)" stroke-width="2" stroke-dasharray="5 4"></path>
+          <path d="{{ hzPath }}" fill="color-mix(in srgb, var(--color-accent-2-500) 85%, transparent)" stroke="var(--color-accent-2-500)" stroke-width="1.5"></path>
+          <path d="{{ sunPath }}" fill="none" stroke="color-mix(in srgb, var(--color-accent-400) 55%, transparent)" stroke-width="2" stroke-dasharray="5 4"></path>
+          <!-- Nach den Pfaden, nicht davor: die Geländefläche hatte diese
+               Beschriftung bisher verdeckt. Die Nulllinie ist der Bezugspunkt,
+               nicht der Boden — darunter liegt Gelände, das tiefer steht als
+               der Beobachter. Ohne den Text liest sich eine Fläche am unteren
+               Rand als „flaches Land" statt als „von hier fällt alles ab". -->
+          <text x="40" y="{{ eyeY }}" font-size="{{ horizonFsSm }}" letter-spacing="0.06em" fill="var(--on-ink-muted)">{{ eyeLabel }}</text>
           <circle cx="{{ sunMaxX }}" cy="{{ sunMaxY }}" r="9" fill="var(--color-accent-400)"></circle>
-          <text x="{{ sunMaxLX }}" y="{{ sunMaxLY }}" font-size="11" font-weight="600" fill="var(--color-accent-400)" text-anchor="middle">{{ maxWord }}</text>
+          <text x="{{ sunMaxLX }}" y="{{ sunMaxLY }}" font-size="{{ horizonFs }}" font-weight="600" fill="var(--color-accent-400)" text-anchor="middle">{{ maxWord }}</text>
           <sc-for list="{{ hzX }}" as="g" hint-placeholder-count="4">
-            <text x="{{ g.x }}" y="222" text-anchor="middle" font-size="10" fill="var(--on-ink-muted)">{{ g.label }}</text>
+            <text x="{{ g.x }}" y="222" text-anchor="middle" font-size="{{ horizonFs }}" fill="var(--on-ink-muted)">{{ g.label }}</text>
           </sc-for>
         </svg>
-        <div style="font-size:12px;line-height:1.55;color:var(--on-ink-body);margin-top:12px">{{ detVerdict }}</div>
+        </div>
+        </sc-if>
+
+        <!-- Ohne gemessenes Profil wird nichts gezeichnet, was nach Messung
+             aussieht: keine Achsen, kein Gitternetz, keine Sonnenbahn. -->
+        <sc-if value="{{ hzEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;min-height:150px;border:1px dashed var(--line-ink);border-radius:var(--radius-tile);padding:20px">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--on-ink-muted)" stroke-width="1.6" aria-hidden="true">
+              <path d="M2 18l5-6 4 4 4-7 7 9"></path><circle cx="17" cy="6" r="2.5"></circle>
+            </svg>
+            <div style="font-size:14px;font-weight:600;color:var(--on-ink)">{{ hzEmptyTitle }}</div>
+            <div style="font-size:12px;line-height:1.55;color:var(--on-ink-muted);max-width:44ch">{{ hzEmptyBody }}</div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ hasHorizon }}" hint-placeholder-val="{{ true }}">
+          <div style="font-size:12px;line-height:1.55;color:var(--on-ink-body);margin-top:12px">{{ detVerdict }}</div>
+        </sc-if>
       </div>
 
-      <div style="background:var(--color-surface);border-radius:24px;padding:6px 20px 16px">
+      <div class="panel" style="padding:6px 20px 16px">
         <sc-for list="{{ detBars }}" as="b" hint-placeholder-count="4">
           <div style="padding:13px 0;border-bottom:1px solid var(--line-soft)">
             <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:7px">
@@ -532,7 +563,7 @@
         <p style="font-size:12px;line-height:1.5;color:var(--text-muted);margin:12px 0 0">{{ detAccess }}</p>
       </div>
 
-      <div style="background:rgba(198,113,57,0.12);border-radius:20px;padding:16px 20px;font-size:12px;line-height:1.55;color:var(--text-body)">
+      <div style="background:color-mix(in srgb, var(--color-accent) 12%, transparent);border-radius:var(--radius-tile);padding:16px 20px;font-size:12px;line-height:1.55;color:var(--text-body)">
         <span data-l="de"><strong>Datenstand:</strong> Bedeckungsgrad und Sonnenstand rechnet der Browser. Der Horizont kommt aus Copernicus GLO-30 über <code>/api/v1/horizon</code>: Gelände und Bewuchs sind erfasst, Gebäude und alles unterhalb von 30 m Rasterweite nicht — die wirkliche Sicht ist nie besser als die angezeigte. Wolkenklimatologie und Zugangshinweise sind weiterhin Beispielwerte.</span>
         <span data-l="en"><strong>Data status:</strong> obscuration and sun position are computed in your browser. The horizon comes from Copernicus GLO-30 via <code>/api/v1/horizon</code>: terrain and vegetation are modelled, buildings and anything below the 30 m grid are not — the real view is never better than the one shown. Cloud climatology and access notes are still sample values.</span>
       </div>
@@ -543,22 +574,22 @@
 
 <!-- ══ BEOBACHTUNGSTIPPS ══ -->
 <sc-if value="{{ isTipps }}" hint-placeholder-val="{{ false }}">
-<div style="max-width:860px;margin:0 auto;padding:36px 20px 64px">
-  <h1 style="font-family:'Caprasimo',serif;font-size:clamp(30px,5vw,44px);margin:0 0 8px;letter-spacing:-0.02em"><span data-l="de">Beobachtungstipps</span><span data-l="en">Observing Tips</span></h1>
+<div class="page" style="--wrap:860px">
+  <h1><span data-l="de">Beobachtungstipps</span><span data-l="en">Observing Tips</span></h1>
   <p data-l="de" style="font-size:17px;line-height:1.6;color:var(--text-body);margin:0 0 32px;text-wrap:pretty">Die entscheidende Vorbereitung findet vor dem 12. August statt: den Platz aussuchen, die Sichtlinie prüfen, den Abend planen. Am Tag selbst ist es für Korrekturen zu spät — die Sonne geht unter, während die Finsternis noch läuft.</p>
   <p data-l="en" style="font-size:17px;line-height:1.6;color:var(--text-body);margin:0 0 32px;text-wrap:pretty">The decisive preparation happens before 12 August: choose the spot, check the sight line, plan the evening. On the day itself there is no time to correct — the Sun sets while the eclipse is still running.</p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:26px;margin:0 0 14px"><span data-l="de">Den Platz vorher besuchen</span><span data-l="en">Visit the spot beforehand</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Gehen Sie an einem der Abende davor zur selben Uhrzeit hin. Die Sonne steht Anfang August um 20:15 Uhr fast an derselben Stelle wie am 12. — wenn sie dort frei steht, steht sie es auch zur Finsternis. Das ersetzt jede Rechnung.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Go there on one of the preceding evenings at the same time. In early August the Sun at 20:15 sits almost exactly where it will on the 12th — if it stands clear there, it will during the eclipse too. That beats any calculation.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">Achten Sie auf das, was Karten nicht zeigen: eine Baumreihe hinter dem Feld, ein Silo, eine Lärmschutzwand, ein Bauzaun. Zwei Grad Horizonthöhe sind bei dieser Finsternis der Unterschied zwischen sehen und nicht sehen.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">Watch for what maps do not show: a tree line behind the field, a silo, a noise barrier, a construction fence. Two degrees of horizon height are the difference between seeing this eclipse and missing it.</p>
+  <h2><span data-l="de">Den Platz vorher besuchen</span><span data-l="en">Visit the spot beforehand</span></h2>
+  <p data-l="de" class="prose">Gehen Sie an einem der Abende davor zur selben Uhrzeit hin. Die Sonne steht Anfang August um 20:15 Uhr fast an derselben Stelle wie am 12. — wenn sie dort frei steht, steht sie es auch zur Finsternis. Das ersetzt jede Rechnung.</p>
+  <p data-l="en" class="prose">Go there on one of the preceding evenings at the same time. In early August the Sun at 20:15 sits almost exactly where it will on the 12th — if it stands clear there, it will during the eclipse too. That beats any calculation.</p>
+  <p data-l="de" class="prose-end">Achten Sie auf das, was Karten nicht zeigen: eine Baumreihe hinter dem Feld, ein Silo, eine Lärmschutzwand, ein Bauzaun. Zwei Grad Horizonthöhe sind bei dieser Finsternis der Unterschied zwischen sehen und nicht sehen.</p>
+  <p data-l="en" class="prose-end">Watch for what maps do not show: a tree line behind the field, a silo, a noise barrier, a construction fence. Two degrees of horizon height are the difference between seeing this eclipse and missing it.</p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:26px;margin:0 0 14px"><span data-l="de">Der Ablauf des Abends</span><span data-l="en">How the evening runs</span></h2>
+  <h2><span data-l="de">Der Ablauf des Abends</span><span data-l="en">How the evening runs</span></h2>
   <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:32px">
     <sc-for list="{{ timeline }}" as="t" hint-placeholder-count="5">
       <div style="display:flex;gap:18px;padding:15px 0;border-bottom:1px solid var(--line-soft)">
-        <div style="font-family:'Caprasimo',serif;font-size:17px;color:var(--color-accent-700);min-width:88px;flex:none;font-variant-numeric:tabular-nums">{{ t.time }}</div>
+        <div class="display" style="font-size:17px;color:var(--color-accent-700);min-width:88px;flex:none;font-variant-numeric:tabular-nums">{{ t.time }}</div>
         <div>
           <div style="font-size:15px;font-weight:600;margin-bottom:2px">{{ t.title }}</div>
           <div style="font-size:14px;line-height:1.55;color:var(--text-body)">{{ t.body }}</div>
@@ -568,207 +599,207 @@
   </div>
   <p style="font-size:12px;color:var(--text-muted);margin:-24px 0 32px"><span data-l="de">Zeiten für {{ locName }}. Für einen anderen Ort:</span><span data-l="en">Times for {{ locName }}. For another place:</span> <a href="#/zeiten"><span data-l="de">Ort wechseln</span><span data-l="en">change location</span></a>.</p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:26px;margin:0 0 14px"><span data-l="de">Was Sie mitnehmen sollten</span><span data-l="en">What to bring</span></h2>
+  <h2><span data-l="de">Was Sie mitnehmen sollten</span><span data-l="en">What to bring</span></h2>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:32px">
-    <div style="background:var(--color-surface);border-radius:20px;padding:18px">
-      <div style="font-size:15px;font-weight:600;margin-bottom:4px"><span data-l="de">Finsternisbrille pro Person</span><span data-l="en">One eclipse filter each</span></div>
-      <div data-l="de" style="font-size:13px;line-height:1.5;color:var(--text-body)">ISO 12312-2. Lieber eine zu viel als eine zu wenig — geteilt wird ungern.</div>
-      <div data-l="en" style="font-size:13px;line-height:1.5;color:var(--text-body)">ISO 12312-2. Bring one spare — nobody likes sharing.</div>
+    <div class="tile" style="padding:18px">
+      <div class="tile-title"><span data-l="de">Finsternisbrille pro Person</span><span data-l="en">One eclipse filter each</span></div>
+      <div data-l="de" class="prose-sm">ISO 12312-2. Lieber eine zu viel als eine zu wenig — geteilt wird ungern.</div>
+      <div data-l="en" class="prose-sm">ISO 12312-2. Bring one spare — nobody likes sharing.</div>
     </div>
-    <div style="background:var(--color-surface);border-radius:20px;padding:18px">
-      <div style="font-size:15px;font-weight:600;margin-bottom:4px"><span data-l="de">Fernglas mit Objektivfilter</span><span data-l="en">Binoculars with objective filters</span></div>
-      <div data-l="de" style="font-size:13px;line-height:1.5;color:var(--text-body)">Filter vor die Linse, nicht ans Auge. Ohne Filter bleibt es in der Tasche.</div>
-      <div data-l="en" style="font-size:13px;line-height:1.5;color:var(--text-body)">Filters in front of the lens, never at the eye. Without them, leave it in the bag.</div>
+    <div class="tile" style="padding:18px">
+      <div class="tile-title"><span data-l="de">Fernglas mit Objektivfilter</span><span data-l="en">Binoculars with objective filters</span></div>
+      <div data-l="de" class="prose-sm">Filter vor die Linse, nicht ans Auge. Ohne Filter bleibt es in der Tasche.</div>
+      <div data-l="en" class="prose-sm">Filters in front of the lens, never at the eye. Without them, leave it in the bag.</div>
     </div>
-    <div style="background:var(--color-surface);border-radius:20px;padding:18px">
-      <div style="font-size:15px;font-weight:600;margin-bottom:4px"><span data-l="de">Karton mit 2-mm-Loch</span><span data-l="en">Card with a 2 mm hole</span></div>
-      <div data-l="de" style="font-size:13px;line-height:1.5;color:var(--text-body)">Die Projektion funktioniert für beliebig viele Zuschauer gleichzeitig.</div>
-      <div data-l="en" style="font-size:13px;line-height:1.5;color:var(--text-body)">Projection works for any number of onlookers at once.</div>
+    <div class="tile" style="padding:18px">
+      <div class="tile-title"><span data-l="de">Karton mit 2-mm-Loch</span><span data-l="en">Card with a 2 mm hole</span></div>
+      <div data-l="de" class="prose-sm">Die Projektion funktioniert für beliebig viele Zuschauer gleichzeitig.</div>
+      <div data-l="en" class="prose-sm">Projection works for any number of onlookers at once.</div>
     </div>
-    <div style="background:var(--color-surface);border-radius:20px;padding:18px">
-      <div style="font-size:15px;font-weight:600;margin-bottom:4px"><span data-l="de">Warme Jacke</span><span data-l="en">A warm jacket</span></div>
-      <div data-l="de" style="font-size:13px;line-height:1.5;color:var(--text-body)">Bei 88 % Bedeckung kurz vor Sonnenuntergang fällt die Temperatur spürbar.</div>
-      <div data-l="en" style="font-size:13px;line-height:1.5;color:var(--text-body)">At 88 per cent obscuration just before sunset the temperature drops noticeably.</div>
+    <div class="tile" style="padding:18px">
+      <div class="tile-title"><span data-l="de">Warme Jacke</span><span data-l="en">A warm jacket</span></div>
+      <div data-l="de" class="prose-sm">Bei 88 % Bedeckung kurz vor Sonnenuntergang fällt die Temperatur spürbar.</div>
+      <div data-l="en" class="prose-sm">At 88 per cent obscuration just before sunset the temperature drops noticeably.</div>
     </div>
-    <div style="background:var(--color-surface);border-radius:20px;padding:18px">
-      <div style="font-size:15px;font-weight:600;margin-bottom:4px"><span data-l="de">Taschenlampe mit Rotlicht</span><span data-l="en">Torch with red light</span></div>
-      <div data-l="de" style="font-size:13px;line-height:1.5;color:var(--text-body)">Der Rückweg im Dunkeln kommt schneller, als man denkt.</div>
-      <div data-l="en" style="font-size:13px;line-height:1.5;color:var(--text-body)">The walk back in the dark arrives sooner than you expect.</div>
+    <div class="tile" style="padding:18px">
+      <div class="tile-title"><span data-l="de">Taschenlampe mit Rotlicht</span><span data-l="en">Torch with red light</span></div>
+      <div data-l="de" class="prose-sm">Der Rückweg im Dunkeln kommt schneller, als man denkt.</div>
+      <div data-l="en" class="prose-sm">The walk back in the dark arrives sooner than you expect.</div>
     </div>
-    <div style="background:var(--color-surface);border-radius:20px;padding:18px">
-      <div style="font-size:15px;font-weight:600;margin-bottom:4px"><span data-l="de">Wetterbericht vom Vortag</span><span data-l="en">The previous day's forecast</span></div>
-      <div data-l="de" style="font-size:13px;line-height:1.5;color:var(--text-body)">Ein zweiter Standort 100 km entfernt kann die Rettung sein. Planen Sie ihn ein.</div>
-      <div data-l="en" style="font-size:13px;line-height:1.5;color:var(--text-body)">A backup spot 100 km away can save the evening. Plan one.</div>
+    <div class="tile" style="padding:18px">
+      <div class="tile-title"><span data-l="de">Wetterbericht vom Vortag</span><span data-l="en">The previous day's forecast</span></div>
+      <div data-l="de" class="prose-sm">Ein zweiter Standort 100 km entfernt kann die Rettung sein. Planen Sie ihn ein.</div>
+      <div data-l="en" class="prose-sm">A backup spot 100 km away can save the evening. Plan one.</div>
     </div>
   </div>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:26px;margin:0 0 14px"><span data-l="de">Schauen Sie auch weg von der Sonne</span><span data-l="en">Look away from the Sun as well</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Der eindrucksvollste Teil einer tiefen partiellen Finsternis passiert nicht am Himmel, sondern um Sie herum. Ab etwa 80 % Bedeckung wird das Licht fahl und metallisch, ohne dass es dunkler im gewohnten Sinn wird — als hätte jemand die Sättigung heruntergedreht.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">The most striking part of a deep partial eclipse happens not in the sky but around you. From roughly 80 per cent the light turns pale and metallic without getting darker in the usual sense — as if someone had pulled the saturation down.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Schatten werden auf einer Seite messerscharf, weil die Sonne zur Sichel schrumpft. Unter Bäumen erscheinen hunderte Sicheln auf dem Boden. Vögel verstummen oder fliegen die Abendrunde zu früh.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Shadows go knife-sharp along one edge because the Sun shrinks to a crescent. Under trees hundreds of crescents appear on the ground. Birds fall silent or fly their evening round too early.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0">Und weil das Ganze in die Dämmerung fällt: Der Horizont im Osten färbt sich, während im Westen die Sichel untergeht. Das ist der Anblick, den nur diese Finsternis bietet.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0">And because all of it falls into dusk: the eastern horizon colours while the crescent sets in the west. That is the sight only this eclipse offers.</p>
+  <h2><span data-l="de">Schauen Sie auch weg von der Sonne</span><span data-l="en">Look away from the Sun as well</span></h2>
+  <p data-l="de" class="prose">Der eindrucksvollste Teil einer tiefen partiellen Finsternis passiert nicht am Himmel, sondern um Sie herum. Ab etwa 80 % Bedeckung wird das Licht fahl und metallisch, ohne dass es dunkler im gewohnten Sinn wird — als hätte jemand die Sättigung heruntergedreht.</p>
+  <p data-l="en" class="prose">The most striking part of a deep partial eclipse happens not in the sky but around you. From roughly 80 per cent the light turns pale and metallic without getting darker in the usual sense — as if someone had pulled the saturation down.</p>
+  <p data-l="de" class="prose">Schatten werden auf einer Seite messerscharf, weil die Sonne zur Sichel schrumpft. Unter Bäumen erscheinen hunderte Sicheln auf dem Boden. Vögel verstummen oder fliegen die Abendrunde zu früh.</p>
+  <p data-l="en" class="prose">Shadows go knife-sharp along one edge because the Sun shrinks to a crescent. Under trees hundreds of crescents appear on the ground. Birds fall silent or fly their evening round too early.</p>
+  <p data-l="de" class="prose-flush">Und weil das Ganze in die Dämmerung fällt: Der Horizont im Osten färbt sich, während im Westen die Sichel untergeht. Das ist der Anblick, den nur diese Finsternis bietet.</p>
+  <p data-l="en" class="prose-flush">And because all of it falls into dusk: the eastern horizon colours while the crescent sets in the west. That is the sight only this eclipse offers.</p>
 </div>
 </sc-if>
 
 <!-- ══ FOTOGRAFIE ══ -->
 <sc-if value="{{ isFoto }}" hint-placeholder-val="{{ false }}">
-<div style="max-width:860px;margin:0 auto;padding:36px 20px 64px">
-  <h1 style="font-family:'Caprasimo',serif;font-size:clamp(30px,5vw,44px);margin:0 0 8px;letter-spacing:-0.02em"><span data-l="de">Fotografie</span><span data-l="en">Photography</span></h1>
+<div class="page" style="--wrap:860px">
+  <h1><span data-l="de">Fotografie</span><span data-l="en">Photography</span></h1>
   <p data-l="de" style="font-size:17px;line-height:1.6;color:var(--text-body);margin:0 0 28px;text-wrap:pretty">Die tiefe Sonnenposition ist fotografisch ein Geschenk: Sie können die Sichel zusammen mit einem Kirchturm, einer Baumsilhouette oder einer Bergkette abbilden. Genau solche Bilder sind bei einer hoch stehenden Finsternis unmöglich.</p>
   <p data-l="en" style="font-size:17px;line-height:1.6;color:var(--text-body);margin:0 0 28px;text-wrap:pretty">The low Sun is a photographic gift: you can frame the crescent together with a church spire, a tree silhouette or a mountain ridge. Those pictures are impossible when an eclipse stands high.</p>
 
-  <div style="background:var(--color-text);color:var(--color-bg);border-radius:24px;padding:24px;margin-bottom:32px">
-    <h2 style="font-family:'Caprasimo',serif;font-size:20px;margin:0 0 10px;color:var(--color-accent-400)"><span data-l="de">Zuerst: die Kamera braucht auch einen Filter</span><span data-l="en">First: the camera needs a filter too</span></h2>
+  <div class="panel-ink" style="padding:24px;margin-bottom:32px">
+    <h2 style="font-size:20px;margin:0 0 10px;color:var(--color-accent-400)"><span data-l="de">Zuerst: die Kamera braucht auch einen Filter</span><span data-l="en">First: the camera needs a filter too</span></h2>
     <p data-l="de" style="font-size:14px;line-height:1.6;color:var(--on-ink-body);margin:0">Ein Teleobjektiv bündelt genug Energie, um Verschlussvorhang und Sensor zu beschädigen — und beim Blick durch den optischen Sucher Ihr Auge. Ein zertifizierter Sonnenfilter gehört <strong style="color:var(--color-bg)">vor die Frontlinse</strong>, niemals hinter das Objektiv. Erst wenn die Sonne im letzten Grad über dem Horizont steht und tiefrot geworden ist, lässt sich ungefiltert arbeiten — und auch dann nur über das Live-View-Display, nie durch den Sucher.</p>
     <p data-l="en" style="font-size:14px;line-height:1.6;color:var(--on-ink-body);margin:0">A telephoto lens concentrates enough energy to damage shutter and sensor — and your eye through an optical viewfinder. A certified solar filter belongs <strong style="color:var(--color-bg)">in front of the front element</strong>, never behind the lens. Only when the Sun is within the last degree above the horizon and has gone deep red can you work unfiltered — and even then via live view, never through the finder.</p>
   </div>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:26px;margin:0 0 6px"><span data-l="de">Ausgangswerte</span><span data-l="en">Starting values</span></h2>
+  <h2 style="margin-bottom:6px"><span data-l="de">Ausgangswerte</span><span data-l="en">Starting values</span></h2>
   <p data-l="de" style="font-size:14px;color:var(--text-muted);margin:0 0 14px">Richtwerte bei ISO 100 und Blende f/8. Die tief stehende Sonne wird durch die Atmosphäre um mehrere Blendenstufen gedämpft — belichten Sie in Reihen und kontrollieren Sie das Histogramm.</p>
   <p data-l="en" style="font-size:14px;color:var(--text-muted);margin:0 0 14px">Guide values at ISO 100 and f/8. The low Sun is dimmed by several stops of atmosphere — bracket generously and check the histogram.</p>
-  <div style="background:var(--color-surface);border-radius:24px;padding:8px 20px 12px;margin-bottom:32px;overflow-x:auto">
+  <div class="panel" style="padding:8px 20px 12px;margin-bottom:32px;overflow-x:auto">
     <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:420px">
       <thead>
         <tr>
-          <th style="text-align:left;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);padding:12px 8px;border-bottom:1px solid var(--line);font-weight:600"><span data-l="de">Situation</span><span data-l="en">Situation</span></th>
-          <th style="text-align:left;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);padding:12px 8px;border-bottom:1px solid var(--line);font-weight:600"><span data-l="de">Filter</span><span data-l="en">Filter</span></th>
-          <th style="text-align:left;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);padding:12px 8px;border-bottom:1px solid var(--line);font-weight:600"><span data-l="de">Belichtung</span><span data-l="en">Exposure</span></th>
+          <th class="th"><span data-l="de">Situation</span><span data-l="en">Situation</span></th>
+          <th class="th"><span data-l="de">Filter</span><span data-l="en">Filter</span></th>
+          <th class="th"><span data-l="de">Belichtung</span><span data-l="en">Exposure</span></th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td style="padding:12px 8px;border-bottom:1px solid var(--line-soft)"><span data-l="de">Sichel, Sonne über 10°</span><span data-l="en">Crescent, Sun above 10°</span></td>
-          <td style="padding:12px 8px;border-bottom:1px solid var(--line-soft)">ND 5.0</td>
-          <td style="padding:12px 8px;border-bottom:1px solid var(--line-soft);font-variant-numeric:tabular-nums">1/250 – 1/60 s</td>
+          <td class="td"><span data-l="de">Sichel, Sonne über 10°</span><span data-l="en">Crescent, Sun above 10°</span></td>
+          <td class="td">ND 5.0</td>
+          <td class="td td-num">1/250 – 1/60 s</td>
         </tr>
         <tr>
-          <td style="padding:12px 8px;border-bottom:1px solid var(--line-soft)"><span data-l="de">Sichel, Sonne 3–10°</span><span data-l="en">Crescent, Sun 3–10°</span></td>
-          <td style="padding:12px 8px;border-bottom:1px solid var(--line-soft)">ND 5.0</td>
-          <td style="padding:12px 8px;border-bottom:1px solid var(--line-soft);font-variant-numeric:tabular-nums">1/60 – 1/8 s</td>
+          <td class="td"><span data-l="de">Sichel, Sonne 3–10°</span><span data-l="en">Crescent, Sun 3–10°</span></td>
+          <td class="td">ND 5.0</td>
+          <td class="td td-num">1/60 – 1/8 s</td>
         </tr>
         <tr>
-          <td style="padding:12px 8px;border-bottom:1px solid var(--line-soft)"><span data-l="de">Letztes Grad, tiefrot</span><span data-l="en">Last degree, deep red</span></td>
-          <td style="padding:12px 8px;border-bottom:1px solid var(--line-soft)"><span data-l="de">ohne, nur Live-View</span><span data-l="en">none, live view only</span></td>
-          <td style="padding:12px 8px;border-bottom:1px solid var(--line-soft);font-variant-numeric:tabular-nums">1/2000 – 1/250 s</td>
+          <td class="td"><span data-l="de">Letztes Grad, tiefrot</span><span data-l="en">Last degree, deep red</span></td>
+          <td class="td"><span data-l="de">ohne, nur Live-View</span><span data-l="en">none, live view only</span></td>
+          <td class="td td-num">1/2000 – 1/250 s</td>
         </tr>
         <tr>
-          <td style="padding:12px 8px;border-bottom:1px solid var(--line-soft)"><span data-l="de">Landschaft mit Sichel</span><span data-l="en">Landscape with crescent</span></td>
-          <td style="padding:12px 8px;border-bottom:1px solid var(--line-soft)"><span data-l="de">ohne</span><span data-l="en">none</span></td>
-          <td style="padding:12px 8px;border-bottom:1px solid var(--line-soft);font-variant-numeric:tabular-nums"><span data-l="de">Belichtungsreihe ±3 EV</span><span data-l="en">bracket ±3 EV</span></td>
+          <td class="td"><span data-l="de">Landschaft mit Sichel</span><span data-l="en">Landscape with crescent</span></td>
+          <td class="td"><span data-l="de">ohne</span><span data-l="en">none</span></td>
+          <td class="td td-num"><span data-l="de">Belichtungsreihe ±3 EV</span><span data-l="en">bracket ±3 EV</span></td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:26px;margin:0 0 14px"><span data-l="de">Brennweite und Bildidee</span><span data-l="en">Focal length and picture idea</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Die Sonne ist ein halbes Grad groß. Bei 300 mm am Kleinbild füllt sie etwa ein Zehntel der Bildhöhe — genug für eine erkennbare Sichel im Landschaftsbild, zu wenig für ein Porträt der Sonne. Dafür braucht es 600 mm und mehr.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">The Sun is half a degree across. At 300 mm on full frame it fills about a tenth of the frame height — enough for a readable crescent in a landscape, too little for a portrait of the Sun. That needs 600 mm and up.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">Der lohnendere Weg bei dieser Finsternis: 24–70 mm, ein starkes Vordergrundmotiv, die Sichel klein im oberen Bilddrittel. Suchen Sie das Motiv vorher — die Sonne wandert in der letzten Stunde rund 15° nach rechts, das Bild verschiebt sich also merklich.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">The more rewarding route here: 24–70 mm, a strong foreground subject, the crescent small in the upper third. Scout the composition beforehand — in the final hour the Sun moves some 15° to the right, so the frame shifts noticeably.</p>
+  <h2><span data-l="de">Brennweite und Bildidee</span><span data-l="en">Focal length and picture idea</span></h2>
+  <p data-l="de" class="prose">Die Sonne ist ein halbes Grad groß. Bei 300 mm am Kleinbild füllt sie etwa ein Zehntel der Bildhöhe — genug für eine erkennbare Sichel im Landschaftsbild, zu wenig für ein Porträt der Sonne. Dafür braucht es 600 mm und mehr.</p>
+  <p data-l="en" class="prose">The Sun is half a degree across. At 300 mm on full frame it fills about a tenth of the frame height — enough for a readable crescent in a landscape, too little for a portrait of the Sun. That needs 600 mm and up.</p>
+  <p data-l="de" class="prose-end">Der lohnendere Weg bei dieser Finsternis: 24–70 mm, ein starkes Vordergrundmotiv, die Sichel klein im oberen Bilddrittel. Suchen Sie das Motiv vorher — die Sonne wandert in der letzten Stunde rund 15° nach rechts, das Bild verschiebt sich also merklich.</p>
+  <p data-l="en" class="prose-end">The more rewarding route here: 24–70 mm, a strong foreground subject, the crescent small in the upper third. Scout the composition beforehand — in the final hour the Sun moves some 15° to the right, so the frame shifts noticeably.</p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:26px;margin:0 0 14px"><span data-l="de">Mit dem Smartphone</span><span data-l="en">With a phone</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Halten Sie eine Finsternisbrille vor die Linse — nicht davor schweben lassen, sondern anlegen, sonst kommt Streulicht seitlich hinein. Belichtung antippen und auf die Sonne ziehen, sonst rechnet die Automatik die Sichel weg.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Hold an eclipse filter against the lens — resting on it, not floating in front, or stray light creeps in from the side. Tap and drag the exposure onto the Sun, otherwise auto-exposure erases the crescent.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0">Das bessere Smartphone-Bild ist ohnehin ein anderes: die Menschen um Sie herum, die Projektionsbilder unter dem Baum, das fahle Licht auf der Wiese. Dafür braucht es keinen Filter und kein Tele.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0">The better phone picture is a different one anyway: the people around you, the projected crescents under a tree, the pale light on the grass. No filter and no telephoto needed.</p>
+  <h2><span data-l="de">Mit dem Smartphone</span><span data-l="en">With a phone</span></h2>
+  <p data-l="de" class="prose">Halten Sie eine Finsternisbrille vor die Linse — nicht davor schweben lassen, sondern anlegen, sonst kommt Streulicht seitlich hinein. Belichtung antippen und auf die Sonne ziehen, sonst rechnet die Automatik die Sichel weg.</p>
+  <p data-l="en" class="prose">Hold an eclipse filter against the lens — resting on it, not floating in front, or stray light creeps in from the side. Tap and drag the exposure onto the Sun, otherwise auto-exposure erases the crescent.</p>
+  <p data-l="de" class="prose-flush">Das bessere Smartphone-Bild ist ohnehin ein anderes: die Menschen um Sie herum, die Projektionsbilder unter dem Baum, das fahle Licht auf der Wiese. Dafür braucht es keinen Filter und kein Tele.</p>
+  <p data-l="en" class="prose-flush">The better phone picture is a different one anyway: the people around you, the projected crescents under a tree, the pale light on the grass. No filter and no telephoto needed.</p>
 </div>
 </sc-if>
 
 <!-- ══ SICHERHEIT ══ -->
 <sc-if value="{{ isSicherheit }}" hint-placeholder-val="{{ false }}">
-<div style="max-width:820px;margin:0 auto;padding:36px 20px 64px">
-  <h1 style="font-family:'Caprasimo',serif;font-size:clamp(30px,5vw,44px);margin:0 0 8px;letter-spacing:-0.02em"><span data-l="de">Sicher beobachten</span><span data-l="en">Observe safely</span></h1>
+<div class="page" style="--wrap:820px">
+  <h1><span data-l="de">Sicher beobachten</span><span data-l="en">Observe safely</span></h1>
   <p data-l="de" style="font-size:17px;line-height:1.6;color:var(--text-body);margin:0 0 28px;text-wrap:pretty">In Deutschland wird die Sonne am 12. August 2026 zu keinem Zeitpunkt vollständig bedeckt. Es gibt deshalb <strong>keine einzige Minute</strong>, in der ein Blick ohne Filter unbedenklich wäre — auch nicht bei 91 % Bedeckung, auch nicht kurz vor Sonnenuntergang.</p>
   <p data-l="en" style="font-size:17px;line-height:1.6;color:var(--text-body);margin:0 0 28px;text-wrap:pretty">Over Germany on 12 August 2026 the Sun is never completely covered. There is therefore <strong>not one minute</strong> in which an unfiltered look would be safe — not at 91 per cent obscuration, and not shortly before sunset.</p>
 
-  <div style="background:var(--color-text);color:var(--color-bg);border-radius:24px;padding:26px;margin-bottom:28px">
-    <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 14px"><span data-l="de">Die drei Regeln</span><span data-l="en">The three rules</span></h2>
+  <div class="panel-ink" style="padding:26px;margin-bottom:28px">
+    <h2 style="font-size:22px;margin:0 0 14px"><span data-l="de">Die drei Regeln</span><span data-l="en">The three rules</span></h2>
     <div style="display:flex;flex-direction:column;gap:14px">
       <div style="display:flex;gap:14px">
-        <span style="font-family:'Caprasimo',serif;color:var(--color-accent-400);font-size:20px;line-height:1.3">1</span>
+        <span class="display" style="color:var(--color-accent-400);font-size:20px;line-height:1.3">1</span>
         <div>
-          <p data-l="de" style="margin:0;font-size:15px;line-height:1.6;color:var(--on-ink-body)">Nur zertifizierte Sonnenfinsternisbrille nach <strong style="color:var(--color-bg)">ISO 12312-2</strong> verwenden. Vor Gebrauch gegen eine helle Lampe halten: Kratzer, Löcher oder Knicke bedeuten Ausschuss.</p>
-          <p data-l="en" style="margin:0;font-size:15px;line-height:1.6;color:var(--on-ink-body)">Use only certified eclipse glasses to <strong style="color:var(--color-bg)">ISO 12312-2</strong>. Hold them against a bright lamp first: scratches, pinholes or creases mean they go in the bin.</p>
+          <p data-l="de" class="prose-ink">Nur zertifizierte Sonnenfinsternisbrille nach <strong style="color:var(--color-bg)">ISO 12312-2</strong> verwenden. Vor Gebrauch gegen eine helle Lampe halten: Kratzer, Löcher oder Knicke bedeuten Ausschuss.</p>
+          <p data-l="en" class="prose-ink">Use only certified eclipse glasses to <strong style="color:var(--color-bg)">ISO 12312-2</strong>. Hold them against a bright lamp first: scratches, pinholes or creases mean they go in the bin.</p>
         </div>
       </div>
       <div style="display:flex;gap:14px">
-        <span style="font-family:'Caprasimo',serif;color:var(--color-accent-400);font-size:20px;line-height:1.3">2</span>
+        <span class="display" style="color:var(--color-accent-400);font-size:20px;line-height:1.3">2</span>
         <div>
-          <p data-l="de" style="margin:0;font-size:15px;line-height:1.6;color:var(--on-ink-body)">Niemals durch Fernglas, Kamera oder Teleskop schauen, solange die Brille das einzige Filter ist. Die Optik bündelt das Licht und zerstört den Filter — und die Netzhaut — in Sekundenbruchteilen. Optiken brauchen einen <strong style="color:var(--color-bg)">Objektivfilter vor der Linse</strong>.</p>
-          <p data-l="en" style="margin:0;font-size:15px;line-height:1.6;color:var(--on-ink-body)">Never look through binoculars, a camera or a telescope while the glasses are the only filter. The optics concentrate the light and destroy the filter — and the retina — in fractions of a second. Optics need a <strong style="color:var(--color-bg)">filter in front of the objective</strong>.</p>
+          <p data-l="de" class="prose-ink">Niemals durch Fernglas, Kamera oder Teleskop schauen, solange die Brille das einzige Filter ist. Die Optik bündelt das Licht und zerstört den Filter — und die Netzhaut — in Sekundenbruchteilen. Optiken brauchen einen <strong style="color:var(--color-bg)">Objektivfilter vor der Linse</strong>.</p>
+          <p data-l="en" class="prose-ink">Never look through binoculars, a camera or a telescope while the glasses are the only filter. The optics concentrate the light and destroy the filter — and the retina — in fractions of a second. Optics need a <strong style="color:var(--color-bg)">filter in front of the objective</strong>.</p>
         </div>
       </div>
       <div style="display:flex;gap:14px">
-        <span style="font-family:'Caprasimo',serif;color:var(--color-accent-400);font-size:20px;line-height:1.3">3</span>
+        <span class="display" style="color:var(--color-accent-400);font-size:20px;line-height:1.3">3</span>
         <div>
-          <p data-l="de" style="margin:0;font-size:15px;line-height:1.6;color:var(--on-ink-body)">Die tief stehende, rot gefärbte Sonne wirkt harmlos, ist es aber nicht. Blendungsfreiheit ist kein Sicherheitssignal: die schädigende Infrarot- und UV-Strahlung spüren Sie nicht.</p>
-          <p data-l="en" style="margin:0;font-size:15px;line-height:1.6;color:var(--on-ink-body)">The low, reddened Sun looks harmless but is not. Absence of glare is no safety signal: you cannot feel the damaging infrared and ultraviolet.</p>
+          <p data-l="de" class="prose-ink">Die tief stehende, rot gefärbte Sonne wirkt harmlos, ist es aber nicht. Blendungsfreiheit ist kein Sicherheitssignal: die schädigende Infrarot- und UV-Strahlung spüren Sie nicht.</p>
+          <p data-l="en" class="prose-ink">The low, reddened Sun looks harmless but is not. Absence of glare is no safety signal: you cannot feel the damaging infrared and ultraviolet.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:26px;margin:0 0 12px"><span data-l="de">Was nicht funktioniert</span><span data-l="en">What does not work</span></h2>
+  <h2><span data-l="de">Was nicht funktioniert</span><span data-l="en">What does not work</span></h2>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:32px">
-    <div style="background:var(--color-surface);border-radius:18px;padding:16px 18px;font-size:14px;line-height:1.5"><span data-l="de">Sonnenbrillen, auch mehrere übereinander</span><span data-l="en">Sunglasses, even stacked</span></div>
-    <div style="background:var(--color-surface);border-radius:18px;padding:16px 18px;font-size:14px;line-height:1.5"><span data-l="de">Rußgeschwärztes Glas, CDs, DVDs</span><span data-l="en">Smoked glass, CDs, DVDs</span></div>
-    <div style="background:var(--color-surface);border-radius:18px;padding:16px 18px;font-size:14px;line-height:1.5"><span data-l="de">Belichteter Film, Rettungsdecke, Folien</span><span data-l="en">Exposed film, emergency blankets, foil</span></div>
-    <div style="background:var(--color-surface);border-radius:18px;padding:16px 18px;font-size:14px;line-height:1.5"><span data-l="de">Schweißerglas unter Schutzstufe 14</span><span data-l="en">Welding glass below shade 14</span></div>
-    <div style="background:var(--color-surface);border-radius:18px;padding:16px 18px;font-size:14px;line-height:1.5"><span data-l="de">Blick über eine Wasserspiegelung</span><span data-l="en">Looking via a water reflection</span></div>
-    <div style="background:var(--color-surface);border-radius:18px;padding:16px 18px;font-size:14px;line-height:1.5"><span data-l="de">Das Smartphone-Display als „Filter“</span><span data-l="en">A phone screen as a "filter"</span></div>
+    <div class="tile" style="padding:16px 18px;font-size:14px;line-height:1.5"><span data-l="de">Sonnenbrillen, auch mehrere übereinander</span><span data-l="en">Sunglasses, even stacked</span></div>
+    <div class="tile" style="padding:16px 18px;font-size:14px;line-height:1.5"><span data-l="de">Rußgeschwärztes Glas, CDs, DVDs</span><span data-l="en">Smoked glass, CDs, DVDs</span></div>
+    <div class="tile" style="padding:16px 18px;font-size:14px;line-height:1.5"><span data-l="de">Belichteter Film, Rettungsdecke, Folien</span><span data-l="en">Exposed film, emergency blankets, foil</span></div>
+    <div class="tile" style="padding:16px 18px;font-size:14px;line-height:1.5"><span data-l="de">Schweißerglas unter Schutzstufe 14</span><span data-l="en">Welding glass below shade 14</span></div>
+    <div class="tile" style="padding:16px 18px;font-size:14px;line-height:1.5"><span data-l="de">Blick über eine Wasserspiegelung</span><span data-l="en">Looking via a water reflection</span></div>
+    <div class="tile" style="padding:16px 18px;font-size:14px;line-height:1.5"><span data-l="de">Das Smartphone-Display als „Filter“</span><span data-l="en">A phone screen as a "filter"</span></div>
   </div>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:26px;margin:0 0 12px"><span data-l="de">Ohne Brille geht das</span><span data-l="en">This works without glasses</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Die <strong>Projektion</strong> ist die sicherste Methode und für Gruppen die beste: Ein Loch von etwa 2 mm in einem Stück Karton wirft ein Bild der Sichel auf eine helle Fläche im Schatten. Ein Küchensieb oder das Blätterdach eines Baums erzeugt hunderte solcher Bilder gleichzeitig.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px"><strong>Projection</strong> is the safest method and the best one for groups: a hole of about 2 mm in a piece of card throws an image of the crescent onto a light surface in the shade. A kitchen sieve or a tree canopy makes hundreds of them at once.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Für Kinder gilt: Brillen sitzen auf kleinen Gesichtern oft schlecht. Projektion ist hier nicht der Kompromiss, sondern die bessere Wahl — und man sieht die Sichelform deutlicher als durch die Brille.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">For children: glasses sit badly on small faces. Projection is not the compromise here but the better choice — and the crescent shape reads more clearly than through a filter.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0">Ebenfalls sehenswert und völlig ungefährlich: die Umgebung. Bei über 80 % Bedeckung wird das Licht metallisch-fahl, Schatten werden schärfer, die Temperatur fällt spürbar. Schauen Sie zwischendurch weg von der Sonne.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0">Also worth watching and entirely safe: your surroundings. Above 80 per cent the light turns pale and metallic, shadows sharpen, the temperature drops. Look away from the Sun now and then.</p>
+  <h2><span data-l="de">Ohne Brille geht das</span><span data-l="en">This works without glasses</span></h2>
+  <p data-l="de" class="prose">Die <strong>Projektion</strong> ist die sicherste Methode und für Gruppen die beste: Ein Loch von etwa 2 mm in einem Stück Karton wirft ein Bild der Sichel auf eine helle Fläche im Schatten. Ein Küchensieb oder das Blätterdach eines Baums erzeugt hunderte solcher Bilder gleichzeitig.</p>
+  <p data-l="en" class="prose"><strong>Projection</strong> is the safest method and the best one for groups: a hole of about 2 mm in a piece of card throws an image of the crescent onto a light surface in the shade. A kitchen sieve or a tree canopy makes hundreds of them at once.</p>
+  <p data-l="de" class="prose">Für Kinder gilt: Brillen sitzen auf kleinen Gesichtern oft schlecht. Projektion ist hier nicht der Kompromiss, sondern die bessere Wahl — und man sieht die Sichelform deutlicher als durch die Brille.</p>
+  <p data-l="en" class="prose">For children: glasses sit badly on small faces. Projection is not the compromise here but the better choice — and the crescent shape reads more clearly than through a filter.</p>
+  <p data-l="de" class="prose-flush">Ebenfalls sehenswert und völlig ungefährlich: die Umgebung. Bei über 80 % Bedeckung wird das Licht metallisch-fahl, Schatten werden schärfer, die Temperatur fällt spürbar. Schauen Sie zwischendurch weg von der Sonne.</p>
+  <p data-l="en" class="prose-flush">Also worth watching and entirely safe: your surroundings. Above 80 per cent the light turns pale and metallic, shadows sharpen, the temperature drops. Look away from the Sun now and then.</p>
 </div>
 </sc-if>
 
 <!-- ══ FAQ ══ -->
 <sc-if value="{{ isFaq }}" hint-placeholder-val="{{ false }}">
-<div style="max-width:780px;margin:0 auto;padding:36px 20px 64px">
-  <h1 style="font-family:'Caprasimo',serif;font-size:clamp(30px,5vw,44px);margin:0 0 24px;letter-spacing:-0.02em"><span data-l="de">Häufige Fragen</span><span data-l="en">Frequently Asked</span></h1>
+<div class="page" style="--wrap:780px">
+  <h1 style="font-size:clamp(30px,5vw,44px);margin:0 0 24px;letter-spacing:-0.02em"><span data-l="de">Häufige Fragen</span><span data-l="en">Frequently Asked</span></h1>
   <div style="display:flex;flex-direction:column;gap:2px">
-    <div style="padding:20px 0;border-bottom:1px solid var(--line-soft)">
-      <h3 style="font-family:'Caprasimo',serif;font-size:19px;margin:0 0 8px"><span data-l="de">Wird es in Deutschland dunkel?</span><span data-l="en">Will it get dark in Germany?</span></h3>
-      <p data-l="de" style="font-size:15px;line-height:1.6;color:var(--text-body);margin:0">Nicht so, wie viele erwarten. Selbst bei 91 % Bedeckung bleibt die Sonne hell genug für Dämmerungslicht. Weil das Ereignis ohnehin in die Abenddämmerung fällt, überlagern sich beide Effekte — es wirkt, als würde der Abend plötzlich schneller vergehen.</p>
-      <p data-l="en" style="font-size:15px;line-height:1.6;color:var(--text-body);margin:0">Not the way most people expect. Even at 91 per cent the Sun stays bright enough for twilight-level light. Since the event falls into dusk anyway, both effects overlap — it feels as if the evening suddenly runs faster.</p>
+    <div class="row-lg">
+      <h2 style="font-size:19px"><span data-l="de">Wird es in Deutschland dunkel?</span><span data-l="en">Will it get dark in Germany?</span></h2>
+      <p data-l="de" class="prose-flush">Nicht so, wie viele erwarten. Selbst bei 91 % Bedeckung bleibt die Sonne hell genug für Dämmerungslicht. Weil das Ereignis ohnehin in die Abenddämmerung fällt, überlagern sich beide Effekte — es wirkt, als würde der Abend plötzlich schneller vergehen.</p>
+      <p data-l="en" class="prose-flush">Not the way most people expect. Even at 91 per cent the Sun stays bright enough for twilight-level light. Since the event falls into dusk anyway, both effects overlap — it feels as if the evening suddenly runs faster.</p>
     </div>
-    <div style="padding:20px 0;border-bottom:1px solid var(--line-soft)">
-      <h3 style="font-family:'Caprasimo',serif;font-size:19px;margin:0 0 8px"><span data-l="de">Kann ich die Finsternis vollständig verfolgen?</span><span data-l="en">Can I follow the eclipse to the end?</span></h3>
-      <p data-l="de" style="font-size:15px;line-height:1.6;color:var(--text-body);margin:0">In den meisten Teilen Deutschlands nicht. Die Sonne geht unter, bevor der letzte Kontakt erreicht ist. Der genaue Anteil hängt vom Ort ab — die Seite „Zeiten &amp; Orte“ zeigt ihn als schraffierten Bereich in der Verlaufsgrafik.</p>
-      <p data-l="en" style="font-size:15px;line-height:1.6;color:var(--text-body);margin:0">In most of Germany, no. The Sun sets before last contact. How much you lose depends on your location — the "Times &amp; Places" page shows it as the hatched area of the curve.</p>
+    <div class="row-lg">
+      <h2 style="font-size:19px"><span data-l="de">Kann ich die Finsternis vollständig verfolgen?</span><span data-l="en">Can I follow the eclipse to the end?</span></h2>
+      <p data-l="de" class="prose-flush">In den meisten Teilen Deutschlands nicht. Die Sonne geht unter, bevor der letzte Kontakt erreicht ist. Der genaue Anteil hängt vom Ort ab — die Seite „Zeiten &amp; Orte“ zeigt ihn als schraffierten Bereich in der Verlaufsgrafik.</p>
+      <p data-l="en" class="prose-flush">In most of Germany, no. The Sun sets before last contact. How much you lose depends on your location — the "Times &amp; Places" page shows it as the hatched area of the curve.</p>
     </div>
-    <div style="padding:20px 0;border-bottom:1px solid var(--line-soft)">
-      <h3 style="font-family:'Caprasimo',serif;font-size:19px;margin:0 0 8px"><span data-l="de">Lohnt sich die Reise nach Spanien oder Island?</span><span data-l="en">Is the trip to Spain or Iceland worth it?</span></h3>
-      <p data-l="de" style="font-size:15px;line-height:1.6;color:var(--text-body);margin:0">Der Unterschied zwischen 91 % und 100 % ist kein gradueller, sondern ein kategorischer. Nur in der Totalitätszone erscheint die Korona, fällt echte Dunkelheit ein und darf man kurz ohne Filter schauen. Wer die Möglichkeit hat, sollte reisen — die Totalitätszone verläuft über Nordspanien und Island.</p>
-      <p data-l="en" style="font-size:15px;line-height:1.6;color:var(--text-body);margin:0">The difference between 91 and 100 per cent is categorical, not gradual. Only inside the path of totality does the corona appear, does real darkness fall, and may you briefly look unfiltered. If you can travel, do — the path crosses northern Spain and Iceland.</p>
+    <div class="row-lg">
+      <h2 style="font-size:19px"><span data-l="de">Lohnt sich die Reise nach Spanien oder Island?</span><span data-l="en">Is the trip to Spain or Iceland worth it?</span></h2>
+      <p data-l="de" class="prose-flush">Der Unterschied zwischen 91 % und 100 % ist kein gradueller, sondern ein kategorischer. Nur in der Totalitätszone erscheint die Korona, fällt echte Dunkelheit ein und darf man kurz ohne Filter schauen. Wer die Möglichkeit hat, sollte reisen — die Totalitätszone verläuft über Nordspanien und Island.</p>
+      <p data-l="en" class="prose-flush">The difference between 91 and 100 per cent is categorical, not gradual. Only inside the path of totality does the corona appear, does real darkness fall, and may you briefly look unfiltered. If you can travel, do — the path crosses northern Spain and Iceland.</p>
     </div>
-    <div style="padding:20px 0;border-bottom:1px solid var(--line-soft)">
-      <h3 style="font-family:'Caprasimo',serif;font-size:19px;margin:0 0 8px"><span data-l="de">Wie genau sind die Zeiten hier?</span><span data-l="en">How accurate are these times?</span></h3>
-      <p data-l="de" style="font-size:15px;line-height:1.6;color:var(--text-body);margin:0">Die Kontaktzeiten werden aus den polynomialen Besselschen Elementen des NASA Five Millennium Canon berechnet und sind auf wenige Sekunden genau. Nicht berücksichtigt ist das Mondrandprofil, das bei einer partiellen Finsternis ohnehin kaum ins Gewicht fällt.</p>
-      <p data-l="en" style="font-size:15px;line-height:1.6;color:var(--text-body);margin:0">Contact times are computed from the polynomial Besselian elements of the NASA Five Millennium Canon and are accurate to a few seconds. The lunar limb profile is not modelled, which barely matters for a partial eclipse.</p>
+    <div class="row-lg">
+      <h2 style="font-size:19px"><span data-l="de">Wie genau sind die Zeiten hier?</span><span data-l="en">How accurate are these times?</span></h2>
+      <p data-l="de" class="prose-flush">Die Kontaktzeiten werden aus den polynomialen Besselschen Elementen des NASA Five Millennium Canon berechnet und sind auf wenige Sekunden genau. Nicht berücksichtigt ist das Mondrandprofil, das bei einer partiellen Finsternis ohnehin kaum ins Gewicht fällt.</p>
+      <p data-l="en" class="prose-flush">Contact times are computed from the polynomial Besselian elements of the NASA Five Millennium Canon and are accurate to a few seconds. The lunar limb profile is not modelled, which barely matters for a partial eclipse.</p>
     </div>
-    <div style="padding:20px 0;border-bottom:1px solid var(--line-soft)">
-      <h3 style="font-family:'Caprasimo',serif;font-size:19px;margin:0 0 8px"><span data-l="de">Woher kommen die Horizontprofile?</span><span data-l="en">Where do the horizon profiles come from?</span></h3>
-      <p data-l="de" style="font-size:15px;line-height:1.6;color:var(--text-body);margin:0">Aus Copernicus GLO-30 (ESA), einem Oberflächenmodell mit 30 m Rasterweite. Der Server schickt einen Strahl je Viertelgrad Azimut bis 40 km hinaus und nimmt den größten Erhebungswinkel — mit Erdkrümmung und Refraktion. GLO-30 enthält Bewuchs: ein Waldrand liegt darin rund 17 m über der offenen Fläche daneben. Was fehlt, sind Gebäude und alles unterhalb der Rasterweite, also die einzelne Hecke am Feldrand. Beides verdeckt zusätzlich — deshalb ist ein „frei“ hier immer eine Obergrenze. Ein DOM1 der Länder wäre genauer, liegt aber in sechzehn Formaten und Lizenzen vor.</p>
-      <p data-l="en" style="font-size:15px;line-height:1.6;color:var(--text-body);margin:0">From Copernicus GLO-30 (ESA), a surface model at 30 m resolution. The server casts one ray per quarter degree of azimuth out to 40 km and takes the largest elevation angle, accounting for Earth curvature and refraction. GLO-30 includes vegetation: a forest edge sits about 17 m above the open ground beside it. What it misses are buildings and anything below the grid size — the single hedge at the field boundary. Both add obstruction, which is why a “clear” here is always an upper bound.</p>
+    <div class="row-lg">
+      <h2 style="font-size:19px"><span data-l="de">Woher kommen die Horizontprofile?</span><span data-l="en">Where do the horizon profiles come from?</span></h2>
+      <p data-l="de" class="prose-flush">Aus Copernicus GLO-30 (ESA), einem Oberflächenmodell mit 30 m Rasterweite. Der Server schickt einen Strahl je Viertelgrad Azimut bis 40 km hinaus und nimmt den größten Erhebungswinkel — mit Erdkrümmung und Refraktion. GLO-30 enthält Bewuchs: ein Waldrand liegt darin rund 17 m über der offenen Fläche daneben. Was fehlt, sind Gebäude und alles unterhalb der Rasterweite, also die einzelne Hecke am Feldrand. Beides verdeckt zusätzlich — deshalb ist ein „frei“ hier immer eine Obergrenze. Ein DOM1 der Länder wäre genauer, liegt aber in sechzehn Formaten und Lizenzen vor.</p>
+      <p data-l="en" class="prose-flush">From Copernicus GLO-30 (ESA), a surface model at 30 m resolution. The server casts one ray per quarter degree of azimuth out to 40 km and takes the largest elevation angle, accounting for Earth curvature and refraction. GLO-30 includes vegetation: a forest edge sits about 17 m above the open ground beside it. What it misses are buildings and anything below the grid size — the single hedge at the field boundary. Both add obstruction, which is why a “clear” here is always an upper bound.</p>
     </div>
-    <div style="padding:20px 0;border-bottom:1px solid var(--line-soft)">
-      <h3 style="font-family:'Caprasimo',serif;font-size:19px;margin:0 0 8px"><span data-l="de">Wann ist die nächste Finsternis bei uns?</span><span data-l="en">When is the next one here?</span></h3>
-      <p data-l="de" style="font-size:15px;line-height:1.6;color:var(--text-body);margin:0">Schon am 2. August 2027 gibt es eine weitere tiefe partielle Finsternis über Deutschland, diesmal mittags. Die nächste totale Finsternis auf deutschem Boden folgt am 3. September 2081 über dem Bodenseeraum.</p>
-      <p data-l="en" style="font-size:15px;line-height:1.6;color:var(--text-body);margin:0">Another deep partial eclipse follows over Germany on 2 August 2027, this time around midday. The next totality on German soil comes on 3 September 2081, over the Lake Constance region.</p>
+    <div class="row-lg">
+      <h2 style="font-size:19px"><span data-l="de">Wann ist die nächste Finsternis bei uns?</span><span data-l="en">When is the next one here?</span></h2>
+      <p data-l="de" class="prose-flush">Schon am 2. August 2027 gibt es eine weitere tiefe partielle Finsternis über Deutschland, diesmal mittags. Die nächste totale Finsternis auf deutschem Boden folgt am 3. September 2081 über dem Bodenseeraum.</p>
+      <p data-l="en" class="prose-flush">Another deep partial eclipse follows over Germany on 2 August 2027, this time around midday. The next totality on German soil comes on 3 September 2081, over the Lake Constance region.</p>
     </div>
-    <div style="padding:20px 0;border-bottom:1px solid var(--line-soft)">
-      <h3 style="font-family:'Caprasimo',serif;font-size:19px;margin:0 0 8px"><span data-l="de">Sind meine Standortdaten sicher?</span><span data-l="en">Is my location data safe?</span></h3>
-      <p data-l="de" style="font-size:15px;line-height:1.6;color:var(--text-body);margin:0">Die Finsternisrechnung läuft vollständig im Browser. Ihre Koordinaten verlassen das Gerät nur, wenn Sie die Ortssuche oder ein Horizontprofil anfordern — und werden dabei nicht gespeichert.</p>
-      <p data-l="en" style="font-size:15px;line-height:1.6;color:var(--text-body);margin:0">The eclipse computation runs entirely in your browser. Your coordinates leave the device only when you request a place search or a horizon profile — and are not stored.</p>
+    <div class="row-lg">
+      <h2 style="font-size:19px"><span data-l="de">Sind meine Standortdaten sicher?</span><span data-l="en">Is my location data safe?</span></h2>
+      <p data-l="de" class="prose-flush">Die Finsternisrechnung läuft vollständig im Browser. Ihre Koordinaten verlassen das Gerät nur, wenn Sie die Ortssuche oder ein Horizontprofil anfordern — und werden dabei nicht gespeichert.</p>
+      <p data-l="en" class="prose-flush">The eclipse computation runs entirely in your browser. Your coordinates leave the device only when you request a place search or a horizon profile — and are not stored.</p>
     </div>
   </div>
 </div>
@@ -776,11 +807,11 @@
 
 <!-- ══ IMPRESSUM ══ -->
 <sc-if value="{{ isImpressum }}" hint-placeholder-val="{{ false }}">
-<div style="max-width:720px;margin:0 auto;padding:36px 20px 64px">
-  <h1 style="font-family:'Caprasimo',serif;font-size:clamp(30px,5vw,44px);margin:0 0 24px;letter-spacing:-0.02em"><span data-l="de">Impressum</span><span data-l="en">Legal Notice</span></h1>
+<div class="page" style="--wrap:720px;--h2:22px">
+  <h1 style="font-size:clamp(30px,5vw,44px);margin:0 0 24px;letter-spacing:-0.02em"><span data-l="de">Impressum</span><span data-l="en">Legal Notice</span></h1>
 
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Diensteanbieter</span><span data-l="en">Service provider</span></h2>
+  <h2><span data-l="de">Diensteanbieter</span><span data-l="en">Service provider</span></h2>
   <p style="font-size:15px;line-height:1.9;margin:0 0 28px">
     Johannes Göpel<br>
     Heddernheimer Landstraße 86<br>
@@ -788,30 +819,30 @@
     <span data-l="de">Deutschland</span><span data-l="en">Germany</span>
   </p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Kontakt</span><span data-l="en">Contact</span></h2>
+  <h2><span data-l="de">Kontakt</span><span data-l="en">Contact</span></h2>
   <p style="font-size:15px;line-height:1.9;margin:0 0 28px">
     <span data-l="de">E-Mail:</span><span data-l="en">E-mail:</span>
     <a href="mailto:info@johannes-goepel.de">info@johannes-goepel.de</a>
   </p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Redaktionell verantwortlich</span><span data-l="en">Editorially responsible</span></h2>
+  <h2><span data-l="de">Redaktionell verantwortlich</span><span data-l="en">Editorially responsible</span></h2>
   <p style="font-size:15px;line-height:1.9;margin:0 0 28px">
     Johannes Göpel, Heddernheimer Landstraße 86, 60439 Frankfurt am Main
   </p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Verbraucherstreitbeilegung</span><span data-l="en">Consumer dispute resolution</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen (§ 36 VSBG).</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">We are neither willing nor obliged to take part in dispute resolution proceedings before a consumer arbitration board (§ 36 VSBG).</p>
+  <h2><span data-l="de">Verbraucherstreitbeilegung</span><span data-l="en">Consumer dispute resolution</span></h2>
+  <p data-l="de" class="prose-end">Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen (§ 36 VSBG).</p>
+  <p data-l="en" class="prose-end">We are neither willing nor obliged to take part in dispute resolution proceedings before a consumer arbitration board (§ 36 VSBG).</p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Haftung für Inhalte</span><span data-l="en">Liability for content</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">Die astronomischen Angaben werden nach bestem Wissen berechnet, ersetzen aber keine eigene Prüfung vor Ort. Die Wolkenprognose ist eine Modellvorhersage und kann von der tatsächlichen Bewölkung abweichen. Für Augenschäden durch unsachgemäße Beobachtung wird keine Haftung übernommen — beachten Sie die <a href="#/sicherheit">Sicherheitshinweise</a>.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">The astronomical figures are computed to the best of our knowledge but do not replace checking conditions on site. The cloud forecast is a model prediction and may differ from the actual sky. No liability is accepted for eye damage from improper observation — please read the <a href="#/sicherheit">safety notes</a>.</p>
+  <h2><span data-l="de">Haftung für Inhalte</span><span data-l="en">Liability for content</span></h2>
+  <p data-l="de" class="prose-end">Die astronomischen Angaben werden nach bestem Wissen berechnet, ersetzen aber keine eigene Prüfung vor Ort. Die Wolkenprognose ist eine Modellvorhersage und kann von der tatsächlichen Bewölkung abweichen. Für Augenschäden durch unsachgemäße Beobachtung wird keine Haftung übernommen — beachten Sie die <a href="#/sicherheit">Sicherheitshinweise</a>.</p>
+  <p data-l="en" class="prose-end">The astronomical figures are computed to the best of our knowledge but do not replace checking conditions on site. The cloud forecast is a model prediction and may differ from the actual sky. No liability is accepted for eye damage from improper observation — please read the <a href="#/sicherheit">safety notes</a>.</p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Haftung für Links</span><span data-l="en">Liability for links</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">Für die Inhalte verlinkter externer Seiten sind deren Betreiber verantwortlich. Zum Zeitpunkt der Verlinkung waren keine Rechtsverstöße erkennbar; bei Bekanntwerden entfernen wir solche Links umgehend.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">The operators of linked external sites are responsible for their content. No infringements were apparent at the time of linking; should any become known, such links will be removed without delay.</p>
+  <h2><span data-l="de">Haftung für Links</span><span data-l="en">Liability for links</span></h2>
+  <p data-l="de" class="prose-end">Für die Inhalte verlinkter externer Seiten sind deren Betreiber verantwortlich. Zum Zeitpunkt der Verlinkung waren keine Rechtsverstöße erkennbar; bei Bekanntwerden entfernen wir solche Links umgehend.</p>
+  <p data-l="en" class="prose-end">The operators of linked external sites are responsible for their content. No infringements were apparent at the time of linking; should any become known, such links will be removed without delay.</p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Datenquellen und Lizenzen</span><span data-l="en">Data sources and licences</span></h2>
+  <h2><span data-l="de">Datenquellen und Lizenzen</span><span data-l="en">Data sources and licences</span></h2>
   <ul style="font-size:15px;line-height:1.7;color:var(--text-body);margin:0 0 12px;padding-left:20px">
     <li><span data-l="de">Besselsche Elemente: NASA/GSFC Five Millennium Canon of Solar Eclipses, Fred Espenak</span><span data-l="en">Besselian elements: NASA/GSFC Five Millennium Canon of Solar Eclipses, Fred Espenak</span></li>
     <li><span data-l="de">Kartendaten und Kacheln: OpenStreetMap-Mitwirkende (ODbL)</span><span data-l="en">Map data and tiles: OpenStreetMap contributors (ODbL)</span></li>
@@ -822,9 +853,9 @@
     <li><span data-l="de">Wolkenklimatologie: CM SAF / EUMETSAT</span><span data-l="en">Cloud climatology: CM SAF / EUMETSAT</span></li>
   </ul>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Datenschutz</span><span data-l="en">Privacy</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0">Wie diese Seite mit personenbezogenen Daten umgeht, steht in der <a href="#/datenschutz">Datenschutzerklärung</a>.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0">How this site handles personal data is set out in the <a href="#/datenschutz">privacy policy</a>.</p>
+  <h2><span data-l="de">Datenschutz</span><span data-l="en">Privacy</span></h2>
+  <p data-l="de" class="prose-flush">Wie diese Seite mit personenbezogenen Daten umgeht, steht in der <a href="#/datenschutz">Datenschutzerklärung</a>.</p>
+  <p data-l="en" class="prose-flush">How this site handles personal data is set out in the <a href="#/datenschutz">privacy policy</a>.</p>
 </div>
 </sc-if>
 
@@ -838,66 +869,66 @@
      Rundung der Koordinaten —, gehört der betroffene Abschnitt mit geändert und
      das Datum unter „Stand" nachgezogen.                                     -->
 <sc-if value="{{ isDatenschutz }}" hint-placeholder-val="{{ false }}">
-<div style="max-width:720px;margin:0 auto;padding:36px 20px 64px">
-  <h1 style="font-family:'Caprasimo',serif;font-size:clamp(30px,5vw,44px);margin:0 0 24px;letter-spacing:-0.02em"><span data-l="de">Datenschutzerklärung</span><span data-l="en">Privacy Policy</span></h1>
+<div class="page" style="--wrap:720px;--h2:22px">
+  <h1 style="font-size:clamp(30px,5vw,44px);margin:0 0 24px;letter-spacing:-0.02em"><span data-l="de">Datenschutzerklärung</span><span data-l="en">Privacy Policy</span></h1>
 
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">1. Verantwortlicher</span><span data-l="en">1. Controller</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Verantwortlich im Sinne von Art. 4 Nr. 7 DSGVO ist Johannes Göpel, Heddernheimer Landstraße 86, 60439 Frankfurt am Main, <a href="mailto:info@johannes-goepel.de">info@johannes-goepel.de</a>.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">Ein Datenschutzbeauftragter ist nicht bestellt.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">The controller within the meaning of Art. 4 (7) GDPR is Johannes Göpel, Heddernheimer Landstraße 86, 60439 Frankfurt am Main, Germany, <a href="mailto:info@johannes-goepel.de">info@johannes-goepel.de</a>.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">No data protection officer has been appointed.</p>
+  <h2><span data-l="de">1. Verantwortlicher</span><span data-l="en">1. Controller</span></h2>
+  <p data-l="de" class="prose">Verantwortlich im Sinne von Art. 4 Nr. 7 DSGVO ist Johannes Göpel, Heddernheimer Landstraße 86, 60439 Frankfurt am Main, <a href="mailto:info@johannes-goepel.de">info@johannes-goepel.de</a>.</p>
+  <p data-l="de" class="prose-end">Ein Datenschutzbeauftragter ist nicht bestellt.</p>
+  <p data-l="en" class="prose">The controller within the meaning of Art. 4 (7) GDPR is Johannes Göpel, Heddernheimer Landstraße 86, 60439 Frankfurt am Main, Germany, <a href="mailto:info@johannes-goepel.de">info@johannes-goepel.de</a>.</p>
+  <p data-l="en" class="prose-end">No data protection officer has been appointed.</p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">2. Hosting und Server-Protokolle</span><span data-l="en">2. Hosting and server logs</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Beim Abruf der Seite verarbeitet der Server technisch notwendige Verbindungsdaten: Zeitpunkt, angeforderter Pfad, Statuscode, übertragene Datenmenge, Referrer und Browserkennung. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO — das berechtigte Interesse am sicheren und störungsfreien Betrieb.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Zwei Dinge werden dabei bewusst nicht vollständig festgehalten. Die IP-Adresse wird vor dem Schreiben gekürzt — bei IPv4 auf das Netz aus 24 Bit, bei IPv6 auf 48 Bit —, sodass der einzelne Anschluss nicht mehr erkennbar ist. Und die Abfrageparameter werden aus der protokollierten Adresse entfernt: der Suchbegriff aus der Ortssuche und die Koordinaten der Wolkenabfrage erscheinen im Protokoll nicht. Übrig bleibt, was zur Fehlersuche taugt, nicht was zur Person führt.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">When the site is accessed, the server processes technically necessary connection data: time, the requested path, status code, volume transferred, referrer and browser identification. The legal basis is Art. 6 (1)(f) GDPR — the legitimate interest in secure and trouble-free operation.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Two things are deliberately not recorded in full. The IP address is truncated before being written — to the 24-bit network for IPv4, to 48 bits for IPv6 — so that the individual connection is no longer identifiable. And query parameters are stripped from the logged address: the search term from the place search and the coordinates of the cloud request do not appear in the log. What remains is what serves troubleshooting, not what leads to a person.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Die Seite läuft bei der Hetzner Online GmbH, Industriestraße 25, 91710 Gunzenhausen, in einem Rechenzentrum in Nürnberg. Die Daten verlassen Deutschland dabei nicht. Mit Hetzner besteht ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">Eine feste Speicherfrist gibt es nicht: Die Protokolle rotieren nach Größe. Je Dienst werden drei Dateien zu je 10 MB vorgehalten; ist die jüngste voll, wird die älteste verworfen. Da weder die vollständige IP-Adresse noch die Abfrageparameter geschrieben werden, ist der Personenbezug dieser Dateien stark eingeschränkt.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">The site runs at Hetzner Online GmbH, Industriestraße 25, 91710 Gunzenhausen, Germany, in a data centre in Nuremberg. The data does not leave Germany. A data processing agreement under Art. 28 GDPR is in place with Hetzner.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">There is no fixed retention period: the logs rotate by size. Three files of 10 MB each are kept per service; once the newest is full, the oldest is discarded. Since neither the full IP address nor the query parameters are written, any link to a person is severely limited.</p>
+  <h2><span data-l="de">2. Hosting und Server-Protokolle</span><span data-l="en">2. Hosting and server logs</span></h2>
+  <p data-l="de" class="prose">Beim Abruf der Seite verarbeitet der Server technisch notwendige Verbindungsdaten: Zeitpunkt, angeforderter Pfad, Statuscode, übertragene Datenmenge, Referrer und Browserkennung. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO — das berechtigte Interesse am sicheren und störungsfreien Betrieb.</p>
+  <p data-l="de" class="prose">Zwei Dinge werden dabei bewusst nicht vollständig festgehalten. Die IP-Adresse wird vor dem Schreiben gekürzt — bei IPv4 auf das Netz aus 24 Bit, bei IPv6 auf 48 Bit —, sodass der einzelne Anschluss nicht mehr erkennbar ist. Und die Abfrageparameter werden aus der protokollierten Adresse entfernt: der Suchbegriff aus der Ortssuche und die Koordinaten der Wolkenabfrage erscheinen im Protokoll nicht. Übrig bleibt, was zur Fehlersuche taugt, nicht was zur Person führt.</p>
+  <p data-l="en" class="prose">When the site is accessed, the server processes technically necessary connection data: time, the requested path, status code, volume transferred, referrer and browser identification. The legal basis is Art. 6 (1)(f) GDPR — the legitimate interest in secure and trouble-free operation.</p>
+  <p data-l="en" class="prose">Two things are deliberately not recorded in full. The IP address is truncated before being written — to the 24-bit network for IPv4, to 48 bits for IPv6 — so that the individual connection is no longer identifiable. And query parameters are stripped from the logged address: the search term from the place search and the coordinates of the cloud request do not appear in the log. What remains is what serves troubleshooting, not what leads to a person.</p>
+  <p data-l="de" class="prose">Die Seite läuft bei der Hetzner Online GmbH, Industriestraße 25, 91710 Gunzenhausen, in einem Rechenzentrum in Nürnberg. Die Daten verlassen Deutschland dabei nicht. Mit Hetzner besteht ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO.</p>
+  <p data-l="de" class="prose-end">Eine feste Speicherfrist gibt es nicht: Die Protokolle rotieren nach Größe. Je Dienst werden drei Dateien zu je 10 MB vorgehalten; ist die jüngste voll, wird die älteste verworfen. Da weder die vollständige IP-Adresse noch die Abfrageparameter geschrieben werden, ist der Personenbezug dieser Dateien stark eingeschränkt.</p>
+  <p data-l="en" class="prose">The site runs at Hetzner Online GmbH, Industriestraße 25, 91710 Gunzenhausen, Germany, in a data centre in Nuremberg. The data does not leave Germany. A data processing agreement under Art. 28 GDPR is in place with Hetzner.</p>
+  <p data-l="en" class="prose-end">There is no fixed retention period: the logs rotate by size. Three files of 10 MB each are kept per service; once the newest is full, the oldest is discarded. Since neither the full IP address nor the query parameters are written, any link to a person is severely limited.</p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">3. Kartenkacheln von OpenStreetMap</span><span data-l="en">3. Map tiles from OpenStreetMap</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Die Karte lädt ihre Kacheln von <code>tile.openstreetmap.org</code>. Das ist der einzige fremde Server, mit dem Ihr Browser auf dieser Seite spricht — Programmbibliotheken, Schriften, Ortssuche und Wolkendaten kommen alle vom eigenen Server.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Dabei erfährt die OpenStreetMap Foundation Ihre IP-Adresse und, aus den angeforderten Kachelnummern, den betrachteten Kartenausschnitt — also ungefähr den Ort, für den Sie sich interessieren. Auf einer Seite, deren Kerninteraktion die Eingabe eines Standorts ist, ist das die aussagekräftigste Spur nach außen. Übermittelt wird außerdem die Herkunft dieser Seite als Referrer: die Kachelrichtlinie verlangt das ausdrücklich, weshalb die Referrer-Policy <code>strict-origin-when-cross-origin</code> lautet und nicht <code>no-referrer</code>. Der aufgerufene Pfad wird dabei nicht übertragen.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO; das berechtigte Interesse ist die Darstellung der Karte, ohne die die Seite ihren Zweck nicht erfüllt.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">The map loads its tiles from <code>tile.openstreetmap.org</code>. This is the only external server your browser contacts on this site — libraries, fonts, place search and cloud data all come from our own server.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">In doing so, the OpenStreetMap Foundation learns your IP address and, from the requested tile numbers, the map section you are viewing — that is, roughly the place you are interested in. On a site whose core interaction is entering a location, this is the most telling trace leaving it. The origin of this site is also transmitted as the referrer: the tile usage policy expressly requires this, which is why the referrer policy is <code>strict-origin-when-cross-origin</code> and not <code>no-referrer</code>. The path you are on is not transmitted.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">The legal basis is Art. 6 (1)(f) GDPR; the legitimate interest is displaying the map, without which the site cannot serve its purpose.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">Die OpenStreetMap Foundation hat ihren Sitz im Vereinigten Königreich. Der Abruf der Kacheln ist damit eine Übermittlung in ein Drittland; für das Vereinigte Königreich hat die Europäische Kommission einen Angemessenheitsbeschluss nach Art. 45 DSGVO gefasst. Wird der Kachelanbieter gewechselt, ändert sich dieser Abschnitt mit.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">The OpenStreetMap Foundation is based in the United Kingdom. Fetching the tiles is therefore a transfer to a third country; for the United Kingdom the European Commission has adopted an adequacy decision under Art. 45 GDPR. Should the tile provider change, this section changes with it.</p>
+  <h2><span data-l="de">3. Kartenkacheln von OpenStreetMap</span><span data-l="en">3. Map tiles from OpenStreetMap</span></h2>
+  <p data-l="de" class="prose">Die Karte lädt ihre Kacheln von <code>tile.openstreetmap.org</code>. Das ist der einzige fremde Server, mit dem Ihr Browser auf dieser Seite spricht — Programmbibliotheken, Schriften, Ortssuche und Wolkendaten kommen alle vom eigenen Server.</p>
+  <p data-l="de" class="prose">Dabei erfährt die OpenStreetMap Foundation Ihre IP-Adresse und, aus den angeforderten Kachelnummern, den betrachteten Kartenausschnitt — also ungefähr den Ort, für den Sie sich interessieren. Auf einer Seite, deren Kerninteraktion die Eingabe eines Standorts ist, ist das die aussagekräftigste Spur nach außen. Übermittelt wird außerdem die Herkunft dieser Seite als Referrer: die Kachelrichtlinie verlangt das ausdrücklich, weshalb die Referrer-Policy <code>strict-origin-when-cross-origin</code> lautet und nicht <code>no-referrer</code>. Der aufgerufene Pfad wird dabei nicht übertragen.</p>
+  <p data-l="de" class="prose">Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO; das berechtigte Interesse ist die Darstellung der Karte, ohne die die Seite ihren Zweck nicht erfüllt.</p>
+  <p data-l="en" class="prose">The map loads its tiles from <code>tile.openstreetmap.org</code>. This is the only external server your browser contacts on this site — libraries, fonts, place search and cloud data all come from our own server.</p>
+  <p data-l="en" class="prose">In doing so, the OpenStreetMap Foundation learns your IP address and, from the requested tile numbers, the map section you are viewing — that is, roughly the place you are interested in. On a site whose core interaction is entering a location, this is the most telling trace leaving it. The origin of this site is also transmitted as the referrer: the tile usage policy expressly requires this, which is why the referrer policy is <code>strict-origin-when-cross-origin</code> and not <code>no-referrer</code>. The path you are on is not transmitted.</p>
+  <p data-l="en" class="prose">The legal basis is Art. 6 (1)(f) GDPR; the legitimate interest is displaying the map, without which the site cannot serve its purpose.</p>
+  <p data-l="de" class="prose-end">Die OpenStreetMap Foundation hat ihren Sitz im Vereinigten Königreich. Der Abruf der Kacheln ist damit eine Übermittlung in ein Drittland; für das Vereinigte Königreich hat die Europäische Kommission einen Angemessenheitsbeschluss nach Art. 45 DSGVO gefasst. Wird der Kachelanbieter gewechselt, ändert sich dieser Abschnitt mit.</p>
+  <p data-l="en" class="prose-end">The OpenStreetMap Foundation is based in the United Kingdom. Fetching the tiles is therefore a transfer to a third country; for the United Kingdom the European Commission has adopted an adequacy decision under Art. 45 GDPR. Should the tile provider change, this section changes with it.</p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">4. Ortssuche</span><span data-l="en">4. Place search</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">Was Sie in das Suchfeld tippen, wird an unseren eigenen Server geschickt und dort gegen ein lokal vorgehaltenes Ortsverzeichnis beantwortet. Es wird kein fremder Geocoding-Dienst befragt — jede Tastatureingabe würde sonst zu einem Dritten abfließen. Der Suchbegriff wird nicht protokolliert: er steht in den Abfrageparametern, und die werden nach Abschnitt 2 vor dem Schreiben entfernt. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">What you type into the search field is sent to our own server and answered there from a locally held place index. No external geocoding service is queried — otherwise every keystroke would flow to a third party. The search term is not logged: it sits in the query parameters, and those are stripped before writing, as described in section 2. The legal basis is Art. 6 (1)(f) GDPR.</p>
+  <h2><span data-l="de">4. Ortssuche</span><span data-l="en">4. Place search</span></h2>
+  <p data-l="de" class="prose-end">Was Sie in das Suchfeld tippen, wird an unseren eigenen Server geschickt und dort gegen ein lokal vorgehaltenes Ortsverzeichnis beantwortet. Es wird kein fremder Geocoding-Dienst befragt — jede Tastatureingabe würde sonst zu einem Dritten abfließen. Der Suchbegriff wird nicht protokolliert: er steht in den Abfrageparametern, und die werden nach Abschnitt 2 vor dem Schreiben entfernt. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO.</p>
+  <p data-l="en" class="prose-end">What you type into the search field is sent to our own server and answered there from a locally held place index. No external geocoding service is queried — otherwise every keystroke would flow to a third party. The search term is not logged: it sits in the query parameters, and those are stripped before writing, as described in section 2. The legal basis is Art. 6 (1)(f) GDPR.</p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">5. Standortermittlung und Wolkenprognose</span><span data-l="en">5. Location and cloud forecast</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Ihr Standort wird nur ermittelt, wenn Sie „Mein Standort" anklicken und Ihr Browser Sie um Erlaubnis gefragt hat. Ohne diesen Klick greift die Seite nicht auf die Standortdienste zu.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Für den gewählten Ort — ob eingegeben, angeklickt oder vom Gerät ermittelt — werden die Koordinaten an unseren Server übertragen, um die Wolkenprognose für diesen Punkt zu berechnen. Sie werden dabei schon im Browser auf drei Nachkommastellen gerundet, also auf rund 110 Meter. Das Wettermodell arbeitet auf einem Gitter von 2,2 Kilometern; eine genauere Angabe würde dasselbe Ergebnis liefern und nur mehr über Sie verraten. Auch nach einem Klick auf „Mein Standort" verlässt Ihre genaue Position Ihr Gerät also nicht.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Die gerundeten Koordinaten werden auf dem Server nicht gespeichert und nach Abschnitt 2 auch nicht protokolliert — sie stehen in den Abfrageparametern, die vor dem Schreiben entfernt werden.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">Kontaktzeiten, Bedeckungsgrad und die Isolinien auf der Karte rechnet ausschließlich Ihr Browser. Diese Werte verlassen Ihr Gerät nicht.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Your position is only determined if you click “My location” and your browser has asked you for permission. Without that click the site does not access location services.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">For the selected place — whether typed, clicked on the map or determined by your device — the coordinates are transmitted to our server in order to compute the cloud forecast for that point. They are rounded to three decimal places in the browser first, that is to about 110 metres. The weather model works on a 2.2-kilometre grid; a more precise figure would yield the same result and only reveal more about you. So even after clicking “My location”, your exact position never leaves your device.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">The rounded coordinates are not stored on the server, and not logged either, as described in section 2 — they sit in the query parameters, which are stripped before writing.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">Contact times, obscuration and the contour lines on the map are computed solely by your browser. Those values never leave your device.</p>
+  <h2><span data-l="de">5. Standortermittlung und Wolkenprognose</span><span data-l="en">5. Location and cloud forecast</span></h2>
+  <p data-l="de" class="prose">Ihr Standort wird nur ermittelt, wenn Sie „Mein Standort" anklicken und Ihr Browser Sie um Erlaubnis gefragt hat. Ohne diesen Klick greift die Seite nicht auf die Standortdienste zu.</p>
+  <p data-l="de" class="prose">Für den gewählten Ort — ob eingegeben, angeklickt oder vom Gerät ermittelt — werden die Koordinaten an unseren Server übertragen, um die Wolkenprognose für diesen Punkt zu berechnen. Sie werden dabei schon im Browser auf drei Nachkommastellen gerundet, also auf rund 110 Meter. Das Wettermodell arbeitet auf einem Gitter von 2,2 Kilometern; eine genauere Angabe würde dasselbe Ergebnis liefern und nur mehr über Sie verraten. Auch nach einem Klick auf „Mein Standort" verlässt Ihre genaue Position Ihr Gerät also nicht.</p>
+  <p data-l="de" class="prose">Die gerundeten Koordinaten werden auf dem Server nicht gespeichert und nach Abschnitt 2 auch nicht protokolliert — sie stehen in den Abfrageparametern, die vor dem Schreiben entfernt werden.</p>
+  <p data-l="de" class="prose-end">Kontaktzeiten, Bedeckungsgrad und die Isolinien auf der Karte rechnet ausschließlich Ihr Browser. Diese Werte verlassen Ihr Gerät nicht.</p>
+  <p data-l="en" class="prose">Your position is only determined if you click “My location” and your browser has asked you for permission. Without that click the site does not access location services.</p>
+  <p data-l="en" class="prose">For the selected place — whether typed, clicked on the map or determined by your device — the coordinates are transmitted to our server in order to compute the cloud forecast for that point. They are rounded to three decimal places in the browser first, that is to about 110 metres. The weather model works on a 2.2-kilometre grid; a more precise figure would yield the same result and only reveal more about you. So even after clicking “My location”, your exact position never leaves your device.</p>
+  <p data-l="en" class="prose">The rounded coordinates are not stored on the server, and not logged either, as described in section 2 — they sit in the query parameters, which are stripped before writing.</p>
+  <p data-l="en" class="prose-end">Contact times, obscuration and the contour lines on the map are computed solely by your browser. Those values never leave your device.</p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">6. Speicherung im Browser</span><span data-l="en">6. Storage in your browser</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">Diese Seite setzt keine Cookies. Gespeichert wird allein Ihre Sprachwahl unter dem Schlüssel <code>sofi26-lang</code> im lokalen Speicher Ihres Browsers, damit die Seite beim nächsten Besuch in derselben Sprache erscheint. Der Wert verlässt Ihr Gerät nicht und lässt keinen Rückschluss auf Ihre Person zu. Sie können ihn jederzeit über die Einstellungen Ihres Browsers löschen.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">This site sets no cookies. The only thing stored is your language choice under the key <code>sofi26-lang</code> in your browser's local storage, so that the site appears in the same language on your next visit. The value never leaves your device and permits no inference about your identity. You can delete it at any time through your browser settings.</p>
+  <h2><span data-l="de">6. Speicherung im Browser</span><span data-l="en">6. Storage in your browser</span></h2>
+  <p data-l="de" class="prose-end">Diese Seite setzt keine Cookies. Gespeichert wird allein Ihre Sprachwahl unter dem Schlüssel <code>sofi26-lang</code> im lokalen Speicher Ihres Browsers, damit die Seite beim nächsten Besuch in derselben Sprache erscheint. Der Wert verlässt Ihr Gerät nicht und lässt keinen Rückschluss auf Ihre Person zu. Sie können ihn jederzeit über die Einstellungen Ihres Browsers löschen.</p>
+  <p data-l="en" class="prose-end">This site sets no cookies. The only thing stored is your language choice under the key <code>sofi26-lang</code> in your browser's local storage, so that the site appears in the same language on your next visit. The value never leaves your device and permits no inference about your identity. You can delete it at any time through your browser settings.</p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">7. Keine Analyse, keine Weitergabe</span><span data-l="en">7. No analytics, no disclosure</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">Es findet keine Reichweitenmessung statt, es sind keine Analyse- oder Werbedienste eingebunden, und es werden keine Profile gebildet. Eine Weitergabe personenbezogener Daten an Dritte erfolgt nicht — mit Ausnahme der in Abschnitt 3 beschriebenen, technisch unvermeidbaren Übermittlung an den Kachelserver und der Verarbeitung durch den Hoster nach Abschnitt 2. Eine automatisierte Entscheidungsfindung findet nicht statt.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">There is no audience measurement, no analytics or advertising services are embedded, and no profiles are created. Personal data is not passed to third parties — with the exception of the technically unavoidable transmission to the tile server described in section 3 and the processing by the host described in section 2. No automated decision-making takes place.</p>
+  <h2><span data-l="de">7. Keine Analyse, keine Weitergabe</span><span data-l="en">7. No analytics, no disclosure</span></h2>
+  <p data-l="de" class="prose-end">Es findet keine Reichweitenmessung statt, es sind keine Analyse- oder Werbedienste eingebunden, und es werden keine Profile gebildet. Eine Weitergabe personenbezogener Daten an Dritte erfolgt nicht — mit Ausnahme der in Abschnitt 3 beschriebenen, technisch unvermeidbaren Übermittlung an den Kachelserver und der Verarbeitung durch den Hoster nach Abschnitt 2. Eine automatisierte Entscheidungsfindung findet nicht statt.</p>
+  <p data-l="en" class="prose-end">There is no audience measurement, no analytics or advertising services are embedded, and no profiles are created. Personal data is not passed to third parties — with the exception of the technically unavoidable transmission to the tile server described in section 3 and the processing by the host described in section 2. No automated decision-making takes place.</p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">8. Ihre Rechte</span><span data-l="en">8. Your rights</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) sowie das Recht, der Verarbeitung auf Grundlage berechtigter Interessen aus Gründen Ihrer besonderen Situation zu widersprechen (Art. 21). Wenden Sie sich dafür an die im <a href="#/impressum">Impressum</a> genannte Adresse.</p>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">Außerdem steht Ihnen ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde zu (Art. 77 DSGVO). Für den Verantwortlichen zuständig ist der Hessische Beauftragte für Datenschutz und Informationsfreiheit, Gustav-Stresemann-Ring 1, 65189 Wiesbaden.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 12px">You have the right to information (Art. 15 GDPR), rectification (Art. 16), erasure (Art. 17), restriction of processing (Art. 18), data portability (Art. 20), and the right to object, on grounds relating to your particular situation, to processing based on legitimate interests (Art. 21). Please contact the address given in the <a href="#/impressum">legal notice</a>.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0 0 28px">You also have the right to lodge a complaint with a data protection supervisory authority (Art. 77 GDPR). The competent authority for the controller is the Hessischer Beauftragter für Datenschutz und Informationsfreiheit, Gustav-Stresemann-Ring 1, 65189 Wiesbaden, Germany.</p>
+  <h2><span data-l="de">8. Ihre Rechte</span><span data-l="en">8. Your rights</span></h2>
+  <p data-l="de" class="prose">Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) sowie das Recht, der Verarbeitung auf Grundlage berechtigter Interessen aus Gründen Ihrer besonderen Situation zu widersprechen (Art. 21). Wenden Sie sich dafür an die im <a href="#/impressum">Impressum</a> genannte Adresse.</p>
+  <p data-l="de" class="prose-end">Außerdem steht Ihnen ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde zu (Art. 77 DSGVO). Für den Verantwortlichen zuständig ist der Hessische Beauftragte für Datenschutz und Informationsfreiheit, Gustav-Stresemann-Ring 1, 65189 Wiesbaden.</p>
+  <p data-l="en" class="prose">You have the right to information (Art. 15 GDPR), rectification (Art. 16), erasure (Art. 17), restriction of processing (Art. 18), data portability (Art. 20), and the right to object, on grounds relating to your particular situation, to processing based on legitimate interests (Art. 21). Please contact the address given in the <a href="#/impressum">legal notice</a>.</p>
+  <p data-l="en" class="prose-end">You also have the right to lodge a complaint with a data protection supervisory authority (Art. 77 GDPR). The competent authority for the controller is the Hessischer Beauftragter für Datenschutz und Informationsfreiheit, Gustav-Stresemann-Ring 1, 65189 Wiesbaden, Germany.</p>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">9. Stand</span><span data-l="en">9. Version</span></h2>
-  <p style="font-size:15px;line-height:1.65;color:var(--text-body);margin:0"><span data-l="de">11. August 2026</span><span data-l="en">11 August 2026</span></p>
+  <h2><span data-l="de">9. Stand</span><span data-l="en">9. Version</span></h2>
+  <p class="prose-flush"><span data-l="de">11. August 2026</span><span data-l="en">11 August 2026</span></p>
 </div>
 </sc-if>
 
@@ -906,21 +937,21 @@
 <footer style="background:var(--color-text);color:var(--on-ink-muted);margin-top:auto">
   <div style="max-width:1180px;margin:0 auto;padding:36px 20px;display:flex;flex-wrap:wrap;gap:28px;justify-content:space-between">
     <div style="max-width:38ch">
-      <div style="font-family:'Caprasimo',serif;font-size:16px;color:var(--color-bg);margin-bottom:8px">SoFi 2026</div>
+      <div class="display" style="font-size:16px;color:var(--color-bg);margin-bottom:8px">SoFi 2026</div>
       <p data-l="de" style="font-size:12px;line-height:1.6;margin:0">Kontaktzeiten und Bedeckungsgrade werden im Browser aus den polynomialen Besselschen Elementen des NASA Five Millennium Canon (F. Espenak) berechnet, ΔT = 75,4 s.</p>
       <p data-l="en" style="font-size:12px;line-height:1.6;margin:0">Contact times and obscuration are computed in the browser from the polynomial Besselian elements of the NASA Five Millennium Canon (F. Espenak), ΔT = 75.4 s.</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px;font-size:13px">
-      <a href="#/zeiten" style="color:var(--on-ink-body);text-decoration:none"><span data-l="de">Zeiten &amp; Orte</span><span data-l="en">Times &amp; Places</span></a>
-      <a href="#/standorte" style="color:var(--on-ink-body);text-decoration:none"><span data-l="de">Beste Standorte</span><span data-l="en">Best Locations</span></a>
-      <a href="#/tipps" style="color:var(--on-ink-body);text-decoration:none"><span data-l="de">Beobachtungstipps</span><span data-l="en">Observing Tips</span></a>
+      <a href="#/zeiten" class="link-ink"><span data-l="de">Zeiten &amp; Orte</span><span data-l="en">Times &amp; Places</span></a>
+      <a href="#/standorte" class="link-ink"><span data-l="de">Standorte</span><span data-l="en">Locations</span></a>
+      <a href="#/tipps" class="link-ink"><span data-l="de">Beobachten</span><span data-l="en">Observing</span></a>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px;font-size:13px">
-      <a href="#/foto" style="color:var(--on-ink-body);text-decoration:none"><span data-l="de">Fotografie</span><span data-l="en">Photography</span></a>
-      <a href="#/sicherheit" style="color:var(--on-ink-body);text-decoration:none"><span data-l="de">Sicherheit</span><span data-l="en">Safety</span></a>
-      <a href="#/faq" style="color:var(--on-ink-body);text-decoration:none">FAQ</a>
-      <a href="#/impressum" style="color:var(--on-ink-body);text-decoration:none"><span data-l="de">Impressum</span><span data-l="en">Legal Notice</span></a>
-      <a href="#/datenschutz" style="color:var(--on-ink-body);text-decoration:none"><span data-l="de">Datenschutz</span><span data-l="en">Privacy</span></a>
+      <a href="#/foto" class="link-ink"><span data-l="de">Fotografie</span><span data-l="en">Photography</span></a>
+      <a href="#/sicherheit" class="link-ink"><span data-l="de">Sicherheit</span><span data-l="en">Safety</span></a>
+      <a href="#/faq" class="link-ink">FAQ</a>
+      <a href="#/impressum" class="link-ink"><span data-l="de">Impressum</span><span data-l="en">Legal Notice</span></a>
+      <a href="#/datenschutz" class="link-ink"><span data-l="de">Datenschutz</span><span data-l="en">Privacy</span></a>
     </div>
   </div>
 </footer>
@@ -1018,7 +1049,20 @@ const T = {
     /* Bedienung */
     navOpen: 'Menü öffnen', navClose: 'Menü schließen',
     sugList: 'Ortsvorschläge',
+    mapLabel: 'Karte mit den Isolinien der Bedeckung — anklicken wertet einen beliebigen Punkt aus',
     myLocation: 'Mein Standort', mapPoint: 'Gewählter Punkt',
+    /* Textfassungen der Grafiken. Sichel, Verlaufskurve und Horizontprofil
+       tragen die Kernaussagen der Seite und waren fuer Hilfsmittel stumm. */
+    altCrescent: (o, a) => `Die Sonne im Maximum, ${o} bedeckt, ${a}° über dem Horizont.`,
+    altCurve: (c1, c4, o, t) => `Verlaufskurve der Bedeckung von ${c1} bis ${c4}, Maximum ${o} um ${t}.`,
+    altHorizon: (v) => `Horizontprofil nach Westnordwest mit der Sonnenbahn. ${v}`,
+    altHorizonNone: 'Kein Horizontprofil verfügbar.',
+    /* Leerzustaende. Neun Karten mit neun Gedankenstrichen lesen sich als
+       Ausfall — gemeint ist Zurueckhaltung. */
+    noScore: 'ohne Wertung', noScoreWhy: 'Der Horizont wiegt 0,42. Ohne ihn wäre jede Zahl hier eine Behauptung.',
+    hzPending: 'Horizontprofil wird geladen …',
+    hzNoneT: 'Kein Horizontprofil',
+    scoreWord: 'Score',
     /* Countdown. Der Zähler kannte bisher nur „davor": nach dem Maximum stand
        er auf 0/00/00/00, während darunter weiter „bis zum Maximum" zu lesen
        war — ab 20:13 der Dauerzustand der Startseite. */
@@ -1083,7 +1127,16 @@ const T = {
     /* Interface */
     navOpen: 'Open menu', navClose: 'Close menu',
     sugList: 'Place suggestions',
+    mapLabel: 'Map with obscuration contours — click to evaluate any point',
     myLocation: 'My location', mapPoint: 'Selected point',
+    altCrescent: (o, a) => `The Sun at maximum, ${o} covered, ${a}° above the horizon.`,
+    altCurve: (c1, c4, o, t) => `Obscuration curve from ${c1} to ${c4}, maximum ${o} at ${t}.`,
+    altHorizon: (v) => `Horizon profile towards west-northwest with the solar track. ${v}`,
+    altHorizonNone: 'No horizon profile available.',
+    noScore: 'not rated', noScoreWhy: 'The horizon carries 0.42 of the weight. Without it any number here would be a claim.',
+    hzPending: 'Loading horizon profile …',
+    hzNoneT: 'No horizon profile',
+    scoreWord: 'Score',
     /* Countdown */
     cdToMax: 'until maximum at', cdToSunset: 'until sunset at',
     cdOver: 'The eclipse is over.',
@@ -1146,6 +1199,9 @@ class Component extends DCLogic {
     clouds: null, cloudsStatus: 'idle',
     horizons: {}, horizonStatus: 'idle',
     overlays: [], overlayOn: false, overlayVar: 'clct', overlayIdx: 0, overlayStatus: 'idle',
+    // Gemessene Breite der beiden Diagramme in CSS-Pixeln. Ohne sie skaliert
+    // die Beschriftung mit dem viewBox und wird auf dem Handy unlesbar klein.
+    curveW: 0, horizonW: 0,
   };
 
   componentDidMount() {
@@ -1185,6 +1241,8 @@ class Component extends DCLogic {
     clearInterval(this.timer);
     clearTimeout(this.searchTimer);
     this.search?.abort();
+    this._ro_curveW?.disconnect();
+    this._ro_horizonW?.disconnect();
     this.cloudReq?.abort();
     this.overlayReq?.abort();
     window.removeEventListener('hashchange', this.onHash);
@@ -1392,6 +1450,40 @@ class Component extends DCLogic {
 
   setDetailEl = (el) => { this.detailEl = el; };
 
+  /* ── Mitskalierende Beschriftung ──────────────────────────────────────────
+     Text in SVG skaliert mit dem viewBox. Beide Diagramme haben eine feste
+     Breite in Nutzereinheiten (620 und 600) und werden auf die Containerbreite
+     gezogen: auf 350 px landete eine als 11 px ausgezeichnete Achsenbeschriftung
+     bei rund 6 px. Statt die Beschriftung aus dem Koordinatensystem zu loesen,
+     wird die Gegenrechnung gefuehrt — gemessene Breite rein, Schriftgroesse in
+     Nutzereinheiten raus. */
+  _refs = {};
+  observe = (key) => {
+    /* Die Rueckrufe muessen ueber Renderdurchgaenge hinweg dieselben bleiben.
+       Eine frisch erzeugte Funktion loest React dazu, den ref abzuhaengen und
+       neu zu setzen — bei einer Uhr, die im Sekundentakt neu rendert, waere das
+       im Sekundentakt ein abgebauter und ein neuer ResizeObserver. */
+    if (!this._refs[key]) {
+      this._refs[key] = (el) => {
+        this[`_ro_${key}`]?.disconnect();
+        this[`_ro_${key}`] = null;
+        if (!el) return;
+        const set = () => {
+          const w = el.getBoundingClientRect().width;
+          if (w && Math.abs(w - this.state[key]) > 1) this.setState({ [key]: w });
+        };
+        this[`_ro_${key}`] = new ResizeObserver(set);
+        this[`_ro_${key}`].observe(el);
+        set();
+      };
+    }
+    return this._refs[key];
+  };
+
+  /** Schriftgroesse in Nutzereinheiten, damit am Geraet `px` herauskommt. */
+  svgFont = (px, viewBoxW, renderedW) =>
+    (renderedW > 0 ? px * (viewBoxW / renderedW) : px).toFixed(1);
+
   setLang = (lang) => {
     document.documentElement.lang = lang;
     try { localStorage.setItem('sofi26-lang', lang); } catch (e) { /* ignore */ }
@@ -1539,7 +1631,13 @@ class Component extends DCLogic {
       enPressed: S.lang === 'en' ? 'true' : 'false',
       sugExpanded: S.sug.length ? 'true' : 'false',
       sugActiveId: S.sugIdx >= 0 ? `ortsvorschlag-${S.sugIdx}` : '',
-      sugListLabel: t.sugList,
+      sugListLabel: t.sugList, mapLabel: t.mapLabel,
+      curveRef: this.observe('curveW'), horizonRef: this.observe('horizonW'),
+      // 12 px am Geraet, umgerechnet in Nutzereinheiten des jeweiligen viewBox.
+      curveFs: this.svgFont(12, 620, S.curveW),
+      curveFsBold: this.svgFont(12.5, 620, S.curveW),
+      horizonFs: this.svgFont(11, 600, S.horizonW),
+      horizonFsSm: this.svgFont(10, 600, S.horizonW),
       detailRef: this.setDetailEl,
       locCoords: `${S.loc.lat.toFixed(4)}° N, ${S.loc.lon.toFixed(4)}° ${S.lang === 'en' ? 'E' : 'O'}`,
       radius, radiusLabel: `${radius} km`, searchPlaceholder: t.search,
@@ -1579,6 +1677,9 @@ class Component extends DCLogic {
       detBars: [], hzPath: '', sunPath: '', hzX: [], hzY: [], sunMaxX: 300, sunMaxY: 150,
       eyeY: 180, eyeLabel: '',
       sunMaxLX: 300, sunMaxLY: 130,
+      heroAlt: '', crescentAlt: '', curveAlt: '', horizonAlt: t.altHorizonNone,
+      hasHorizon: false, hzEmpty: true, hzEmptyTitle: t.hzNoneT, hzEmptyBody: t.hzMissing,
+      scoreWord: t.scoreWord,
     };
     if (!S.ready) return v;
 
@@ -1682,6 +1783,7 @@ class Component extends DCLogic {
     const F = this.E.fmtTime;
     const obs = (c.max.obs * 100).toFixed(1);
     v.obsPct = `${obs} %`;
+    v.heroAlt = v.crescentAlt = t.altCrescent(v.obsPct, c.max.alt.toFixed(1));
     const visEnd = c.endsAtSunset ? c.sunset : c.c4;
     v.rows = [
       { label: t.c1, note: t.c1n(c.c1.alt.toFixed(1)), value: F(c.c1.date) },
@@ -1697,6 +1799,7 @@ class Component extends DCLogic {
     const ty = (o) => Y1 - o * (Y1 - Y0);
     const pts = c.track.map((p) => `${tx(p.t).toFixed(1)},${ty(p.obs).toFixed(1)}`);
     v.curvePath = `M${pts.join('L')}`;
+    v.curveAlt = t.altCurve(F(c.c1.date), F(visEnd.date), v.obsPct, F(c.max.date));
     v.areaPath = `M${X0},${Y1}L${pts.join('L')}L${X1},${Y1}Z`;
   /* Beschriftungen in SVG-<text> müssen als *Array* übergeben werden, nicht
      als String. Die DC-Laufzeit verpackt einen interpolierten String in ein
@@ -1705,8 +1808,13 @@ class Component extends DCLogic {
      Element bleibt 0x0 und die Beschriftung fehlt ersatzlos. Ein Array läuft
      dagegen in den Fragment-Zweig direkt darüber (support.js:602) und wird zu
      einem echten Textknoten. Deshalb überall hier `[text]` statt `text`. */
-    v.yTicks = [0, 0.25, 0.5, 0.75, 1].map((f) => ({ y: ty(f), ty: ty(f) + 4, label: [`${Math.round(f * 100)} %`] }));
-    v.xTicks = [0, 0.25, 0.5, 0.75, 1].map((f) => {
+    /* Unter 460 px reichen drei Marken je Achse: fuenf Zeitangaben stehen dort
+       so dicht, dass sie sich beruehren, und eine beruehrende Beschriftung ist
+       schlechter als eine fehlende. */
+    const eng = S.curveW > 0 && S.curveW < 460;
+    v.yTicks = (eng ? [0, 0.5, 1] : [0, 0.25, 0.5, 0.75, 1])
+      .map((f) => ({ y: ty(f), ty: ty(f) + 4, label: [`${Math.round(f * 100)} %`] }));
+    v.xTicks = (eng ? [0, 0.5, 1] : [0, 0.25, 0.5, 0.75, 1]).map((f) => {
       const x = c.c1.t + (c.c4.t - c.c1.t) * f;
       return { x: tx(x), label: [F(this.E.tToDate(x), false)] };
     });
@@ -1800,6 +1908,13 @@ class Component extends DCLogic {
       const track = sel ? 'var(--track-ink)' : 'var(--line-soft)';
       return {
         id: s.id, name: s.name, sub: `${s.region} · ${Math.round(s.d)} km · ${s.h} m`,
+        /* Neun Karten mit neun Gedankenstrichen lasen sich als Ausfall. Gemeint
+           ist Zurueckhaltung: der Horizont wiegt 0,42, und die uebrigen drei
+           umzugewichten ergaebe eine Zahl, die wie eine Bewertung aussieht und
+           die entscheidende Groesse nicht kennt. Das sagt die Karte jetzt. */
+        hasScore: s.score !== null,
+        noScore: s.score === null,
+        noScoreLabel: t.noScore, noScoreWhy: t.noScoreWhy,
         score: s.score === null ? '—' : String(s.score),
         scoreColor: sel ? 'var(--color-accent-400)' : 'var(--color-accent-700)',
         bg: sel ? 'var(--color-text)' : 'var(--color-surface)', fg: sel ? 'var(--color-bg)' : 'var(--color-text)',
@@ -1807,7 +1922,10 @@ class Component extends DCLogic {
         current: s.id === selId ? 'true' : 'false',
         pick: () => { this._scrollToDetail = true; this.setState({ siteId: s.id }); },
         bars: [
-          { short: t.barH, pct: s.hScore === null ? 0 : Math.round(s.hScore * 100), color: 'var(--color-accent)', track },
+          { short: t.barH, pct: s.hScore === null ? 0 : Math.round(s.hScore * 100),
+            color: 'var(--color-accent)', track,
+            // Ohne Horizontwert bleibt die Spur leer statt auf Null zu stehen.
+            empty: s.hScore === null ? '1' : '0' },
           { short: t.barC, pct: Math.round(s.cScore * 100), color: 'var(--color-accent-2)', track },
           { short: t.barO, pct: Math.round(s.oScore * 100), color: 'var(--color-accent-500)', track },
           { short: t.barA, pct: Math.round(s.aScore * 100), color: 'var(--color-accent-2-500)', track },
@@ -1844,13 +1962,15 @@ class Component extends DCLogic {
       v.sunPath = sp.length > 1 ? `M${sp.join('L')}` : '';
       v.sunMaxX = hx(det.c.max.az); v.sunMaxY = hy(det.c.max.alt);
       v.sunMaxLX = Math.min(540, Math.max(60, v.sunMaxX)); v.sunMaxLY = v.sunMaxY - 16;
-      v.hzY = [0, 3, 6, 9, 12].map((el) => ({
+      const hzEng = S.horizonW > 0 && S.horizonW < 460;
+      v.hzY = (hzEng ? [0, 6, 12] : [0, 3, 6, 9, 12]).map((el) => ({
         y: hy(el), ty: hy(el) + 4, label: [`${el}°`],
         // Die Augenhöhe trägt die Aussage, die Hilfslinien nur die Skala.
         stroke: el === 0 ? 'var(--on-ink-muted)' : 'var(--track-ink)',
         width: el === 0 ? '1.5' : '1',
       }));
-      v.hzX = [255, 270, 285, 300, 315].map((az) => ({ x: hx(az), label: [`${az}°`] }));
+      v.hzX = (hzEng ? [255, 285, 315] : [255, 270, 285, 300, 315])
+        .map((az) => ({ x: hx(az), label: [`${az}°`] }));
       v.eyeY = hy(0) - 6;
       v.eyeLabel = [S.lang === 'en' ? 'eye level' : 'Augenhöhe'];
 
@@ -1863,6 +1983,7 @@ class Component extends DCLogic {
           seg.push(`${hx(az).toFixed(1)},${hy(el ?? EL0).toFixed(1)}`);
         }
         v.hzPath = `M${hx(AZ0)},${floorY}L${seg.join('L')}L${hx(AZ1)},${floorY}Z`;
+        v.hasHorizon = true; v.hzEmpty = false;
 
         const cl = Math.abs(det.hz.clearance).toFixed(1);
         // Liegt die Kante unter der Augenhöhe, ist das die eigentliche Nachricht:
@@ -1872,6 +1993,7 @@ class Component extends DCLogic {
           : det.hz.tight ? t.vTight(cl)
           : det.hz.horizon < 0 ? t.vBelow(Math.abs(det.hz.horizon).toFixed(1), cl)
           : t.vClear(cl);
+        v.horizonAlt = t.altHorizon(v.detVerdict);
         v.detBars = [
           { label: t.facH, value: t.facHV(`${det.hz.clearance >= 0 ? '+' : '−'}${cl}°`),
             pct: Math.round(det.hScore * 100), color: 'var(--color-accent)' },
@@ -1880,7 +2002,14 @@ class Component extends DCLogic {
           { label: t.facA, value: det.access === 'frei' ? t.accFree : t.accLtd, pct: Math.round(det.aScore * 100), color: 'var(--color-accent-2-500)' },
         ];
       } else {
+        /* Bisher standen hier Achsen, Gitternetz und Sonnenbahn vollstaendig da,
+           und darunter der Satz, dass kein Profil verfuegbar sei — ein Diagramm
+           im Widerspruch zu seiner eigenen Bildunterschrift. Ohne Messung wird
+           nichts gezeichnet, was nach Messung aussieht. */
         v.hzPath = '';
+        v.hasHorizon = false; v.hzEmpty = true;
+        v.hzEmptyTitle = S.horizonStatus === 'loading' ? t.hzPending : t.hzNoneT;
+        v.hzEmptyBody = S.horizonStatus === 'loading' ? '' : t.hzMissing;
         v.detVerdict = S.horizonStatus === 'loading' ? t.hzLoading : t.hzMissing;
         v.detBars = [
           { label: t.facC, value: t.facCV(Math.round((1 - det.cloud) * 100)), pct: Math.round(det.cScore * 100), color: 'var(--color-accent-2)' },
