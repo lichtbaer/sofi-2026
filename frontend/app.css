@@ -1,0 +1,157 @@
+/* Projektschicht über dem Design-System *Organic*.
+   Reihenfolge im <head>: fonts.css → _ds/styles.css → leaflet.css → app.css.
+   Das Design-System liefert Tokens, Ramps und Komponentenklassen; diese Datei
+   benennt daraus die Rollen dieses Projekts und hält alles, was ein
+   style-Attribut prinzipiell nicht kann — Fokus, Hover, Media Queries,
+   Placeholder, Auswahlzustände. */
+
+:root {
+  /* ── Textrollen ───────────────────────────────────────────────────────────
+     Vorher standen hier abgestufte rgba(32,30,29,α)-Werte. Gemessen gegen den
+     Cremegrund lagen die schwächeren davon unter 4,5:1 — 0.62 ergab 4,38,
+     0.55 nur 3,57, und die 11-px-Bildunterschriften auf Sand 2,99. Das Muster
+     ging in die falsche Richtung: je kleiner der Text, desto schwächer der
+     Kontrast, auf einer Seite, die abends im Freien auf dem Telefon gelesen
+     wird. Die Ramps des Design-Systems haben die passenden Stufen bereits.
+
+     Werte auf Creme / auf Sand:                                            */
+  --text-strong: var(--color-text);        /* #201e1d — 14,8 / 13,2         */
+  --text-body:   var(--color-neutral-800); /* #474238 —  8,4 /  7,5         */
+  --text-muted:  var(--color-neutral-700); /* #645c50 —  5,5 /  4,9         */
+  --text-link:   var(--color-accent-700);  /* #8c491a —  5,7 /  5,1         */
+
+  /* Auf dem Tintengrund #201e1d. Die Akzentfarbe kippt hier: --color-accent
+     erreicht auf Creme nur 3,0 und taugt dort nicht für Text, --color-accent-400
+     erreicht auf Tinte 8,0. Deshalb zwei verschiedene Akzente je Grund.     */
+  --on-ink:        var(--color-bg);              /* 14,8 */
+  --on-ink-body:   rgba(245, 234, 216, 0.78);    /*  8,9 */
+  --on-ink-muted:  rgba(245, 234, 216, 0.62);    /*  6,1 */
+  --on-ink-accent: var(--color-accent-400);      /*  8,0 */
+
+  /* ── Flächen und Linien ───────────────────────────────────────────────── */
+  --surface-hover: #e3d2b4;
+  --ink-hover:     var(--color-neutral-900);
+  --line:          var(--color-divider);
+  --line-soft:     color-mix(in srgb, var(--color-text) 10%, transparent);
+  --line-strong:   color-mix(in srgb, var(--color-text) 18%, transparent);
+  --line-ink:      rgba(245, 234, 216, 0.16);
+  --track:         color-mix(in srgb, var(--color-text) 11%, transparent);
+  --track-ink:     rgba(245, 234, 216, 0.14);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--text-body);
+  font-family: var(--font-body);
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--text-link); text-underline-offset: 3px; }
+a:hover { color: var(--color-accent-800); }
+
+/* ── Fokus ───────────────────────────────────────────────────────────────────
+   Ein doppelter Ring, weil die Seite zwei Gründe hat: der innere dunkle Ring
+   ist auf Creme sichtbar, der äußere helle auf Tinte. Ein einfarbiger Ring
+   verschwindet zwangsläufig auf einem der beiden — vorher stand hier der
+   Browser-Standard, der auf den dunklen Karten praktisch unsichtbar war.    */
+:focus-visible {
+  outline: 2px solid var(--color-accent-400);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--color-accent-800);
+}
+:focus:not(:focus-visible) { outline: none; }
+
+/* Sprungmarke: der erste Tabstopp der Seite, sichtbar nur mit Tastatur. Ohne
+   sie steht vor jedem Seiteninhalt die vollständige Navigation.            */
+.skip {
+  position: absolute; left: 12px; top: -60px; z-index: 1000;
+  padding: 10px 18px; border-radius: 999px;
+  background: var(--color-accent); color: var(--color-text);
+  font-weight: 600; text-decoration: none;
+  transition: top 0.15s ease;
+}
+.skip:focus { top: 12px; color: var(--color-text); }
+
+/* ── Sprachumschaltung ────────────────────────────────────────────────────── */
+html[lang="de"] [data-l="en"] { display: none !important; }
+html[lang="en"] [data-l="de"] { display: none !important; }
+
+/* ── Zustände ────────────────────────────────────────────────────────────────
+   Vorher lagen Hover-Farben in style-hover-Attributen der DC-Laufzeit und
+   griffen nur dort, wo jemand daran gedacht hatte. Ein Aktiv-Zustand fehlte
+   überall.                                                                  */
+.u-card-link { transition: background-color 0.15s ease; }
+.u-card-link:hover { background: var(--surface-hover); }
+.u-card-link:active { background: var(--color-neutral-300); }
+.u-card-link-ink:hover { background: var(--ink-hover); }
+.u-card-link-ink:active { background: #3a352d; }
+
+.u-nav-link { transition: color 0.15s ease; }
+.u-nav-link:hover { color: var(--text-link); }
+.u-nav-link[aria-current="page"] { color: var(--text-link); font-weight: 600; }
+
+.u-btn { transition: background-color 0.15s ease, border-color 0.15s ease; }
+.u-btn-primary:hover { background: var(--color-accent-600) !important; }
+.u-btn-primary:active { background: var(--color-accent-700) !important; }
+.u-btn-outline:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+.u-btn-outline:active { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
+
+/* ── Ortssuche ───────────────────────────────────────────────────────────────
+   Die Vorschläge waren <div onClick>: nicht fokussierbar, nicht mit Enter
+   auslösbar, ohne Rolle. Jetzt eine Listbox mit Pfeiltasten — der aktive
+   Eintrag wird über aria-activedescendant angesagt, nicht über den Fokus,
+   damit die Eingabe die Tastatur behält.                                    */
+.sug-list { list-style: none; margin: 0; padding: 0; }
+.sug-option {
+  display: flex; justify-content: space-between; gap: 12px; align-items: baseline;
+  width: 100%; padding: 12px 18px; cursor: pointer;
+  font: inherit; text-align: left; color: var(--text-strong);
+  background: transparent; border: 0;
+}
+.sug-option:hover { background: var(--color-surface); }
+.sug-option[data-active="1"] { background: var(--color-accent-200); }
+
+/* ── Standortkarten ──────────────────────────────────────────────────────────
+   Waren <div onClick> und kamen in der Tab-Reihenfolge nicht vor: per Tastatur
+   war auf dieser Seite kein Standort auswählbar. Jetzt <button>, hier auf das
+   Aussehen der Karte zurückgesetzt.                                         */
+.site-card {
+  display: block; width: 100%; text-align: left; font: inherit;
+  cursor: pointer; transition: transform 0.12s ease, box-shadow 0.15s ease;
+}
+.site-card:hover { box-shadow: var(--shadow-md); }
+.site-card:active { transform: translateY(1px); }
+
+/* ── Eingaben ───────────────────────────────────────────────────────────────
+   Der Standard-Placeholder vieler Browser liegt unter dem Schwellenwert.    */
+input::placeholder { color: var(--text-muted); opacity: 1; }
+input[type="range"] { accent-color: var(--color-accent); }
+
+/* ── Karte ──────────────────────────────────────────────────────────────── */
+.leaflet-container { font-family: var(--font-body); background: var(--color-neutral-300); }
+.leaflet-control-attribution { font-size: 9px; }
+/* OSM-Standardkacheln gibt es nur hell; „dunkel" entsteht als Filter. */
+.basemap-dark { filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.9); }
+
+::selection { background: color-mix(in srgb, var(--color-accent) 30%, transparent); }
+
+@keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+@media (max-width: 900px) {
+  [data-nav-desktop] { display: none !important; }
+  [data-nav-toggle] { display: inline-flex !important; }
+}
+
+/* Der pulsierende Punkt im Hero lief bisher unbedingt. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

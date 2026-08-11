@@ -1,6 +1,8 @@
 # Oberfläche und Bedienung — Befund und Plan
 
-Stand: 11. August 2026. Grundlage ist die ausgelieferte Seite, nicht der
+Stand: 11. August 2026. **Stufe 0 ist umgesetzt** — was sich dadurch
+geändert hat, steht bei den jeweiligen Befunden und am Ende unter „Stand der
+Umsetzung". Grundlage ist die ausgelieferte Seite, nicht der
 Quelltext allein: `frontend/` wurde statisch serviert und in Chromium auf
 1280×900 und 390×844 vermessen — Screenshots aller sieben Seiten,
 Tab-Reihenfolge, Paint-Zeiten, Zustand ohne JavaScript, gerechnete
@@ -241,43 +243,66 @@ Zeile muss beim Übernehmen raus — Caprasimo und Figtree liegen bereits unter
 Drei Stufen, nach Wirkung je Aufwand sortiert. Stufe 0 ist so geschnitten,
 dass sie heute fertig wird und morgen früh ausgeliefert werden kann.
 
-### Stufe 0 — vor dem Ereignis (etwa ein halber Tag, geringes Risiko)
+### Stufe 0 — vor dem Ereignis · **umgesetzt**
 
-Nur Änderungen ohne Umbau: Attribute, Farbwerte, ein zusätzlicher
-`<style>`-Block, drei kleine Eingriffe in die Logik.
+Zwei der offenen Entscheidungen sind inzwischen beantwortet: das Design-System
+soll benutzt werden, und das DC-Tooling ist aus dem Spiel. Damit wandert die
+Tokenschicht — ursprünglich Stufe 1, Punkt 9 — nach vorn in Stufe 0 und trägt
+die Kontrastreparatur, statt dass diese von Hand 200-fach ausgeführt wird.
 
-1. **Kopfdaten.** `<html lang="de">`, `<title>`, Meta-Description, Favicon
-   (die Sichel aus dem Logo als SVG), `theme-color`, Open Graph und Twitter
-   Card mit Vorschaubild. Behebt Befund 1 und die Hälfte von 5.
-   → *größte Wirkung im ganzen Plan, etwa eine Stunde Arbeit*
-2. **Kontraststufen ersetzen.** `0.62` / `0.55` / `0.5` → `#645c50`,
-   Fließtextlinks und Kickerfarbe → `#8c491a`, SVG-Achsen von `ivory 0.45`
-   auf `0.62` anheben, die 9-px-Balkenlabels auf 10 px. Suchen und Ersetzen,
-   kein Layoutrisiko. Behebt Befund 2.
-3. **Ein `<style>`-Block im `<helmet>`** mit dem, was inline nicht geht:
-   `:focus-visible`-Ring nach Systemvorgabe, `@media (prefers-reduced-motion)`
-   für den Pulspunkt, `:hover`/`:active` für Karten und Buttons.
-4. **Standortkarten und Suchvorschläge bedienbar machen.** `<div onClick>` →
-   `<button>` beziehungsweise Listbox mit Pfeiltasten, `aria-current` für die
-   ausgewählte Karte. Behebt den Kern von Befund 3.
-5. **Karte folgt der Auswahl.** `setView` mit passendem Zoom nach Suche, nach
-   „Mein Standort" und nach Kartenklick; `'Gewählter Punkt'` übersetzen.
-   Behebt Befund 9.
-6. **Countdown-Zustände.** „läuft gerade" mit Restzeit bis zum Maximum,
-   danach „vorbei" mit Verweis auf den 2. August 2027. Behebt Befund 10.
-7. **Mobiles Detailpanel.** Bei Auswahl an den Anfang der Liste rücken oder
-   dorthin scrollen, damit Antippen sichtbar wirkt. Behebt Befund 6, erster
-   Teil.
-8. **Menü-Button:** `aria-expanded`, `aria-controls`, Escape schließt.
+0. **Design-System eingebunden.** Der Google-Fonts-`@import` in
+   `_ds/…/styles.css` ist entfernt — er wäre an der CSP (`font-src 'self'`)
+   ohnehin still gescheitert und hätte die Schriften auf `system-ui`
+   zurückfallen lassen; Caprasimo und Figtree liegen längst unter
+   `vendor/fonts/`. Die Reihenfolge im Kopf ist jetzt Schriften →
+   Design-System → Leaflet → `app.css`. Die neue Datei `frontend/app.css`
+   benennt aus den Ramps die Rollen dieses Projekts (`--text-body`,
+   `--text-muted`, `--text-link`, `--on-ink-*`) und hält alles, was ein
+   `style`-Attribut prinzipiell nicht kann. Behebt Befund 12.
+1. **Kopfdaten.** `<html lang="de">`, Titel, Meta-Description, Favicon als
+   SVG-Datenpfad, `theme-color`, Open Graph und Twitter Card mit einem selbst
+   ausgelieferten Vorschaubild (`frontend/og.png`, 1200×630, mit den Schriften
+   und der Palette des Projekts gerendert). Behebt Befund 1 und die Hälfte
+   von 5.
+2. **Kontrast über die Tokens repariert.** Alle 202 `rgba()`- und 150
+   Hex-Literale zeigen auf die Ramps; die Textstufen liegen jetzt bei
+   `--color-neutral-800` (8,4:1) und `--color-neutral-700` (5,5:1), Links und
+   Kicker bei `--color-accent-700` (5,7:1). Die aktive Sprachtaste trägt Tinte
+   statt Creme auf dem Akzent (3,03 → 4,6). Gemessen am gerenderten DOM aller
+   neun Seiten: keine Textstelle mehr unter dem Schwellenwert, SVG-Achsen
+   eingeschlossen. Behebt Befund 2.
+3. **`app.css` statt Inline-Zustände.** Doppelter Fokusring — innen dunkel für
+   den Cremegrund, außen hell für die Tinte, weil ein einfarbiger Ring auf
+   einem der beiden Gründe zwangsläufig verschwindet. Dazu Hover und Aktiv für
+   Karten, Knöpfe und Navigation, `prefers-reduced-motion` für den Pulspunkt,
+   eine Sprungmarke als erster Tabstopp.
+4. **Standortkarten und Suchvorschläge bedienbar.** Die neun Karten sind
+   `<button>` mit `aria-current` und stehen in der Tab-Reihenfolge; die
+   Ortssuche ist eine Combobox mit beschrifteter Listbox, Pfeiltasten,
+   `aria-activedescendant` und Escape. Behebt den Kern von Befund 3.
+5. **Karte folgt der Auswahl.** `setView` auf Zoom 9 nach Suche und nach
+   „Mein Standort", bewusst nicht nach einem Kartenklick — dort bliebe die
+   Ansicht sonst unter dem Finger weg. Die drei bisher getrennten
+   Ortszuweisungen laufen jetzt durch eine Stelle, und der Kartenklick ist
+   übersetzt. Behebt Befund 9.
+6. **Countdown in drei Zuständen.** Vor C1 und bis zum Maximum zählt er auf das
+   Maximum, danach auf den Sonnenuntergang, mit einem „läuft"-Kennzeichen
+   neben dem Datum; nach dem Ende entfällt der Zähler und es steht der Hinweis
+   auf den 2. August 2027 da. Behebt Befund 10.
+7. **Mobiles Detailpanel** scrollt bei Auswahl in Sicht — ausgelöst von der
+   Auswahlhandlung, nicht von einem Zustandsvergleich, damit die Seite nicht
+   auch dann springt, wenn ein neuer Radius die Liste umsortiert. Behebt
+   Befund 6, erster Teil.
+8. **Menü-Button:** `aria-expanded`, `aria-controls`, Escape schließt Menü und
+   Vorschlagsliste.
 
 ### Stufe 1 — Substanz (zwei bis drei Tage)
 
-9. **Styles aus dem Markup ziehen.** Eine verlinkte CSS-Datei mit den
-   *Organic*-Tokens und einer schmalen Klassenschicht (`.card`, `.stat`,
-   `.row`, `.chip`, `.bar`, `.panel`), das Markup behält seine Struktur. Der
-   Google-Fonts-Import bleibt draußen. Ab hier ist jede Farb- und
-   Abstandsfrage an einer Stelle zu beantworten. Grundlage für alles Weitere;
-   behebt Befund 12.
+9. **Die Klassenschicht nachziehen.** Die Tokens sitzen, die 463
+   `style`-Attribute stehen noch. Als Nächstes die wiederkehrenden Muster in
+   Klassen fassen (`.card`, `.stat`, `.row`, `.chip`, `.bar`, `.panel`) und die
+   Größen- und Abstandswerte auf `--space-*` und `--radius-*` umstellen — die
+   Farben sind bereits durch.
 10. **Diagramme responsiv.** Beschriftungen aus dem SVG-Koordinatensystem
     lösen (`vector-effect` beziehungsweise HTML-Overlay), auf schmalen
     Breiten weniger Achsenmarken, Mindestschriftgröße 11 px am Gerät. Behebt
@@ -316,32 +341,32 @@ Nur Änderungen ohne Umbau: Attribute, Farbwerte, ein zusätzlicher
 Vier Weggabelungen, die den Zuschnitt ändern. Bis zur Antwort arbeite ich
 nach der jeweils erstgenannten Annahme.
 
-1. **Geht die Seite morgen für dieses Ereignis live?**
-   *Annahme: ja.* Deshalb ist Stufe 0 so geschnitten, dass sie ohne
-   Strukturumbau auskommt und einzeln ausgeliefert werden kann. Falls das
-   Datum für diese Arbeit nicht bindend ist, würde ich stattdessen mit
-   Stufe 1 Punkt 9 beginnen — die Tokenschicht zuerst, dann alles andere
-   darauf.
+1. ~~**Wie frei darf `Sofi.dc.html` umgebaut werden?**~~ — **beantwortet:**
+   Das DC-Tooling ist aus dem Spiel, die Datei wird von Hand gepflegt. Damit
+   sind Kopfdaten im echten `<head>` möglich, der Inline-`<style>`-Block ist
+   nach `app.css` gewandert, und Punkt 16 (Zweisprachigkeit über ein
+   Wörterbuch) ist ohne Rücksicht auf eine Neuerzeugung machbar.
 
-2. **Wie frei darf `Sofi.dc.html` umgebaut werden?**
-   Das README beschreibt die Datei als vom DC-Tooling verwaltet und begründet,
-   warum `support.js` unangetastet bleibt.
-   *Annahme: Struktur bleibt, Styles wandern in eine verlinkte CSS-Datei.*
-   Das überlebt eine Neuerzeugung am ehesten. Wenn das Tooling ohnehin aus
-   dem Spiel ist, wäre der Umbau deutlich gründlicher möglich — vor allem
-   Punkt 16.
+2. ~~**Design-System benutzen?**~~ — **beantwortet: ja**, mitsamt dem
+   Herauslösen der Google Fonts. Deshalb steht die Tokenschicht jetzt in
+   Stufe 0 statt in Stufe 1.
 
-3. **Wie weit soll sich die Optik verändern?**
+3. **Geht die Seite morgen für dieses Ereignis live?**
+   *Annahme weiterhin: ja.* Stufe 0 ist einzeln auslieferbar und in sich
+   fertig.
+
+4. **Wie weit soll sich die Optik verändern?**
    *Annahme: verfeinern, Bildsprache bleibt.* Die Gestaltung ist gut; die
    Probleme liegen in Kontrast, Zuständen und Bedienbarkeit, nicht im
    Entwurf. Ein sichtbarer Umbau — neue Hero-Grafik, andere Kartenästhetik —
    wäre eine eigene Entscheidung und steht nicht in diesem Plan.
 
-4. **Dunkelmodus: Ausbau oder Stufe 0?**
-   Ich habe ihn nach Stufe 2 gelegt, weil er ohne die Tokenschicht aus
-   Punkt 9 auf 463 Inline-Styles trifft. Wenn er fürs Ereignis wichtiger ist
-   als der Rest von Stufe 1, lässt er sich vorziehen — dann aber mit Punkt 9
-   zusammen, nicht davor.
+5. **Dunkelmodus: jetzt möglich.**
+   Er lag in Stufe 2, weil er ohne Tokenschicht auf 463 Inline-Styles
+   getroffen wäre. Die Tokenschicht steht nun — ein Dunkelmodus ist damit im
+   Kern ein zweiter `:root`-Block in `app.css`. Er bleibt trotzdem eine eigene
+   Entscheidung: die Gründe kehren sich um, und jede Fläche, die heute
+   ausdrücklich Tinte trägt, muss dann Creme tragen.
 
 ## Anhang: Prüfaufbau
 
@@ -355,3 +380,28 @@ Tab-Reihenfolge über 14 Stationen, `document.title` und Kopfdaten,
 Rendering ohne JavaScript, Paint-Zeiten (FCP 256 ms, 27 Anfragen, 445 kB),
 Verhalten des Mobilmenüs bei Escape, sowie Kontrastverhältnisse nach
 WCAG-2-Formel für 15 Farbpaare der Seite.
+
+## Stand der Umsetzung
+
+| Befund | Stufe | Stand |
+| --- | --- | --- |
+| 1 Kein Titel, keine Vorschau | 0 | behoben |
+| 2 Kontrast unter dem Schwellenwert | 0 | behoben, am DOM aller neun Seiten nachgemessen |
+| 3 Tastatur und Fokus | 0 | behoben bis auf die Grafikbeschriftungen (Stufe 1) |
+| 4 Doppeltes Sprachmarkup | 2 | offen |
+| 5 Erster Frame doppelsprachig | 0 | behoben |
+| 6 Mobiles Antippen ohne Wirkung | 0 / 1 | Detailsprung behoben, Diagrammbeschriftung offen |
+| 7 Desktop-Balance „Zeiten & Orte" | 1 | offen |
+| 8 Leerzustände lesen sich als Fehler | 1 | offen |
+| 9 Karte folgt der Auswahl nicht | 0 | behoben |
+| 10 Countdown kennt nur „davor" | 0 | behoben |
+| 11 Navigation uneinheitlich | 1 | offen |
+| 12 Design-System ungenutzt | 0 | Tokens durch, Klassenschicht offen |
+
+Gegengeprüft wurde mit demselben Aufbau wie der Befund: Kopfdaten,
+Tab-Reihenfolge über 16 Stationen, Tastaturauswahl einer Standortkarte,
+Menü mit Escape, Countdown in vier gestellten Zeitpunkten, Kartenschwenk
+nach Ortswahl, mobiler Detailsprung, Rendering ohne JavaScript und die
+Kontrastverhältnisse am gerenderten DOM aller neun Seiten samt SVG-Text.
+
+Die Seite kontaktiert weiterhin genau einen Fremdhost: `tile.openstreetmap.org`.
