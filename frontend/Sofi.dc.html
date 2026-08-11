@@ -257,6 +257,66 @@
         </div>
       </div>
 
+      <!-- ══ Wolkenprognose ═══════════════════════════════════════════════════
+           Der einzige Wert auf dieser Seite, der sich bis zum Ereignis noch
+           ändert — alles andere steht seit Jahrhunderten fest. Deshalb oben,
+           direkt unter dem Ort, und nicht am Ende der Seite.               -->
+      <sc-if value="{{ cloudsShow }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#ebddc5;border-radius:24px;padding:22px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+            <h3 style="font-family:'Caprasimo',serif;font-size:18px;margin:0"><span data-l="de">Wolken zum Maximum</span><span data-l="en">Clouds at maximum</span></h3>
+            <span style="font-size:11px;color:rgba(32,30,29,0.5);font-variant-numeric:tabular-nums">{{ cloudRunLine }}</span>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px">
+            <div style="font-family:'Caprasimo',serif;font-size:42px;line-height:1;color:#b2622d">{{ cloudFreePct }}</div>
+            <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(32,30,29,0.55);line-height:1.5">
+              <span data-l="de">freie Sicht</span><span data-l="en">clear view</span>
+              <div style="text-transform:none;letter-spacing:0;font-size:12px;color:rgba(32,30,29,0.5)"><span data-l="de">auf die tiefstehende Sonne, {{ cloudMaxAt }}</span><span data-l="en">of the low-standing Sun, {{ cloudMaxAt }}</span></div>
+            </div>
+          </div>
+
+          <p style="font-size:14px;line-height:1.55;margin:0 0 20px">{{ cloudVerdict }}</p>
+
+          <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(32,30,29,0.55);margin-bottom:10px"><span data-l="de">Bewölkung nach Schichten</span><span data-l="en">Cloud cover by layer</span></div>
+          <sc-for list="{{ cloudLayers }}" as="l" hint-placeholder-count="4">
+            <div style="margin-bottom:11px">
+              <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:4px">
+                <span style="font-size:13px;font-weight:600">{{ l.label }}</span>
+                <span style="font-size:13px;font-variant-numeric:tabular-nums">{{ l.pctLabel }}</span>
+              </div>
+              <div style="height:6px;border-radius:3px;background:rgba(32,30,29,0.12);overflow:hidden">
+                <div style="height:100%;width:{{ l.pctCss }};background:{{ l.color }};border-radius:3px"></div>
+              </div>
+              <div style="font-size:11px;color:rgba(32,30,29,0.5);margin-top:3px">{{ l.note }}</div>
+            </div>
+          </sc-for>
+
+          <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(32,30,29,0.55);margin:18px 0 10px"><span data-l="de">Freie Sicht im Verlauf des Abends</span><span data-l="en">Clear view through the evening</span></div>
+          <div style="display:flex;align-items:flex-end;gap:8px">
+            <sc-for list="{{ cloudSeries }}" as="s" hint-placeholder-count="5">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+                <div style="width:100%;height:78px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px">
+                  <span style="font-size:11px;font-variant-numeric:tabular-nums;font-weight:{{ s.weight }}">{{ s.pctLabel }}</span>
+                  <div style="width:100%;height:{{ s.barPx }};background:{{ s.color }};border-radius:5px 5px 0 0"></div>
+                </div>
+                <span style="font-size:11px;color:rgba(32,30,29,0.55);font-variant-numeric:tabular-nums;font-weight:{{ s.weight }}">{{ s.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <p data-l="de" style="font-size:11px;line-height:1.5;color:rgba(32,30,29,0.5);margin:16px 0 0">Die freie Sicht gewichtet die drei Schichten (tief 1,0 · mittel 0,85 · hoch 0,45) — eine Heuristik für die tiefstehende Sonne, keine Strahlungsrechnung. Der DWD liefert alle drei Stunden einen neuen Lauf.</p>
+          <p data-l="en" style="font-size:11px;line-height:1.5;color:rgba(32,30,29,0.5);margin:16px 0 0">The clear-view figure weights the three layers (low 1.0 · mid 0.85 · high 0.45) — a heuristic for the low-standing Sun, not a radiative calculation. The DWD publishes a new run every three hours.</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ cloudsNote }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#ebddc5;border-radius:24px;padding:20px 22px">
+          <h3 style="font-family:'Caprasimo',serif;font-size:17px;margin:0 0 6px">{{ cloudsNoteTitle }}</h3>
+          <p style="font-size:13px;line-height:1.55;color:rgba(32,30,29,0.62);margin:0">{{ cloudsNoteBody }}</p>
+        </div>
+      </sc-if>
+
       <div style="background:#ebddc5;border-radius:24px;padding:6px 20px 14px">
         <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
           <div style="display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:13px 0;border-bottom:1px solid rgba(32,30,29,0.1)">
@@ -706,6 +766,23 @@ const T = {
     sunsetRow: 'Sonnenuntergang', sunsetN1: 'Finsternis läuft danach unsichtbar weiter', sunsetN2: 'nach dem letzten Kontakt',
     c4: 'Letzter Kontakt (C4)', c4n1: 'unter dem Horizont', c4n2: (a) => `Sonnenhöhe ${a}°`,
     dur: 'Sichtbare Dauer', durN: 'von C1 bis zum Verschwinden der Sonne',
+    /* Wolken */
+    cloudsTitle: 'Wolken zum Maximum',
+    cloudLow: 'tief', cloudMid: 'mittel', cloudHigh: 'hoch', cloudTotal: 'gesamt',
+    cloudLowNote: 'unter 800 hPa — beendet die Beobachtung',
+    cloudMidNote: '800 bis 400 hPa — dämpft deutlich',
+    cloudHighNote: 'ab 400 hPa — die Sichel bleibt sichtbar',
+    cloudTotalNote: 'alle Schichten zusammen, ohne Gewichtung',
+    cloudRun: (m, t) => `${m}, Lauf ${t}`,
+    cloudLoading: 'Prognose wird geladen …',
+    cloudNoneT: 'Noch keine Prognose',
+    cloudNone: 'Es ist kein Modelllauf eingespielt, oder dieser Ort liegt außerhalb des Modellgebiets. ICON-D2 deckt Deutschland und die Nachbarregionen ab und reicht 48 Stunden voraus.',
+    cloudErrT: 'Prognose nicht erreichbar',
+    cloudErr: 'Die Wolkendaten sind gerade nicht abrufbar. Kontaktzeiten, Bedeckungsgrad und Sonnenstand rechnet Ihr Browser selbst — sie stehen unabhängig davon.',
+    cvGood: (p) => `Aussichtsreich: rund ${p} % der Sicht auf die tiefstehende Sonne bleiben frei.`,
+    cvThin: (p) => `Überwiegend hohe Bewölkung — durch Zirren bleibt die Sichel sichtbar, das Licht wird nur gedämpft. Rund ${p} % freie Sicht.`,
+    cvMixed: (p) => `Wechselnd bewölkt, rund ${p} % freie Sicht. Bei dieser Sonnenhöhe können wenige Kilometer entscheiden.`,
+    cvBad: (p) => `Tiefe Bewölkung, nur rund ${p} % freie Sicht. Ein Ausweichort in der Nähe lohnt die Fahrt.`,
     barH: 'Horizont', barC: 'Wolken', barO: 'Bedeckung', barA: 'Zugang',
     facH: 'Horizontfreiheit West/NW', facHV: (c) => `${c} über Geländekante`,
     facC: 'Wolkenklimatologie', facCV: (p) => `${p} % klare Sicht im Mittel`,
@@ -732,6 +809,23 @@ const T = {
     sunsetRow: 'Sunset', sunsetN1: 'Eclipse continues unseen afterwards', sunsetN2: 'after last contact',
     c4: 'Last contact (C4)', c4n1: 'below the horizon', c4n2: (a) => `Sun altitude ${a}°`,
     dur: 'Visible duration', durN: 'from C1 until the Sun disappears',
+    /* Clouds */
+    cloudsTitle: 'Clouds at maximum',
+    cloudLow: 'low', cloudMid: 'mid', cloudHigh: 'high', cloudTotal: 'total',
+    cloudLowNote: 'below 800 hPa — ends the observation',
+    cloudMidNote: '800 to 400 hPa — dims noticeably',
+    cloudHighNote: 'above 400 hPa — the crescent stays visible',
+    cloudTotalNote: 'all layers combined, unweighted',
+    cloudRun: (m, t) => `${m}, run ${t}`,
+    cloudLoading: 'Loading forecast …',
+    cloudNoneT: 'No forecast yet',
+    cloudNone: 'No model run has been ingested, or this place lies outside the model domain. ICON-D2 covers Germany and the neighbouring regions and reaches 48 hours ahead.',
+    cloudErrT: 'Forecast unavailable',
+    cloudErr: 'The cloud data cannot be reached right now. Contact times, obscuration and sun position are computed by your browser — they stand regardless.',
+    cvGood: (p) => `Promising: around ${p} % of the view of the low Sun stays clear.`,
+    cvThin: (p) => `Mostly high cloud — the crescent stays visible through cirrus, the light is merely dimmed. Around ${p} % clear view.`,
+    cvMixed: (p) => `Broken cloud, around ${p} % clear view. At this solar altitude a few kilometres can decide it.`,
+    cvBad: (p) => `Low cloud, only around ${p} % clear view. A different spot nearby is worth the drive.`,
     barH: 'Horizon', barC: 'Cloud', barO: 'Cover', barA: 'Access',
     facH: 'Horizon clearance W/NW', facHV: (c) => `${c} above the terrain edge`,
     facC: 'Cloud climatology', facCV: (p) => `${p} % clear sky on average`,
@@ -755,6 +849,7 @@ class Component extends DCLogic {
   state = {
     page: 'start', navOpen: false, ready: false, now: Date.now(), lang: 'de',
     q: '', sug: [], loc: DEFAULT_LOC, siteId: null, radius: null,
+    clouds: null, cloudsStatus: 'idle',
   };
 
   componentDidMount() {
@@ -775,6 +870,7 @@ class Component extends DCLogic {
       this.E = E; this.D = D; this.A = A; this.C = C;
       this.contours = E.coverageContours([47.0, 5.6, 55.3, 15.4], 0.2, LEVELS);
       this.setState({ ready: true });
+      this.loadClouds();
     }).catch((e) => console.error('Module load failed', e));
   }
 
@@ -782,9 +878,43 @@ class Component extends DCLogic {
     clearInterval(this.timer);
     clearTimeout(this.searchTimer);
     this.search?.abort();
+    this.cloudReq?.abort();
     window.removeEventListener('hashchange', this.onHash);
     if (this.map) { this.map.remove(); this.map = null; }
   }
+
+  /* Wolkenprognose. Sie hängt nicht am Tippen, sondern am gewählten Ort —
+     geholt wird deshalb aus componentDidUpdate, sobald sich die Koordinaten
+     ändern. Der Schlüssel verhindert, dass der Sekundentakt der Uhr die
+     Anfrage wiederholt.
+
+     Fällt sie aus, bleibt die Seite vollständig: Kontaktzeiten, Bedeckung und
+     Isolinien rechnet eclipse.js im Browser. Die Prognose ergänzt, sie trägt
+     nicht — am Ereignisabend ist das der Unterschied zwischen einer
+     unvollständigen und einer toten Seite. */
+  loadClouds = () => {
+    if (!this.A) return;
+    const { lat, lon } = this.state.loc;
+    const key = `${lat.toFixed(4)},${lon.toFixed(4)}`;
+    if (this._cloudKey === key) return;
+    this._cloudKey = key;
+
+    this.cloudReq?.abort();
+    const controller = new AbortController();
+    this.cloudReq = controller;
+    this.setState({ cloudsStatus: 'loading' });
+
+    this.A.clouds(lat, lon, { signal: controller.signal })
+      .then((data) => {
+        if (this._cloudKey !== key) return;
+        this.setState({ clouds: data, cloudsStatus: data ? 'ok' : 'none' });
+      })
+      .catch((err) => {
+        if (err.name === 'AbortError' || this._cloudKey !== key) return;
+        console.warn('Wolkenprognose nicht verfügbar', err);
+        this.setState({ clouds: null, cloudsStatus: 'error' });
+      });
+  };
 
   /* Ortssuche. Die API ist asynchron, das Tippen nicht — deshalb entprellen,
      die vorige Anfrage abbrechen und späte Antworten verwerfen, die zu einer
@@ -814,6 +944,7 @@ class Component extends DCLogic {
   componentDidUpdate() {
     if (this.map && this.marker) this.marker.setLatLng([this.state.loc.lat, this.state.loc.lon]);
     if (this.mapEl && !this.map) this.initMap();
+    if (this.state.ready) this.loadClouds();
   }
 
   setLang = (lang) => {
@@ -928,6 +1059,9 @@ class Component extends DCLogic {
       cdD: '—', cdH: '—', cdM: '—', cdS: '—', heroMoonX: 62, heroMoonY: 88,
       obsPct: '—', crX: 60, crY: 60, crR: 41, rows: [], yTicks: [], xTicks: [], timeline: [],
       areaPath: '', curvePath: '', hasNightBox: false, nightX: 0, nightW: 0, nightLabelX: 0, nightAnchor: 'start',
+      cloudsShow: false, cloudsNote: false, cloudsNoteTitle: '', cloudsNoteBody: '',
+      cloudFreePct: '—', cloudVerdict: '', cloudLayers: [], cloudSeries: [],
+      cloudRunLine: '', cloudMaxAt: '—',
       sites: [], noSites: false, detName: '—', detSub: '', detVerdict: '', detAccess: '',
       detBars: [], hzPath: '', sunPath: '', hzX: [], hzY: [], sunMaxX: 300, sunMaxY: 150,
       sunMaxLX: 300, sunMaxLY: 130,
@@ -1000,6 +1134,67 @@ class Component extends DCLogic {
       sunset: c.sunset ? F(c.sunset.date, false) : F(c.c4.date, false),
       obs, alt: c.max.alt.toFixed(1), az: c.max.az.toFixed(0),
     });
+
+    /* Wolken. Der Kasten erscheint in jedem Zustand — auch „keine Prognose"
+       ist eine Auskunft. Eine leere Stelle wäre am Ereignisabend schlechter:
+       dann weiß der Besucher nicht, ob er etwas übersehen hat. */
+    const cst = S.cloudsStatus;
+    const cl = S.clouds;
+    const atMax = cst === 'ok' && cl ? cl.atMaximum : null;
+    const obstruction = atMax && atMax.obstruction != null ? atMax.obstruction : null;
+
+    if (cst === 'idle' || cst === 'loading') {
+      v.cloudsNote = true; v.cloudsNoteTitle = t.cloudsTitle; v.cloudsNoteBody = t.cloudLoading;
+    } else if (cst === 'error') {
+      v.cloudsNote = true; v.cloudsNoteTitle = t.cloudErrT; v.cloudsNoteBody = t.cloudErr;
+    } else if (cst !== 'ok' || obstruction === null) {
+      // Kein Lauf eingespielt, oder der Ort liegt außerhalb des Modellgebiets.
+      v.cloudsNote = true; v.cloudsNoteTitle = t.cloudNoneT; v.cloudsNoteBody = t.cloudNone;
+    } else {
+      v.cloudsShow = true;
+      const pct = (x) => Math.round((x ?? 0) * 100);
+      const freePct = Math.round((1 - obstruction) * 100);
+      const low = atMax.low ?? 0, mid = atMax.mid ?? 0, high = atMax.high ?? 0;
+
+      v.cloudFreePct = `${freePct} %`;
+      // Die Reihenfolge ist die physikalische: tiefe Bewölkung schlägt alles
+      // andere, hohe Zirren allein sind der gutartige Fall.
+      v.cloudVerdict = low >= 0.6 ? t.cvBad(freePct)
+        : freePct >= 70 ? t.cvGood(freePct)
+        : high >= 0.5 && low < 0.3 && mid < 0.3 ? t.cvThin(freePct)
+        : t.cvMixed(freePct);
+
+      v.cloudLayers = [
+        { label: t.cloudLow, note: t.cloudLowNote, pctLabel: `${pct(atMax.low)} %`, pctCss: `${pct(atMax.low)}%`, color: '#8c491a' },
+        { label: t.cloudMid, note: t.cloudMidNote, pctLabel: `${pct(atMax.mid)} %`, pctCss: `${pct(atMax.mid)}%`, color: '#c67139' },
+        { label: t.cloudHigh, note: t.cloudHighNote, pctLabel: `${pct(atMax.high)} %`, pctCss: `${pct(atMax.high)}%`, color: '#8fa073' },
+        { label: t.cloudTotal, note: t.cloudTotalNote, pctLabel: `${pct(atMax.total)} %`, pctCss: `${pct(atMax.total)}%`, color: '#6b6560' },
+      ];
+
+      const maxMs = cl.maximumAt.getTime();
+      const usable = cl.series.filter((s) => s.obstruction != null);
+      const nearest = usable.reduce(
+        (best, s) => Math.min(best, Math.abs(s.validAt.getTime() - maxMs)), Infinity,
+      );
+      v.cloudSeries = usable.map((s) => {
+        const p = Math.round((1 - s.obstruction) * 100);
+        return {
+          label: F(s.validAt, false),
+          pctLabel: `${p} %`,
+          // Feste Pixel statt Prozent: die Säule wächst von unten in eine Box
+          // fester Höhe, und die Beschriftung sitzt direkt darüber. Der Sockel
+          // von 4 px hält auch 0 % als Säule lesbar.
+          barPx: `${Math.round(4 + (p / 100) * 56)}px`,
+          color: p >= 70 ? '#8fa073' : p >= 40 ? '#d67f48' : '#8c491a',
+          weight: Math.abs(s.validAt.getTime() - maxMs) === nearest ? '700' : '400',
+        };
+      });
+
+      v.cloudMaxAt = F(cl.maximumAt);
+      v.cloudRunLine = t.cloudRun(cl.model.toUpperCase(), cl.runAt.toLocaleString(t.tzLocale, {
+        timeZone: 'Europe/Berlin', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit',
+      }));
+    }
 
     const all = this.siteData().map((s) => ({ ...s, d: this.dist(S.loc, s) }))
       .filter((s) => s.d <= radius).sort((a, b) => b.score - a.score);
