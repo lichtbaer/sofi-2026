@@ -1,9 +1,15 @@
 {
 	admin off
-	auto_https off
 }
 
-:80 {
+# Die Site-Adresse kommt aus SOFI_DOMAIN (docker-compose reicht sie durch).
+# Mit gesetzter Domain — z. B. horizontfrei.de — holt und erneuert Caddy
+# selbsttätig Let's-Encrypt-Zertifikate (Ablage im Volume caddydata) und
+# leitet HTTP auf HTTPS um. Dafür müssen die Ports 80 und 443 öffentlich
+# erreichbar sein: WEB_PORT=80 und WEB_TLS_PORT=443 in der .env. Mehrere
+# Hostnamen gehen durch Leerzeichen getrennt ("horizontfrei.de www.horizontfrei.de").
+# Ohne Domain (lokale Entwicklung) bleibt es bei HTTP auf Port 80.
+{$SOFI_DOMAIN:http://} {
 	encode zstd gzip
 
 	# Alles unter /api geht an FastAPI.
@@ -44,6 +50,14 @@
 		Referrer-Policy "strict-origin-when-cross-origin"
 		X-Content-Type-Options "nosniff"
 		Cross-Origin-Opener-Policy "same-origin"
+
+		# Ein Jahr HSTS, sobald über HTTPS ausgeliefert. Über blankes HTTP
+		# ignorieren Browser den Header (RFC 6797) — die lokale Entwicklung
+		# stört er also nicht. Kein upgrade-insecure-requests in der CSP:
+		# alle Verweise sind relativ, die Kacheln ohnehin https — Mixed
+		# Content kann nicht entstehen, und im HTTP-Entwicklungsbetrieb
+		# würde die Direktive die eigenen Assets kaputt-upgraden.
+		Strict-Transport-Security "max-age=31536000"
 		-Server
 	}
 

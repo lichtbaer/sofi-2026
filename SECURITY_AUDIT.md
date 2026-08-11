@@ -18,17 +18,18 @@ Die kritischen Lücken liegen nicht im Code, sondern **im Betrieb und im Rechtli
 
 | Prio | Befund | Kategorie |
 | --- | --- | --- |
-| **K1** | Kein TLS im Stack — Standortsuchen laufen im Klartext | OWASP A02 |
+| **K1** | Kein TLS im Stack — Standortsuchen laufen im Klartext — *umgesetzt 11.8.* | OWASP A02 |
 | **K2** | Impressum und Datenschutzerklärung fehlen | DSGVO Art. 13 / DDG §5 |
 | **H1** | Access-Logs protokollieren IP + Suchbegriffe + Koordinaten | DSGVO / A09 |
 | **H2** | Kein Rate-Limiting, keine Lastabwehr — am Ereignistag riskant | A04 |
 | **H3** | LIKE-Wildcards in der Ortssuche nicht escaped — *behoben 11.8.* | A03 (Injection-Klasse) |
 | **H4** | Default-Datenbankpasswort `sofi` als Fallback in docker-compose — *behoben 11.8.* | A05 |
 
-**Umsetzungsstand:** H3, H4, M3, M6 und M7 sind auf diesem Branch behoben
-(inkl. Regressionstests in `backend/tests/test_api_validation.py`). Offen
-bleiben die Betriebs- und Rechtsthemen K1, K2, H1, H2 sowie die übrigen
-M-/N-Befunde.
+**Umsetzungsstand:** H3, H4, M3, M6 und M7 sind behoben (inkl.
+Regressionstests in `backend/tests/test_api_validation.py`); K1 ist
+umgesetzt — Let's Encrypt über `SOFI_DOMAIN`, wirksam sobald das Deployment
+die Domain und die Ports 80/443 setzt. Offen bleiben K2, H1, H2 sowie die
+übrigen M-/N-Befunde.
 
 Kein Befund erlaubt Remote Code Execution, Datendiebstahl oder Kontenübernahme —
 die API ist lesend, hält keine Nutzerdaten und kennt keine Accounts. Die realen
@@ -84,6 +85,17 @@ Datenschutzmangel. Zusätzlich fehlt `Strict-Transport-Security`.
   Proxy TLS macht, und das im Repo festhalten.
 * Nach TLS-Aktivierung: `Strict-Transport-Security "max-age=31536000"` und
   `upgrade-insecure-requests` in der CSP ergänzen.
+
+> **Status: umgesetzt (11.08.2026).** Caddy terminiert TLS jetzt selbst:
+> `SOFI_DOMAIN` (z. B. `horizontfrei.de`, konfigurierbar über `.env`)
+> aktiviert automatische Let's-Encrypt-Zertifikate samt HTTP→HTTPS-Umleitung;
+> HSTS (max-age ein Jahr) wird gesetzt. Ohne Domain bleibt die lokale
+> Entwicklung bei HTTP. Auf `upgrade-insecure-requests` wurde bewusst
+> verzichtet: alle Verweise sind relativ, die Kacheln https — Mixed Content
+> kann nicht entstehen, und im HTTP-Entwicklungsbetrieb bräche die Direktive
+> die eigenen Assets. **Produktiv wirksam erst, wenn das Deployment
+> `SOFI_DOMAIN`, `WEB_PORT=80` und `WEB_TLS_PORT=443` setzt und DNS auf den
+> Server zeigt.**
 
 ### K2 — Impressum und Datenschutzerklärung fehlen (DSGVO Art. 13, DDG §5)
 
@@ -408,7 +420,8 @@ Sprachpräferenz (localStorage, rein clientseitig).
 
 **Sofort (vor dem 12.8., zusammen < 1 Tag):**
 
-1. TLS aktivieren bzw. Terminierung klären + HSTS (K1)
+1. ~~TLS aktivieren bzw. Terminierung klären + HSTS (K1)~~ ✔ umgesetzt —
+   im Deployment `SOFI_DOMAIN`, `WEB_PORT=80`, `WEB_TLS_PORT=443` setzen
 2. Impressum + Datenschutzerklärung einspielen (K2)
 3. Query-Strings aus Caddy-Log, `--no-access-log` für Uvicorn, Log-Rotation (H1)
 4. ~~LIKE-Escaping in `geocode.search()` (H3)~~ ✔ erledigt
