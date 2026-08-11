@@ -1,0 +1,286 @@
+/* Projektschicht über dem Design-System *Organic*.
+   Reihenfolge im <head>: fonts.css → _ds/styles.css → leaflet.css → app.css.
+   Das Design-System liefert Tokens, Ramps und Komponentenklassen; diese Datei
+   benennt daraus die Rollen dieses Projekts und hält alles, was ein
+   style-Attribut prinzipiell nicht kann — Fokus, Hover, Media Queries,
+   Placeholder, Auswahlzustände. */
+
+:root {
+  /* ── Textrollen ───────────────────────────────────────────────────────────
+     Vorher standen hier abgestufte rgba(32,30,29,α)-Werte. Gemessen gegen den
+     Cremegrund lagen die schwächeren davon unter 4,5:1 — 0.62 ergab 4,38,
+     0.55 nur 3,57, und die 11-px-Bildunterschriften auf Sand 2,99. Das Muster
+     ging in die falsche Richtung: je kleiner der Text, desto schwächer der
+     Kontrast, auf einer Seite, die abends im Freien auf dem Telefon gelesen
+     wird. Die Ramps des Design-Systems haben die passenden Stufen bereits.
+
+     Werte auf Creme / auf Sand:                                            */
+  --text-strong: var(--color-text);        /* #201e1d — 14,8 / 13,2         */
+  --text-body:   var(--color-neutral-800); /* #474238 —  8,4 /  7,5         */
+  --text-muted:  var(--color-neutral-700); /* #645c50 —  5,5 /  4,9         */
+  --text-link:   var(--color-accent-700);  /* #8c491a —  5,7 /  5,1         */
+
+  /* Auf dem Tintengrund #201e1d. Die Akzentfarbe kippt hier: --color-accent
+     erreicht auf Creme nur 3,0 und taugt dort nicht für Text, --color-accent-400
+     erreicht auf Tinte 8,0. Deshalb zwei verschiedene Akzente je Grund.     */
+  --on-ink:        var(--color-bg);              /* 14,8 */
+  --on-ink-body:   rgba(245, 234, 216, 0.78);    /*  8,9 */
+  --on-ink-muted:  rgba(245, 234, 216, 0.62);    /*  6,1 */
+  --on-ink-accent: var(--color-accent-400);      /*  8,0 */
+
+  /* ── Flächen und Linien ───────────────────────────────────────────────── */
+  --surface-hover: #e3d2b4;
+  --ink-hover:     var(--color-neutral-900);
+  --line:          var(--color-divider);
+  --line-soft:     color-mix(in srgb, var(--color-text) 10%, transparent);
+  --line-strong:   color-mix(in srgb, var(--color-text) 18%, transparent);
+  --line-ink:      rgba(245, 234, 216, 0.16);
+  --track:         color-mix(in srgb, var(--color-text) 11%, transparent);
+  --track-ink:     rgba(245, 234, 216, 0.14);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--text-body);
+  font-family: var(--font-body);
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--text-link); text-underline-offset: 3px; }
+a:hover { color: var(--color-accent-800); }
+
+/* ── Fokus ───────────────────────────────────────────────────────────────────
+   Ein doppelter Ring, weil die Seite zwei Gründe hat: der innere dunkle Ring
+   ist auf Creme sichtbar, der äußere helle auf Tinte. Ein einfarbiger Ring
+   verschwindet zwangsläufig auf einem der beiden — vorher stand hier der
+   Browser-Standard, der auf den dunklen Karten praktisch unsichtbar war.    */
+:focus-visible {
+  outline: 2px solid var(--color-accent-400);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--color-accent-800);
+}
+:focus:not(:focus-visible) { outline: none; }
+
+/* Sprungmarke: der erste Tabstopp der Seite, sichtbar nur mit Tastatur. Ohne
+   sie steht vor jedem Seiteninhalt die vollständige Navigation.            */
+.skip {
+  position: absolute; left: 12px; top: -60px; z-index: 1000;
+  padding: 10px 18px; border-radius: 999px;
+  background: var(--color-accent); color: var(--color-text);
+  font-weight: 600; text-decoration: none;
+  transition: top 0.15s ease;
+}
+.skip:focus { top: 12px; color: var(--color-text); }
+
+/* ── Sprachumschaltung ────────────────────────────────────────────────────── */
+html[lang="de"] [data-l="en"] { display: none !important; }
+html[lang="en"] [data-l="de"] { display: none !important; }
+
+/* ── Zustände ────────────────────────────────────────────────────────────────
+   Vorher lagen Hover-Farben in style-hover-Attributen der DC-Laufzeit und
+   griffen nur dort, wo jemand daran gedacht hatte. Ein Aktiv-Zustand fehlte
+   überall.                                                                  */
+.u-card-link { transition: background-color 0.15s ease; }
+.u-card-link:hover { background: var(--surface-hover); }
+.u-card-link:active { background: var(--color-neutral-300); }
+.u-card-link-ink:hover { background: var(--ink-hover); }
+.u-card-link-ink:active { background: #3a352d; }
+
+.u-nav-link { transition: color 0.15s ease; }
+.u-nav-link:hover { color: var(--text-link); }
+.u-nav-link[aria-current="page"] { color: var(--text-link); font-weight: 600; }
+
+.u-btn { transition: background-color 0.15s ease, border-color 0.15s ease; }
+.u-btn-primary:hover { background: var(--color-accent-600) !important; }
+.u-btn-primary:active { background: var(--color-accent-700) !important; }
+.u-btn-outline:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+.u-btn-outline:active { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
+
+/* ── Ortssuche ───────────────────────────────────────────────────────────────
+   Die Vorschläge waren <div onClick>: nicht fokussierbar, nicht mit Enter
+   auslösbar, ohne Rolle. Jetzt eine Listbox mit Pfeiltasten — der aktive
+   Eintrag wird über aria-activedescendant angesagt, nicht über den Fokus,
+   damit die Eingabe die Tastatur behält.                                    */
+.sug-list { list-style: none; margin: 0; padding: 0; }
+.sug-option {
+  display: flex; justify-content: space-between; gap: 12px; align-items: baseline;
+  width: 100%; padding: 12px 18px; cursor: pointer;
+  font: inherit; text-align: left; color: var(--text-strong);
+  background: transparent; border: 0;
+}
+.sug-option:hover { background: var(--color-surface); }
+.sug-option[data-active="1"] { background: var(--color-accent-200); }
+
+/* ── Standortkarten ──────────────────────────────────────────────────────────
+   Waren <div onClick> und kamen in der Tab-Reihenfolge nicht vor: per Tastatur
+   war auf dieser Seite kein Standort auswählbar. Jetzt <button>, hier auf das
+   Aussehen der Karte zurückgesetzt.                                         */
+.site-card {
+  display: block; width: 100%; text-align: left; font: inherit;
+  cursor: pointer; transition: transform 0.12s ease, box-shadow 0.15s ease;
+}
+.site-card:hover { box-shadow: var(--shadow-md); }
+.site-card:active { transform: translateY(1px); }
+
+/* ── Eingaben ───────────────────────────────────────────────────────────────
+   Der Standard-Placeholder vieler Browser liegt unter dem Schwellenwert.    */
+input::placeholder { color: var(--text-muted); opacity: 1; }
+input[type="range"] { accent-color: var(--color-accent); }
+
+/* ── Karte ──────────────────────────────────────────────────────────────── */
+.leaflet-container { font-family: var(--font-body); background: var(--color-neutral-300); }
+.leaflet-control-attribution { font-size: 9px; }
+/* OSM-Standardkacheln gibt es nur hell; „dunkel" entsteht als Filter. */
+.basemap-dark { filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.9); }
+
+::selection { background: color-mix(in srgb, var(--color-accent) 30%, transparent); }
+
+@keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+@media (max-width: 900px) {
+  [data-nav-desktop] { display: none !important; }
+  [data-nav-toggle] { display: inline-flex !important; }
+}
+
+/* Der pulsierende Punkt im Hero lief bisher unbedingt. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Klassenschicht
+
+   Abgeleitet aus dem, was sich im Markup tatsaechlich wiederholt hat, nicht
+   aus einer gedachten Komponentenliste: 71-mal derselbe Fliesstext, 70-mal
+   dieselbe Auszeichnungsschrift, 58-mal dieselbe Flaeche, 23-mal dieselbe
+   Trennlinie. Was nur einmal vorkommt, bleibt ein style-Attribut — eine
+   Klasse mit einem Verwender erklaert nichts.
+   ══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Vier Radien (24, 22, 20, 18) lagen ohne erkennbare Regel nebeneinander.
+     Zwei genuegen: die Flaeche und die kleinere Kachel darin. */
+  --radius-panel: 24px;
+  --radius-tile:  20px;
+}
+
+/* ── Seitenbreite ──────────────────────────────────────────────────────────
+   Die Breite variiert nach Textsorte — 1180 fuer Karten- und Datenseiten,
+   860 fuer Fliesstext, 720 fuer die Rechtstexte. Eine Klasse, die Breite als
+   Variable, damit die Ausnahme sichtbar bleibt statt sich zu verstecken. */
+.page { max-width: var(--wrap, 1180px); margin: 0 auto; padding: 36px 20px 64px; }
+
+/* ── Flaechen ─────────────────────────────────────────────────────────────── */
+.panel     { background: var(--color-surface); border-radius: var(--radius-panel); }
+.panel-ink { background: var(--color-text); color: var(--on-ink); border-radius: var(--radius-panel); }
+.tile      { background: var(--color-surface); border-radius: var(--radius-tile); }
+
+/* ── Fliesstext ───────────────────────────────────────────────────────────
+   Drei Abstaende, weil der letzte Absatz vor einer Ueberschrift mehr Luft
+   braucht als der zwischen zweien. Kein :last-child: die Sprachfassungen
+   stehen paarweise im DOM, die versteckte zaehlt fuer den Selektor mit. */
+.prose       { font-size: 15px; line-height: 1.65; color: var(--text-body); margin: 0 0 12px; }
+.prose-end   { font-size: 15px; line-height: 1.65; color: var(--text-body); margin: 0 0 28px; }
+.prose-flush { font-size: 15px; line-height: 1.6;  color: var(--text-body); margin: 0; }
+.prose-sm    { font-size: 13px; line-height: 1.5;  color: var(--text-body); }
+.prose-ink   { font-size: 15px; line-height: 1.6;  color: var(--on-ink-body); margin: 0; }
+.lede        { font-size: 17px; line-height: 1.6;  color: var(--text-body); margin: 0 0 28px; text-wrap: pretty; }
+
+/* ── Auszeichnungsschrift ─────────────────────────────────────────────────
+   Auf h1–h6 liefert das Design-System sie ueber --font-heading; dort stand
+   font-family bisher 70-mal ueberfluessig im Markup. .display ist fuer die
+   Stellen, an denen kein Ueberschriftenelement richtig waere — Kennzahlen,
+   Kartentitel, Zeitangaben in der Zeitleiste. */
+.display { font-family: var(--font-heading); font-weight: var(--font-heading-weight); }
+
+/* ── Versalzeile ──────────────────────────────────────────────────────────── */
+.kicker        { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+.kicker-ink    { font-size: 11px; letter-spacing: 0.1em;  text-transform: uppercase; color: var(--on-ink-accent); }
+.kicker-accent { font-size: 10px; letter-spacing: 0.11em; text-transform: uppercase; color: var(--text-link); }
+
+/* ── Zeile mit Trennlinie ─────────────────────────────────────────────────── */
+.row     { padding: 13px 0; border-bottom: 1px solid var(--line-soft); }
+.row-lg  { padding: 20px 0; border-bottom: 1px solid var(--line-soft); }
+.row:last-child, .row-lg:last-child { border-bottom: 0; }
+
+/* ── Verweise auf dunklem Grund ───────────────────────────────────────────── */
+.link-ink { color: var(--on-ink-body); text-decoration: none; }
+.link-ink:hover { color: var(--on-ink); text-decoration: underline; }
+
+/* ── Typografische Skala der Inhaltsseiten ───────────────────────────────────
+   Die Groessen standen 35-mal einzeln im Markup, und sie waren nicht zufaellig
+   verschieden: die Essayseiten setzen h2 auf 26 px, die Rechtstexte auf 22 px.
+   Diese eine echte Variation traegt jetzt eine Variable, der Rest ist Regel.
+   Die untere Marge war zwischen 8 und 14 px gedriftet — ohne Absicht, die man
+   benennen koennte. */
+.page h1 { font-size: clamp(30px, 5vw, 44px); letter-spacing: -0.02em; margin: 0 0 8px; }
+.page h2 { font-size: var(--h2, 26px); margin: 0 0 12px; }
+.page h3 { font-size: var(--h3, 19px); margin: 0 0 8px; }
+
+/* ── Tabellen ─────────────────────────────────────────────────────────────── */
+.td { padding: 12px 8px; border-bottom: 1px solid var(--line-soft); }
+.td-num { font-variant-numeric: tabular-nums; }
+.th {
+  padding: 12px 8px; text-align: left; font-weight: 600;
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-muted); border-bottom: 1px solid var(--line);
+}
+
+/* ── Navigation ─────────────────────────────────────────────────────────────
+   Die Beschriftungen standen in Kopfzeile, Mobilmenue und Fusszeile in drei
+   Fassungen fuer dieselben Ziele; die Groessen ebenso. */
+.nav-link-mobile {
+  text-decoration: none; color: var(--color-text);
+  font-size: 16px; font-weight: 500; padding: 12px 0;
+}
+.nav-link-mobile:hover { color: var(--text-link); }
+.u-nav-link { font-size: 14px; font-weight: 500; white-space: nowrap; text-decoration: none; color: var(--color-text); }
+
+/* ── Kacheltitel und Kleintext ──────────────────────────────────────────────── */
+.tile-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.prose-14 { font-size: 14px; line-height: 1.55; color: var(--text-body); margin: 0; }
+
+/* ── Weitere Versalzeilen ───────────────────────────────────────────────────── */
+.kicker-muted-ink { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--on-ink-muted); }
+
+/* ── Leere Wertungsspur ──────────────────────────────────────────────────────
+   Ohne Horizontwert stand der Balken auf 0 % und las sich als Wertung Null.
+   Eine schraffierte Spur sagt „hier fehlt eine Messung" statt „hier ist der
+   Wert schlecht". */
+.bar-track[data-empty="1"] {
+  background: repeating-linear-gradient(
+    -45deg,
+    color-mix(in srgb, currentColor 22%, transparent) 0 3px,
+    transparent 3px 6px) !important;
+}
+.bar-track[data-empty="1"] > * { display: none; }
+
+/* ── „Zeiten & Orte" ─────────────────────────────────────────────────────────
+   Vorher zwei gleich breite Spalten aus auto-fit: links endete die Karte bei
+   rund 830 px Hoehe, rechts lief die Datenspalte bis 1320 px, darunter stand
+   eine grosse Leerflaeche. Die Karte ist die Kerninteraktion der Seite und
+   bekommt jetzt mehr Breite und mehr Hoehe; das Verlaufsdiagramm sitzt unter
+   beiden Spalten, wo seine Zeitachse Platz hat. */
+.zeiten-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+.zeiten-curve { margin-top: 18px; }
+
+@media (max-width: 900px) {
+  .zeiten-grid { grid-template-columns: minmax(0, 1fr); }
+  /* Auf dem Handy stand die Karte vor allen Zahlen — also vor dem, wonach die
+     meisten Besucher suchen. Sie rutscht hinter Ort, Wolken und Kontaktzeiten. */
+  .zeiten-map { order: 2; --map-h: 46vh; }
+}
