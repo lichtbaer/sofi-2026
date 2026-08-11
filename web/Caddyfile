@@ -61,8 +61,47 @@
 		-Server
 	}
 
+	# Zugriffsprotokoll, aber ohne die personenbeziehbaren Teile (Audit H1).
+	#
+	# Ungefiltert stünde hier beides drin, was die Seite clientseitig gerade
+	# vermeidet: der Suchbegriff aus /api/v1/geocode?q=… und die Koordinaten
+	# aus /api/v1/clouds?lat=…&lon=… — nach einem Klick auf „Mein Standort"
+	# also die Geräteposition. Zusammen mit der IP wäre das ein Bewegungs-
+	# und Interessensprofil im Klartext.
+	#
+	# Abgeschaltet wird der Log deshalb nicht: Pfad, Statuscode, Dauer und
+	# Größe sind genau die Diagnose, die man bei einer Lastspitze braucht.
+	# Gefiltert wird nur, was zur Person führt.
+	#
+	# Nach jeder Änderung hier prüfen — Caddy startet mit fehlerhafter
+	# Konfiguration gar nicht:
+	#   docker compose run --rm --no-deps web \
+	#     validate --config /etc/caddy/Caddyfile --adapter caddyfile
 	log {
 		output stderr
-		format console
+		format filter {
+			wrap console
+			fields {
+				# Der Pfad bleibt, die Parameter fallen weg.
+				request>uri query {
+					delete q
+					delete lat
+					delete lon
+				}
+				# Netz statt Anschluss. remote_ip ist die Gegenstelle,
+				# client_ip die aus vertrauenswürdigen Proxy-Kopfzeilen
+				# aufgelöste Adresse; je nach Aufbau trägt mal die eine,
+				# mal die andere den Besucher. Ein nicht vorhandenes Feld
+				# ist ein No-op, deshalb beide.
+				request>remote_ip ip_mask {
+					ipv4 24
+					ipv6 48
+				}
+				request>client_ip ip_mask {
+					ipv4 24
+					ipv6 48
+				}
+			}
+		}
 	}
 }
