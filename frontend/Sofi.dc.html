@@ -464,10 +464,15 @@
         <svg viewBox="0 0 600 230" style="width:100%;height:auto">
           <sc-for list="{{ hzY }}" as="g" hint-placeholder-count="4">
             <g>
-              <line x1="34" y1="{{ g.y }}" x2="592" y2="{{ g.y }}" stroke="rgba(245,234,216,0.14)" stroke-width="1"></line>
+              <line x1="34" y1="{{ g.y }}" x2="592" y2="{{ g.y }}" stroke="{{ g.stroke }}" stroke-width="{{ g.width }}"></line>
               <text x="28" y="{{ g.ty }}" text-anchor="end" font-size="10" fill="rgba(245,234,216,0.45)">{{ g.label }}</text>
             </g>
           </sc-for>
+          <!-- Die Nulllinie ist der Bezugspunkt, nicht der Boden: darunter liegt
+               Gelände, das tiefer steht als der Beobachter. Ohne diese
+               Beschriftung liest sich eine Fläche am unteren Rand als „flaches
+               Land" statt als „von hier fällt alles ab". -->
+          <text x="40" y="{{ eyeY }}" font-size="9" letter-spacing="0.06em" fill="rgba(245,234,216,0.5)">{{ eyeLabel }}</text>
           <path d="{{ hzPath }}" fill="rgba(122,138,94,0.85)" stroke="#8fa073" stroke-width="1.5"></path>
           <path d="{{ sunPath }}" fill="none" stroke="rgba(246,160,107,0.55)" stroke-width="2" stroke-dasharray="5 4"></path>
           <circle cx="{{ sunMaxX }}" cy="{{ sunMaxY }}" r="9" fill="#f6a06b"></circle>
@@ -995,6 +1000,7 @@ const T = {
     // was fehlt, verdeckt zusätzlich, nie weniger.
     vBlocked: (c) => `Verdeckt: Gelände und Bewuchs stehen im Maximum ${c}° über der Sonne. Das ist belastbar — genauere Daten können nur mehr verdecken, nicht weniger.`,
     vTight: (c) => `Höchstens ${c}° Reserve über der Geländekante. Knapp: erfasst sind Gelände und Bewuchs, nicht aber Gebäude oder eine einzelne Baumreihe — davon reicht hier schon eine.`,
+    vBelow: (b, c) => `Freier Blick nach Westen: die höchste Geländekante liegt ${b}° unterhalb der Augenhöhe — Sie stehen auf dem Berg, im Sektor fällt alles ab. Reserve zur Sonne ${c}°. Gebäude und Einzelhindernisse unter 30 m Rasterweite sind nicht erfasst.`,
     vClear: (c) => `Frei bis höchstens ${c}° Reserve über Gelände und Bewuchs. Gebäude und Einzelhindernisse unter 30 m Rasterweite sind nicht erfasst: vor Ort den Westhorizont prüfen.`,
     hzLoading: 'Horizontprofil wird geladen …',
     hzMissing: 'Kein Horizontprofil verfügbar. Das Höhenmodell ist noch nicht eingespielt oder der Dienst antwortet nicht — hier steht bewusst keine geschätzte Zahl.',
@@ -1044,6 +1050,7 @@ const T = {
     facA: 'Access', accFree: 'freely accessible', accLtd: 'restricted',
     vBlocked: (c) => `Blocked: terrain and vegetation stand ${c}° above the Sun at maximum. This one holds — better data can only add obstruction, never remove it.`,
     vTight: (c) => `At most ${c}° of clearance above the terrain edge. Tight: terrain and vegetation are modelled, buildings and a single tree line are not — and one would be enough here.`,
+    vBelow: (b, c) => `Open view to the west: the highest terrain edge lies ${b}° below eye level — you are standing on the summit, everything in the sector falls away. Clearance to the Sun ${c}°. Buildings and obstacles below the 30 m grid are not modelled.`,
     vClear: (c) => `Clear, with at most ${c}° above terrain and vegetation. Buildings and obstacles below the 30 m grid are not modelled: check your western horizon on site.`,
     hzLoading: 'Loading horizon profile …',
     hzMissing: 'No horizon profile available. The elevation model is not ingested yet, or the service is not responding — no estimated number is shown here on purpose.',
@@ -1374,7 +1381,7 @@ class Component extends DCLogic {
       navOpen: S.navOpen, q: S.q, sug: [], hasSug: false, locName: S.loc.name,
       locCoords: `${S.loc.lat.toFixed(4)}° N, ${S.loc.lon.toFixed(4)}° ${S.lang === 'en' ? 'E' : 'O'}`,
       radius, radiusLabel: `${radius} km`, searchPlaceholder: t.search,
-      sunsetWord: t.sunset, maxWord: t.max,
+      sunsetWord: [t.sunset], maxWord: [t.max],
       deBg: S.lang === 'de' ? on : off, deFg: S.lang === 'de' ? onFg : offFg,
       enBg: S.lang === 'en' ? on : off, enFg: S.lang === 'en' ? onFg : offFg,
       setDe: () => this.setLang('de'), setEn: () => this.setLang('en'),
@@ -1402,6 +1409,7 @@ class Component extends DCLogic {
       overlayNote: false, overlayNoteText: '',
       sites: [], noSites: false, detName: '—', detSub: '', detVerdict: '', detAccess: '',
       detBars: [], hzPath: '', sunPath: '', hzX: [], hzY: [], sunMaxX: 300, sunMaxY: 150,
+      eyeY: 180, eyeLabel: '',
       sunMaxLX: 300, sunMaxLY: 130,
     };
     if (!S.ready) return v;
@@ -1499,10 +1507,17 @@ class Component extends DCLogic {
     const pts = c.track.map((p) => `${tx(p.t).toFixed(1)},${ty(p.obs).toFixed(1)}`);
     v.curvePath = `M${pts.join('L')}`;
     v.areaPath = `M${X0},${Y1}L${pts.join('L')}L${X1},${Y1}Z`;
-    v.yTicks = [0, 0.25, 0.5, 0.75, 1].map((f) => ({ y: ty(f), ty: ty(f) + 4, label: `${Math.round(f * 100)} %` }));
+  /* Beschriftungen in SVG-<text> müssen als *Array* übergeben werden, nicht
+     als String. Die DC-Laufzeit verpackt einen interpolierten String in ein
+     <span class="sc-interp"> (support.js:607); in HTML ist das harmlos, in
+     einem SVG-<text> ist es fatal — SVG setzt nur echte Textknoten, das
+     Element bleibt 0x0 und die Beschriftung fehlt ersatzlos. Ein Array läuft
+     dagegen in den Fragment-Zweig direkt darüber (support.js:602) und wird zu
+     einem echten Textknoten. Deshalb überall hier `[text]` statt `text`. */
+    v.yTicks = [0, 0.25, 0.5, 0.75, 1].map((f) => ({ y: ty(f), ty: ty(f) + 4, label: [`${Math.round(f * 100)} %`] }));
     v.xTicks = [0, 0.25, 0.5, 0.75, 1].map((f) => {
       const x = c.c1.t + (c.c4.t - c.c1.t) * f;
-      return { x: tx(x), label: F(this.E.tToDate(x), false) };
+      return { x: tx(x), label: [F(this.E.tToDate(x), false)] };
     });
     if (c.sunset && c.sunset.t < c.c4.t) {
       const sx = tx(c.sunset.t);
@@ -1612,36 +1627,59 @@ class Component extends DCLogic {
     if (det) {
       v.detName = det.name;
       v.detSub = `${det.region} · ${det.lat.toFixed(3)}° N, ${det.lon.toFixed(3)}° ${S.lang === 'en' ? 'E' : 'O'}`;
-      const AZ0 = 255, AZ1 = 315, EL1 = 12;
+      /* Die Skala reicht bewusst unter null. Von einem Gipfel aus liegt die
+         Geländekante *unter* der Augenhöhe — Wasserkuppe −1,1°, Hesselberg
+         −0,5°, Feldberg −2,0°. Eine Achse, die bei 0° beginnt, kann das nicht
+         zeigen: sie klemmt alle diese Fälle auf dieselbe flache Bank am unteren
+         Rand, und die sieht aus wie ebenes Land auf Augenhöhe. Genau daran ist
+         die Frage „wo ist denn der Berg?" entstanden — der Berg ist der
+         Standpunkt, und die Grafik hat das verschwiegen.
+
+         Die Nulllinie ist deshalb beschriftet und hervorgehoben: sie ist der
+         Bezugspunkt, nicht der Boden. */
+      const AZ0 = 255, AZ1 = 315, EL0 = -3, EL1 = 12;
       const hx = (az) => 34 + ((az - AZ0) / (AZ1 - AZ0)) * (592 - 34);
-      const hy = (el) => 200 - (el / EL1) * (200 - 16);
+      const hy = (el) => 200 - ((Math.max(EL0, Math.min(EL1, el)) - EL0) / (EL1 - EL0)) * (200 - 16);
+      const floorY = hy(EL0);
 
       // Die Sonnenbahn wird immer gezeichnet — sie kommt aus eclipse.js und
       // steht unabhängig von der API. Die Geländesilhouette nur dann, wenn es
       // ein gemessenes Profil gibt: eine Fläche ohne Daten wäre wieder das
       // Bild, das nach Messung aussieht.
       const sp = det.c.track.map((p) => det.c.sample(p.t))
-        .filter((st) => st.alt > -0.5 && st.alt <= EL1 && st.az >= AZ0 && st.az <= AZ1)
+        .filter((st) => st.alt >= EL0 && st.alt <= EL1 && st.az >= AZ0 && st.az <= AZ1)
         .map((st) => `${hx(st.az).toFixed(1)},${hy(st.alt).toFixed(1)}`);
       v.sunPath = sp.length > 1 ? `M${sp.join('L')}` : '';
-      v.sunMaxX = hx(det.c.max.az); v.sunMaxY = hy(Math.max(0, det.c.max.alt));
+      v.sunMaxX = hx(det.c.max.az); v.sunMaxY = hy(det.c.max.alt);
       v.sunMaxLX = Math.min(540, Math.max(60, v.sunMaxX)); v.sunMaxLY = v.sunMaxY - 16;
-      v.hzY = [0, 3, 6, 9, 12].map((el) => ({ y: hy(el), ty: hy(el) + 4, label: `${el}°` }));
-      v.hzX = [255, 270, 285, 300, 315].map((az) => ({ x: hx(az), label: `${az}°` }));
+      v.hzY = [0, 3, 6, 9, 12].map((el) => ({
+        y: hy(el), ty: hy(el) + 4, label: [`${el}°`],
+        // Die Augenhöhe trägt die Aussage, die Hilfslinien nur die Skala.
+        stroke: el === 0 ? 'rgba(245,234,216,0.45)' : 'rgba(245,234,216,0.14)',
+        width: el === 0 ? '1.5' : '1',
+      }));
+      v.hzX = [255, 270, 285, 300, 315].map((az) => ({ x: hx(az), label: [`${az}°`] }));
+      v.eyeY = hy(0) - 6;
+      v.eyeLabel = [S.lang === 'en' ? 'eye level' : 'Augenhöhe'];
 
       if (det.hz) {
         const seg = [];
         for (let az = AZ0; az <= AZ1; az += 1) {
           const el = this.A.horizonAt(det.hz, az);
-          // Unter der Augenhöhe ist der Horizont frei; für die Fläche auf die
-          // Grundlinie setzen, ohne den negativen Wert zu verfälschen.
-          seg.push(`${hx(az).toFixed(1)},${hy(Math.max(0, el ?? 0)).toFixed(1)}`);
+          // null heißt „keine Höhendaten"; die Fläche fällt dort auf den Rand,
+          // statt eine Kante bei 0° zu behaupten.
+          seg.push(`${hx(az).toFixed(1)},${hy(el ?? EL0).toFixed(1)}`);
         }
-        v.hzPath = `M${hx(AZ0)},200L${seg.join('L')}L${hx(AZ1)},200Z`;
+        v.hzPath = `M${hx(AZ0)},${floorY}L${seg.join('L')}L${hx(AZ1)},${floorY}Z`;
 
         const cl = Math.abs(det.hz.clearance).toFixed(1);
+        // Liegt die Kante unter der Augenhöhe, ist das die eigentliche Nachricht:
+        // von hier fällt das Gelände nach Westen ab. Ohne diesen Satz liest sich
+        // die platte Fläche als „flaches Land", nicht als „freier Blick".
         v.detVerdict = det.hz.blocked ? t.vBlocked(cl)
-          : det.hz.tight ? t.vTight(cl) : t.vClear(cl);
+          : det.hz.tight ? t.vTight(cl)
+          : det.hz.horizon < 0 ? t.vBelow(Math.abs(det.hz.horizon).toFixed(1), cl)
+          : t.vClear(cl);
         v.detBars = [
           { label: t.facH, value: t.facHV(`${det.hz.clearance >= 0 ? '+' : '−'}${cl}°`),
             pct: Math.round(det.hScore * 100), color: '#c67139' },
