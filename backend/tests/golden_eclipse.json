@@ -1,0 +1,213 @@
+{
+  "source": "frontend/eclipse.js",
+  "generated": "node scripts/golden_eclipse.mjs",
+  "cases": [
+    {
+      "name": "Flensburg",
+      "lat": 54.7937,
+      "lon": 9.4469,
+      "visible": true,
+      "maximum": {
+        "time": "2026-08-12T18:05:48.209Z",
+        "altitude": 6.618861,
+        "azimuth": 286.347258,
+        "obscuration": 0.84958097,
+        "magnitude": 0.87492027
+      },
+      "c1": {
+        "time": "2026-08-12T17:11:45.134Z",
+        "altitude": 14.266279
+      },
+      "c4": {
+        "time": "2026-08-12T18:57:22.044Z",
+        "altitude": -0.295477
+      },
+      "sunset": "2026-08-12T19:01:33.178Z",
+      "endsAtSunset": false
+    },
+    {
+      "name": "Berlin",
+      "lat": 52.52,
+      "lon": 13.405,
+      "visible": true,
+      "maximum": {
+        "time": "2026-08-12T18:08:19.522Z",
+        "altitude": 3.324415,
+        "azimuth": 290.158157,
+        "obscuration": 0.84818641,
+        "magnitude": 0.87401329
+      },
+      "c1": {
+        "time": "2026-08-12T17:15:24.092Z",
+        "altitude": 11.099731
+      },
+      "c4": {
+        "time": "2026-08-12T18:58:50.507Z",
+        "altitude": -3.632814
+      },
+      "sunset": "2026-08-12T18:38:00.201Z",
+      "endsAtSunset": true
+    },
+    {
+      "name": "Köln",
+      "lat": 50.9375,
+      "lon": 6.9603,
+      "visible": true,
+      "maximum": {
+        "time": "2026-08-12T18:12:44.363Z",
+        "altitude": 5.973973,
+        "azimuth": 286.169004,
+        "obscuration": 0.8824263,
+        "magnitude": 0.90076323
+      },
+      "c1": {
+        "time": "2026-08-12T17:18:32.879Z",
+        "altitude": 14.352067
+      },
+      "c4": {
+        "time": "2026-08-12T19:04:12.773Z",
+        "altitude": -1.59262
+      },
+      "sunset": "2026-08-12T18:58:52.571Z",
+      "endsAtSunset": true
+    },
+    {
+      "name": "Frankfurt am Main",
+      "lat": 50.1109,
+      "lon": 8.6821,
+      "visible": true,
+      "maximum": {
+        "time": "2026-08-12T18:13:35.538Z",
+        "altitude": 4.556222,
+        "azimuth": 287.702502,
+        "obscuration": 0.88153993,
+        "magnitude": 0.90014771
+      },
+      "c1": {
+        "time": "2026-08-12T17:19:53.918Z",
+        "altitude": 12.953824
+      },
+      "c4": {
+        "time": "2026-08-12T19:04:37.030Z",
+        "altitude": -2.999601
+      },
+      "sunset": "2026-08-12T18:49:36.015Z",
+      "endsAtSunset": true
+    },
+    {
+      "name": "München",
+      "lat": 48.1351,
+      "lon": 11.582,
+      "visible": true,
+      "maximum": {
+        "time": "2026-08-12T18:15:43.736Z",
+        "altitude": 1.787221,
+        "azimuth": 290.36244,
+        "obscuration": 0.88769203,
+        "magnitude": 0.9051408
+      },
+      "c1": {
+        "time": "2026-08-12T17:22:55.678Z",
+        "altitude": 10.274161
+      },
+      "c4": {
+        "time": "2026-08-12T19:05:56.208Z",
+        "altitude": -5.80179
+      },
+      "sunset": "2026-08-12T18:32:38.404Z",
+      "endsAtSunset": true
+    },
+    {
+      "name": "Freiburg im Breisgau",
+      "lat": 47.999,
+      "lon": 7.8421,
+      "visible": true,
+      "maximum": {
+        "time": "2026-08-12T18:17:11.135Z",
+        "altitude": 3.873565,
+        "azimuth": 287.893576,
+        "obscuration": 0.90282167,
+        "magnitude": 0.91692156
+      },
+      "c1": {
+        "time": "2026-08-12T17:23:32.175Z",
+        "altitude": 12.61625
+      },
+      "c4": {
+        "time": "2026-08-12T19:08:04.372Z",
+        "altitude": -3.986546
+      },
+      "sunset": "2026-08-12T18:47:13.693Z",
+      "endsAtSunset": true
+    },
+    {
+      "name": "Sylt",
+      "lat": 54.9079,
+      "lon": 8.3038,
+      "visible": true,
+      "maximum": {
+        "time": "2026-08-12T18:05:53.245Z",
+        "altitude": 7.271427,
+        "azimuth": 285.437907,
+        "obscuration": 0.85351154,
+        "magnitude": 0.87797143
+      },
+      "c1": {
+        "time": "2026-08-12T17:11:34.101Z",
+        "altitude": 14.95828
+      },
+      "c4": {
+        "time": "2026-08-12T18:57:40.803Z",
+        "altitude": 0.304668
+      },
+      "sunset": "2026-08-12T19:06:31.991Z",
+      "endsAtSunset": false
+    },
+    {
+      "name": "Brocken",
+      "lat": 51.7991,
+      "lon": 10.6156,
+      "visible": true,
+      "maximum": {
+        "time": "2026-08-12T18:10:19.959Z",
+        "altitude": 4.41041,
+        "azimuth": 288.428655,
+        "obscuration": 0.86209177,
+        "magnitude": 0.88487693
+      },
+      "c1": {
+        "time": "2026-08-12T17:16:53.190Z",
+        "altitude": 12.450982
+      },
+      "c4": {
+        "time": "2026-08-12T19:01:14.371Z",
+        "altitude": -2.814411
+      },
+      "sunset": "2026-08-12T18:46:52.715Z",
+      "endsAtSunset": true
+    },
+    {
+      "name": "Zugspitze",
+      "lat": 47.4211,
+      "lon": 10.9853,
+      "visible": true,
+      "maximum": {
+        "time": "2026-08-12T18:17:01.847Z",
+        "altitude": 1.710563,
+        "azimuth": 290.18383,
+        "obscuration": 0.8964303,
+        "magnitude": 0.91201528
+      },
+      "c1": {
+        "time": "2026-08-12T17:24:10.803Z",
+        "altitude": 10.32831
+      },
+      "c4": {
+        "time": "2026-08-12T19:07:14.799Z",
+        "altitude": -5.998771
+      },
+      "sunset": "2026-08-12T18:33:11.616Z",
+      "endsAtSunset": true
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+name: sofi2026
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-sofi}
+      POSTGRES_USER: ${POSTGRES_USER:-sofi}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sofi}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sofi} -d ${POSTGRES_DB:-sofi}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  api:
+    build: ./backend
+    environment: &backend_env
+      SOFI_DATABASE_URL: postgresql://${POSTGRES_USER:-sofi}:${POSTGRES_PASSWORD:-sofi}@db:5432/${POSTGRES_DB:-sofi}
+      SOFI_DATA_DIR: /data
+      TZ: Europe/Berlin
+    volumes:
+      - fielddata:/data
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health').status==200 else 1)\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+
+  worker:
+    build: ./backend
+    command: ["python", "-m", "app.worker"]
+    environment: *backend_env
+    volumes:
+      - fielddata:/data
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    image: caddy:2-alpine
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    volumes:
+      - ./web/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./frontend:/srv:ro
+      - caddydata:/data
+      - caddyconfig:/config
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  fielddata:
+  caddydata:
+  caddyconfig:

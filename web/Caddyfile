@@ -1,0 +1,40 @@
+{
+	admin off
+	auto_https off
+}
+
+:80 {
+	encode zstd gzip
+
+	# Alles unter /api geht an FastAPI.
+	handle /api/* {
+		reverse_proxy api:8000
+	}
+
+	# Statisches Frontend. Keine externen Hosts — Schriften, Leaflet und
+	# Kartenkacheln liegen unter /vendor bzw. /tiles im selben Origin.
+	handle {
+		root * /srv
+		try_files {path} /Sofi.dc.html
+		file_server
+
+		# Nur hier, nicht global: sonst überschreibt der Matcher auch die
+		# Cache-Vorgaben der API-Antworten (overlay.png).
+		@static path *.js *.css *.woff2 *.png *.svg
+		header @static Cache-Control "public, max-age=3600"
+	}
+
+	header {
+		# Kein Verbindungsaufbau zu Dritten, weder gewollt noch versehentlich.
+		Content-Security-Policy "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'"
+		Referrer-Policy "no-referrer"
+		X-Content-Type-Options "nosniff"
+		Cross-Origin-Opener-Policy "same-origin"
+		-Server
+	}
+
+	log {
+		output stderr
+		format console
+	}
+}

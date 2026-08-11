@@ -1,18 +1,41 @@
 # Sonnenfinsternis 2026 — Deutschland
 
 Website zur partiellen Sonnenfinsternis am **12. August 2026** in Deutschland.
-Kontaktzeiten, Bedeckungsgrade, Isolinien und Standortbewertung.
+Kontaktzeiten, Bedeckungsgrade, Isolinien, Wolkenprognose und Standortbewertung.
 
-## Was hier drin ist
+## Aufbau
 
-| Datei | Inhalt |
+| Pfad | Inhalt |
 | --- | --- |
-| `Sonnenfinsternis 2026.dc.html` | Die Seite: Start, Zeiten & Orte, Beste Standorte, Sicherheit |
-| `eclipse.js` | Finsternisrechnung — Besselsche Elemente, lokale Umstände, Isolinien |
-| `data.js` | Ortsdatenbank und Mock der Backend-Endpunkte |
-| `api-spec.md` | Vertrag für das Backend (Geocoding, HORAYZON, Wolken, Ranking) |
-| `support.js` | Laufzeit der Design-Komponente |
-| `_ds/` | Design-System *Organic* (Tokens, Komponenten) |
+| `frontend/Sofi.dc.html` | Die Seite: Start, Zeiten & Orte, Beste Standorte, Sicherheit |
+| `frontend/eclipse.js` | Finsternisrechnung — Besselsche Elemente, lokale Umstände, Isolinien |
+| `frontend/data.js` | Ortsdatenbank-Mock, wird schrittweise durch die API ersetzt |
+| `frontend/_ds/` | Design-System *Organic* (Tokens, Komponenten) |
+| `backend/` | FastAPI: Ortssuche, Wolkenprognose, lokale Umstände |
+| `db/init/` | PostGIS-Schema |
+| `web/Caddyfile` | Reverse Proxy, statische Auslieferung, CSP |
+| `api-spec.md` | Vertrag für das Backend, mit Stand je Endpunkt |
+
+## Starten
+
+```bash
+cp .env.example .env          # Passwort ändern
+docker compose up -d --build
+docker compose run --rm api python -m app.seed_geonames   # einmalig, ~15 s
+```
+
+http://localhost:8080 — API unter `/api/v1`, interaktive Doku unter
+`/api/v1/docs`.
+
+Der Worker holt alle 10 Minuten den jüngsten ICON-D2-Lauf; nach dem ersten
+Durchlauf (rund 2 s für 20 Felder) liefert `/api/v1/clouds` Werte.
+
+Tests:
+
+```bash
+cd backend && python -m venv .venv && .venv/bin/pip install -e ".[dev]"
+.venv/bin/python -m pytest tests
+```
 
 ## Astronomie
 
@@ -32,51 +55,70 @@ tan f1 = 0.0046141   tan f2 = 0.0045911
 Stichproben (MESZ): Köln Maximum 20:12:44, 88,2 % · Berlin 20:08:19, 84,8 % ·
 Freiburg 20:17:11, 90,3 % · München 20:15:43, 88,8 %.
 
-Isolinien entstehen aus einem 0,2°-Raster über Deutschland (maximale
-Obskuration je Gitterpunkt) plus Marching Squares.
+`backend/app/eclipse.py` ist eine Portierung derselben Rechnung — sie wird für
+die Wolkenauswertung zur lokalen Maximumszeit gebraucht. Beide Fassungen werden
+gegen gemeinsame Stützstellen geprüft (`backend/tests/test_eclipse.py`), die
+Referenz erzeugt `node backend/scripts/golden_eclipse.mjs`.
 
-## Backend
+## Die entscheidende Zahl
 
-Existiert noch nicht. `api-spec.md` beschreibt die Endpunkte:
+Die Sonne steht im Maximum sehr tief: **1,8° in München, 3,3° in Berlin,
+7,3° auf Sylt**, Azimut durchweg 285–290°.
 
-- `GET /api/geocode` — Ortssuche über BKG oder Nominatim
-- `GET /api/elevation` — Geländehöhe aus DGM1
-- `GET /api/horizon` — **HORAYZON**, DOM1 im Nahfeld (< 2 km), DGM im Fernfeld (bis 200 km)
-- `GET /api/clouds` — Wolkenklimatologie (CM SAF) und ICON-D2-Prognose
-- `GET /api/sites` — bewertete Standorte im Umkreis
-- `POST /api/spots` — eigene Beobachtungsorte speichern und teilen
+Daraus folgt fast alles andere. Eine 5 m hohe Hecke in 150 m Entfernung
+verdeckt München im Maximum vollständig; eine 20 m Baumreihe verdeckt ganz
+Deutschland. Ein 800 m höherer Berg in 40 km Entfernung trägt dagegen nur 1°
+bei. Das Nahfeld schlägt das Fernfeld um fast eine Größenordnung — und der
+gebrauchte Azimutsektor ist 30° breit, kein Vollkreis.
 
-Solange das Backend fehlt, liefert `data.js` Beispielwerte für Horizontprofile,
-Wolkenklimatologie und Zugangshinweise. Der Rest rechnet echt.
+## Wolken
+
+ICON-D2 vom DWD (Open Data, ohne Anmeldung), 0,02° ≈ 2,2 km, 48 h Vorlauf.
+Geholt werden vier Wolkenvariablen zu fünf Zeitpunkten rund um das Ereignis.
+
+Die Trennung nach Schichten ist kein Detail: hohe Zirren (ab 400 hPa) lassen
+die Sichel durch, tiefe Bewölkung (unter 800 hPa) beendet die Beobachtung.
+Der DWD kodiert alle drei Schichten als denselben GRIB-Parameter 0/6/22 und
+unterscheidet sie ausschließlich über die begrenzenden Druckflächen — der
+Ingest prüft das bei jeder Datei, weil eine Verwechslung einen plausibel
+aussehenden, aber falschen Wert ergäbe.
+
+GRIB2 kommt als *simple packing* (Template 5.0, 16 bit) mit Bitmap. Dafür
+reicht `backend/app/grib2.py`; eccodes und GDAL bleiben aus dem Image.
 
 ## Standort-Score
 
 ```
 0,42 · Horizontfreiheit West/NW   (Sonnenhöhe minus Geländekante im Maximum)
-0,25 · Wolkenklimatologie          (klarer Himmel am 12.8., 18–19 UTC)
+0,25 · Wolken                      (Klimatologie, später Prognose)
 0,18 · Bedeckungsgrad              (normiert auf 82–91 %)
 0,15 · Zugänglichkeit              (frei / eingeschränkt)
 ```
 
-## Lokal starten
+Noch nicht im Backend — hängt an `/api/v1/horizon`.
 
-Die Seite lädt ES-Module, braucht also einen Server — nicht `file://`:
+## Datenschutz
 
-```bash
-python3 -m http.server 8000
-# http://localhost:8000/Sonnenfinsternis%202026.dc.html
-```
+Es wird nichts von Dritten nachgeladen. Ortssuche läuft gegen die eigene
+Datenbank, die Wolkendaten liegen auf dem eigenen Volume, die CSP in
+`web/Caddyfile` verbietet Verbindungen nach außen.
 
-Kartenkacheln kommen von CARTO, Leaflet und die Schriften von CDNs.
+**Offen:** die Seite lädt derzeit noch Leaflet von unpkg, Schriften von Google
+Fonts und Kartenkacheln von CARTO. Die CSP blockiert das bereits — diese vier
+Hosts müssen lokal ausgeliefert werden, bevor die Karte wieder funktioniert.
 
 ## Offen
 
+- Leaflet, Schriften und Kartenkacheln selbst ausliefern (siehe oben)
+- Frontend von `data.js` auf die API umstellen
+- `/api/v1/elevation` und `/api/v1/horizon` (Copernicus GLO-30, DOM1)
+- Wolkenklimatologie CM SAF
 - Englische Fassung (Umschalter ist angelegt, Texte fehlen)
 - Seiten Beobachtungstipps, Fotografie, FAQ, Impressum
-- Backend inkl. HORAYZON-Pipeline
 
 ## Quellen
 
 Besselsche Elemente: NASA/GSFC Five Millennium Canon of Solar Eclipses,
-Fred Espenak. Karten: OpenStreetMap-Mitwirkende, CARTO.
+Fred Espenak. Wolken: Deutscher Wetterdienst, ICON-D2 (Open Data).
+Orte: GeoNames (CC BY 4.0). Karten: OpenStreetMap-Mitwirkende, CARTO.
 Design-System: *Organic*.
