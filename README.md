@@ -30,6 +30,24 @@ docker compose run --rm api python -m app.seed_geonames   # einmalig, ~15 s
 http://localhost:8080 — API unter `/api/v1`, interaktive Doku unter
 `/api/v1/docs`.
 
+### Produktion: HTTPS mit Let's Encrypt
+
+In der `.env` die Domain und die Standardports setzen:
+
+```bash
+SOFI_DOMAIN=horizontfrei.de
+WEB_PORT=80
+WEB_TLS_PORT=443
+```
+
+Caddy holt und erneuert die Zertifikate dann selbst (Ablage im Volume
+`caddydata`, überlebt Neustarts), leitet HTTP auf HTTPS um und setzt HSTS.
+Voraussetzung: Die DNS-Einträge der Domain zeigen auf den Server, Port 80
+und 443 sind von außen erreichbar. Mehrere Hostnamen gehen durch Leerzeichen
+getrennt (`SOFI_DOMAIN="horizontfrei.de www.horizontfrei.de"`). Ohne
+`SOFI_DOMAIN` bleibt alles beim unverschlüsselten HTTP auf `WEB_PORT` —
+für die lokale Entwicklung.
+
 Der Worker holt alle 10 Minuten den jüngsten ICON-D2-Lauf; nach dem ersten
 Durchlauf (rund 2 s für 20 Felder) liefert `/api/v1/clouds` Werte.
 

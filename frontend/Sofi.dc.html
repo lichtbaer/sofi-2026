@@ -13,7 +13,9 @@
 <body>
 <x-dc>
 <helmet>
-<link rel="preconnect" href="https://tile.openstreetmap.org">
+<!-- Kein preconnect zu tile.openstreetmap.org: der Handshake verriete jeden
+     Seitenbesuch an OSM, auch ohne Kartennutzung. Die Kacheln verbinden sich
+     erst, wenn die Karte tatsächlich initialisiert wird. -->
 <link rel="stylesheet" href="./vendor/fonts/fonts.css">
 <link rel="stylesheet" href="./vendor/leaflet/leaflet.css">
 <script src="./vendor/leaflet/leaflet.js"></script>
