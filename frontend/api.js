@@ -76,8 +76,13 @@ export async function geocode(query, options = {}) {
    `at_maximum` ist bereits auf die lokale Maximumszeit interpoliert; das
    Backend rechnet dafür dieselben Besselschen Elemente wie eclipse.js.     */
 
+/* Drei Nachkommastellen, nicht fünf: das sind rund 110 m, und das ICON-D2-Gitter
+   löst 2,2 km auf. Die bilineare Interpolation im Backend verschiebt sich damit um
+   etwa 5 % einer Maschenweite — im Ergebnis nicht darstellbar. Fünf Stellen wären
+   rund ein Meter gewesen und hätten nach einem Klick auf „Mein Standort" die
+   Geräteposition in die Serverprotokolle geschrieben. */
 export async function clouds(lat, lon, options = {}) {
-  const data = await get('/clouds', { lat: lat.toFixed(5), lon: lon.toFixed(5) }, options);
+  const data = await get('/clouds', { lat: lat.toFixed(3), lon: lon.toFixed(3) }, options);
   if (!data.forecast) return null;
 
   const f = data.forecast;
