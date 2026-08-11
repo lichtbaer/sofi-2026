@@ -19,4 +19,7 @@ RUN useradd --system --uid 10001 sofi && mkdir -p /data && chown sofi /data
 USER sofi
 
 EXPOSE 8000
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers"]
+# --no-access-log: Caddy protokolliert bereits, und von den beiden Logs ist
+# dieser der mit den Koordinaten in der URI (Audit H1). Fehler und Warnungen
+# der Anwendung gehen weiter nach stdout — nur die Zugriffszeile entfällt.
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers", "--no-access-log"]

@@ -1,5 +1,61 @@
+# Protokollformat ohne die personenbeziehbaren Teile (Audit H1).
+#
+# Ungefiltert stünde in den Logs beides, was die Seite clientseitig gerade
+# vermeidet: der Suchbegriff aus /api/v1/geocode?q=… und die Koordinaten aus
+# /api/v1/clouds?lat=…&lon=… — nach einem Klick auf „Mein Standort" also die
+# Geräteposition. Zusammen mit der IP wäre das ein Bewegungs- und
+# Interessensprofil im Klartext.
+#
+# Abgeschaltet wird das Protokoll deshalb nicht: Pfad, Statuscode, Dauer und
+# Größe sind genau die Diagnose, die man bei einer Lastspitze braucht.
+# Gefiltert wird nur, was zur Person führt.
+#
+# Als Snippet, weil es an zwei Stellen gebraucht wird — unten im globalen
+# Block für den Fehlerlog und im Site-Block für den Zugriffslog. Zweimal
+# ausgeschrieben liefe es auseinander, sobald jemand nur eine Stelle ändert,
+# und genau dann leckte die andere wieder.
+#
+# Snippets müssen vor ihrem Import stehen; Vorwärtsreferenzen kennt der
+# Caddyfile-Parser nicht. Deshalb steht dieser Block noch vor den globalen
+# Optionen.
+(datenschutz_log) {
+	output stderr
+	format filter {
+		wrap console
+		fields {
+			# Der Pfad bleibt, die Parameter fallen weg.
+			request>uri query {
+				delete q
+				delete lat
+				delete lon
+			}
+			# Netz statt Anschluss. remote_ip ist die Gegenstelle, client_ip
+			# die aus vertrauenswürdigen Proxy-Kopfzeilen aufgelöste Adresse;
+			# je nach Aufbau trägt mal die eine, mal die andere den Besucher.
+			# Ein nicht vorhandenes Feld ist ein No-op, deshalb beide.
+			request>remote_ip ip_mask {
+				ipv4 24
+				ipv6 48
+			}
+			request>client_ip ip_mask {
+				ipv4 24
+				ipv6 48
+			}
+		}
+	}
+}
+
 {
 	admin off
+
+	# Der Standardlogger. Er trägt unter anderem http.log.error.*, und dort
+	# steht bei einem Proxy-Fehler die vollständige Anfrage — mit Koordinaten
+	# und ungekürzter IP. Das ist kein Randfall: Genau bei überlasteter API
+	# feuert er, also am Ereignisabend. Ohne diesen Block hinge das Leck
+	# daneben, während der Zugriffslog sauber aussähe.
+	log {
+		import datenschutz_log
+	}
 }
 
 # Die Site-Adresse kommt aus SOFI_DOMAIN (docker-compose reicht sie durch).
@@ -61,8 +117,26 @@
 		-Server
 	}
 
+	# Der Zugriffslog. Das Format kommt aus dem Snippet oben — dieselbe
+	# Filterung wie beim Standardlogger, damit die beiden nicht auseinanderlaufen.
+	# Der Block wird gebraucht, um das Zugriffsprotokoll für diese Site
+	# überhaupt einzuschalten: der globale Block allein erzeugt keine Zeile.
+	#
+	# Nach jeder Änderung prüfen — Caddy startet mit fehlerhafter Konfiguration
+	# gar nicht:
+	#   docker compose run --rm --no-deps web \
+	#     caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+	#
+	# Das „caddy" gehört dazu: das offizielle Image setzt kein ENTRYPOINT,
+	# sondern nur CMD. Ohne den Programmnamen sucht Docker eine ausführbare
+	# Datei namens „validate" und bricht ab, bevor die Konfiguration überhaupt
+	# gelesen wird — der Fehler sieht dann nach einem Konfigurationsproblem aus
+	# und ist keins.
+	#
+	# Ohne .env (compose erzwingt POSTGRES_PASSWORD) geht es auch direkt:
+	#   docker run --rm -v "$PWD/web/Caddyfile:/etc/caddy/Caddyfile:ro" \
+	#     caddy:2-alpine caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
 	log {
-		output stderr
-		format console
+		import datenschutz_log
 	}
 }
