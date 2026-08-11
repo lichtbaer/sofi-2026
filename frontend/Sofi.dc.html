@@ -3,16 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- React vor der DC-Laufzeit: support.js holt es sonst von unpkg nach.
+     loadReactUmd() steigt bei vorhandenem window.React aus, deshalb reicht
+     das Vorladen und support.js selbst bleibt unangetastet. -->
+<script src="./vendor/react/react.production.min.js"></script>
+<script src="./vendor/react/react-dom.production.min.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
 <helmet>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="preconnect" href="https://tile.openstreetmap.org">
+<link rel="stylesheet" href="./vendor/fonts/fonts.css">
+<link rel="stylesheet" href="./vendor/leaflet/leaflet.css">
+<script src="./vendor/leaflet/leaflet.js"></script>
 <style>
   html { scroll-behavior: smooth; }
   body { margin: 0; background: #f5ead8; color: #201e1d; font-family: "Figtree", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
@@ -25,6 +29,8 @@
   html[lang="en"] [data-l="de"] { display: none !important; }
   .leaflet-container { font-family: "Figtree", system-ui, sans-serif; background: #dcd3c4; }
   .leaflet-control-attribution { font-size: 9px; }
+  /* OSM-Standardkacheln gibt es nur hell; „dunkel" entsteht als Filter. */
+  .basemap-dark { filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.9); }
   @media (max-width: 900px) {
     [data-nav-desktop] { display: none !important; }
     [data-nav-toggle] { display: inline-flex !important; }
@@ -763,8 +769,10 @@ class Component extends DCLogic {
     const lang = saved || ((navigator.language || 'de').startsWith('de') ? 'de' : 'en');
     this.setLang(lang);
     this.timer = setInterval(() => this.setState({ now: Date.now() }), 1000);
-    Promise.all([import('./eclipse.js'), import('./data.js')]).then(([E, D]) => {
-      this.E = E; this.D = D;
+    Promise.all([
+      import('./eclipse.js'), import('./data.js'), import('./api.js'), import('./config.js'),
+    ]).then(([E, D, A, C]) => {
+      this.E = E; this.D = D; this.A = A; this.C = C;
       this.contours = E.coverageContours([47.0, 5.6, 55.3, 15.4], 0.2, LEVELS);
       this.setState({ ready: true });
     }).catch((e) => console.error('Module load failed', e));
@@ -772,9 +780,36 @@ class Component extends DCLogic {
 
   componentWillUnmount() {
     clearInterval(this.timer);
+    clearTimeout(this.searchTimer);
+    this.search?.abort();
     window.removeEventListener('hashchange', this.onHash);
     if (this.map) { this.map.remove(); this.map = null; }
   }
+
+  /* Ortssuche. Die API ist asynchron, das Tippen nicht — deshalb entprellen,
+     die vorige Anfrage abbrechen und späte Antworten verwerfen, die zu einer
+     inzwischen überholten Eingabe gehören. Fällt die API aus, übernimmt die
+     lokale Städteliste aus data.js: lieber 54 Orte als ein totes Suchfeld. */
+  onQuery = (value) => {
+    this.setState({ q: value });
+    clearTimeout(this.searchTimer);
+    this.search?.abort();
+
+    const q = value.trim();
+    if (!q) { this.setState({ sug: [] }); return; }
+
+    this.searchTimer = setTimeout(() => {
+      const controller = new AbortController();
+      this.search = controller;
+      this.A.geocode(q, { signal: controller.signal })
+        .then((sug) => { if (this.state.q.trim() === q) this.setState({ sug }); })
+        .catch((err) => {
+          if (err.name === 'AbortError') return;
+          console.warn('Ortssuche über die API fehlgeschlagen, nutze lokale Liste', err);
+          if (this.state.q.trim() === q) this.setState({ sug: this.D.geocode(q) });
+        });
+    }, 180);
+  };
 
   componentDidUpdate() {
     if (this.map && this.marker) this.marker.setLatLng([this.state.loc.lat, this.state.loc.lon]);
@@ -794,17 +829,15 @@ class Component extends DCLogic {
   };
 
   initMap = (tries = 0) => {
-    if (!this.mapEl || this.map || !this.contours || !window.L) {
+    if (!this.mapEl || this.map || !this.contours || !window.L || !this.C) {
       if (!this.map && tries < 25) setTimeout(() => this.initMap(tries + 1), 250);
       return;
     }
     const L = window.L;
-    const dark = this.props.mapStyle === 'dunkel';
     const map = L.map(this.mapEl, { center: [51.2, 10.4], zoom: 5, scrollWheelZoom: false });
     this.map = map;
-    L.tileLayer(`https://{s}.basemaps.cartocdn.com/${dark ? 'dark_all' : 'light_all'}/{z}/{x}/{y}{r}.png`, {
-      subdomains: 'abcd', maxZoom: 18, attribution: '© OpenStreetMap, © CARTO',
-    }).addTo(map);
+    const base = this.C.basemapLayer(this.props.mapStyle);
+    L.tileLayer(base.url, base.options).addTo(map);
     if (this.props.showContours !== false) this.contours.forEach((c, i) => {
       c.lines.forEach((line) => {
         L.polyline(line, { color: LEVEL_COLORS[i], weight: 2.5, opacity: 0.95 })
@@ -882,7 +915,7 @@ class Component extends DCLogic {
       setDe: () => this.setLang('de'), setEn: () => this.setLang('en'),
       toggleNav: () => this.setState((s) => ({ navOpen: !s.navOpen })),
       closeNav: () => this.setState({ navOpen: false }),
-      onQuery: (e) => this.setState({ q: e.target.value, sug: this.D ? this.D.geocode(e.target.value) : [] }),
+      onQuery: (e) => this.onQuery(e.target.value),
       onRadius: (e) => this.setState({ radius: Number(e.target.value) }),
       useGeo: () => {
         if (!navigator.geolocation) return;

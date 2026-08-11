@@ -9,7 +9,10 @@ Kontaktzeiten, Bedeckungsgrade, Isolinien, Wolkenprognose und Standortbewertung.
 | --- | --- |
 | `frontend/Sofi.dc.html` | Die Seite: Start, Zeiten & Orte, Beste Standorte, Sicherheit |
 | `frontend/eclipse.js` | Finsternisrechnung — Besselsche Elemente, lokale Umstände, Isolinien |
-| `frontend/data.js` | Ortsdatenbank-Mock, wird schrittweise durch die API ersetzt |
+| `frontend/api.js` | Client für die eigene API |
+| `frontend/config.js` | Kachelanbieter und API-Basis — die einzigen Betriebsknöpfe |
+| `frontend/data.js` | Ersatzdaten: 54 Städte als Rückfall, Standorte und Horizontprofile noch als Mock |
+| `frontend/vendor/` | Leaflet, React, Schriften — selbst ausgeliefert |
 | `frontend/_ds/` | Design-System *Organic* (Tokens, Komponenten) |
 | `backend/` | FastAPI: Ortssuche, Wolkenprognose, lokale Umstände |
 | `db/init/` | PostGIS-Schema |
@@ -99,18 +102,54 @@ Noch nicht im Backend — hängt an `/api/v1/horizon`.
 
 ## Datenschutz
 
-Es wird nichts von Dritten nachgeladen. Ortssuche läuft gegen die eigene
-Datenbank, die Wolkendaten liegen auf dem eigenen Volume, die CSP in
-`web/Caddyfile` verbietet Verbindungen nach außen.
+Genau **ein** Fremdhost: `tile.openstreetmap.org` für die Kartenkacheln.
+Alles andere kommt vom eigenen Server — Leaflet, React, Schriften, Ortssuche,
+Wolkendaten. Die CSP in `web/Caddyfile` erzwingt das über `connect-src 'self'`,
+`font-src 'self'` und ein `img-src`, das genau diesen einen Host zulässt.
 
-**Offen:** die Seite lädt derzeit noch Leaflet von unpkg, Schriften von Google
-Fonts und Kartenkacheln von CARTO. Die CSP blockiert das bereits — diese vier
-Hosts müssen lokal ausgeliefert werden, bevor die Karte wieder funktioniert.
+Was dabei zu wissen ist:
+
+* **Kachelanfragen verraten den Kartenausschnitt** — also grob den gesuchten
+  Ort — plus die IP. Auf einer Seite, deren Kerninteraktion „gib deinen
+  Standort ein" ist, ist das die aussagekräftigste Spur. Gehört in die
+  Datenschutzerklärung.
+* **`Referrer-Policy` ist `strict-origin-when-cross-origin`, nicht
+  `no-referrer`.** Die OSM-Kachelpolicy verlangt ausdrücklich einen gültigen
+  Referer. Nach außen geht damit nur die Herkunft, nie der Pfad.
+* **OSM sichert nichts zu:** „Availability is best-effort: there is no SLA or
+  guarantee. We may block access, without notice, if your usage degrades the
+  service." Für die bundesweite Lastspitze am 12.8. ist das ein Risiko.
+  `frontend/config.js` hält CARTO als Alternative bereit — Umstellen ist eine
+  Zeile.
+* **`script-src` braucht `'unsafe-inline'` und `'unsafe-eval'`**, weil die
+  DC-Laufzeit die Logik-Klasse aus dem `<script type="text/x-dc">`-Block als
+  String auswertet. Ein kompilierter Build aus dem DC-Tooling würde beides
+  überflüssig machen.
+
+### Vendoring
+
+`frontend/vendor/` enthält Leaflet 1.9.4, React und ReactDOM 18.3.1 (UMD) sowie
+die Schriften Caprasimo und Figtree (SIL OFL 1.1, aus dem
+Google-Fonts-CSS2-Endpunkt).
+
+React wird **vor** `support.js` geladen. Die DC-Laufzeit steigt in
+`loadReactUmd()` bei vorhandenem `window.React` aus und holt dann nichts mehr
+von unpkg — damit bleibt `support.js` unverändert und übersteht eine
+Neuerzeugung durch das DC-Tooling. Die unpkg-URLs stehen weiter in der Datei,
+werden aber nie erreicht. Babel lädt die Laufzeit nur für `x-import` mit JSX,
+das die Seite nicht verwendet.
+
+Figtree ist eine Variable Font: eine Datei deckt 400–700 ab. Ein Aufruf mit
+`wght@400;500;600;700` liefert dieselbe Datei viermal — `wght@400..700` ist
+richtig und spart hier 90 kB.
 
 ## Offen
 
-- Leaflet, Schriften und Kartenkacheln selbst ausliefern (siehe oben)
-- Frontend von `data.js` auf die API umstellen
+- **Die Wolkenprognose hat noch keinen Platz im Design.** `frontend/api.js`
+  liefert sie, aber die vorhandenen Slots auf der Standorte-Seite meinen
+  Klimatologie („% klare Sicht im Mittel"), nicht Vorhersage.
+- Die Standortbewertung läuft weiter auf den erfundenen Horizontprofilen aus
+  `data.js` — hängt an `/api/v1/horizon`
 - `/api/v1/elevation` und `/api/v1/horizon` (Copernicus GLO-30, DOM1)
 - Wolkenklimatologie CM SAF
 - Englische Fassung (Umschalter ist angelegt, Texte fehlen)

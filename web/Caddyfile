@@ -25,9 +25,23 @@
 	}
 
 	header {
-		# Kein Verbindungsaufbau zu Dritten, weder gewollt noch versehentlich.
-		Content-Security-Policy "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'"
-		Referrer-Policy "no-referrer"
+		# Genau ein Fremdhost: die Kartenkacheln. Skripte, Schriften, Stile und
+		# alle Datenabrufe bleiben beim eigenen Origin — img-src ist die einzige
+		# Ausnahme, und Rasterkacheln laufen als <img>, brauchen also kein
+		# connect-src.
+		# 'unsafe-eval' verlangt die DC-Laufzeit: sie wertet die Logik-Klasse aus
+		# dem <script type="text/x-dc">-Block als String aus. Ohne sie rendert
+		# nur das Template ohne Logik. Zusammen mit dem ohnehin nötigen
+		# 'unsafe-inline' ist script-src damit schwach — der Datenschutzgewinn
+		# steckt in connect-src, font-src und img-src, und die bleiben scharf.
+		# Ein kompilierter Build aus dem DC-Tooling würde beides überflüssig machen.
+		Content-Security-Policy "default-src 'self'; img-src 'self' data: blob: https://tile.openstreetmap.org; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'"
+
+		# Nicht "no-referrer": die OSM-Kachelpolicy verlangt einen gültigen
+		# Referer. "strict-origin-when-cross-origin" sendet nach außen nur die
+		# Herkunft, nicht den Pfad — der gesuchte Ort steht ohnehin nur im
+		# Fragment und wird nie mitgeschickt.
+		Referrer-Policy "strict-origin-when-cross-origin"
 		X-Content-Type-Options "nosniff"
 		Cross-Origin-Opener-Policy "same-origin"
 		-Server
