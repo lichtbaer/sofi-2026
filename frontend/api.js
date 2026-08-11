@@ -17,12 +17,8 @@ class ApiError extends Error {
   }
 }
 
-async function get(path, params = {}, { signal } = {}) {
-  const url = new URL(`${API_BASE}${path}`, location.origin);
-  for (const [key, value] of Object.entries(params)) {
-    if (value !== undefined && value !== null) url.searchParams.set(key, value);
-  }
-
+/** Eine Anfrage samt Zeitlimit und Abbruch. Liefert die rohe Antwort. */
+async function request(url, { signal, accept }) {
   // Eigenes Zeitlimit, zusätzlich zum Abbruch durch den Aufrufer.
   const timer = new AbortController();
   const timeout = setTimeout(() => timer.abort(), TIMEOUT_MS);
@@ -30,15 +26,24 @@ async function get(path, params = {}, { signal } = {}) {
   signal?.addEventListener('abort', onAbort);
 
   try {
-    const response = await fetch(url, { signal: timer.signal, headers: { accept: 'application/json' } });
+    const response = await fetch(url, { signal: timer.signal, headers: { accept } });
     if (!response.ok) {
-      throw new ApiError(`${path} antwortete ${response.status}`, response.status);
+      throw new ApiError(`${url.pathname} antwortete ${response.status}`, response.status);
     }
-    return await response.json();
+    return response;
   } finally {
     clearTimeout(timeout);
     signal?.removeEventListener('abort', onAbort);
   }
+}
+
+async function get(path, params = {}, { signal } = {}) {
+  const url = new URL(`${API_BASE}${path}`, location.origin);
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null) url.searchParams.set(key, value);
+  }
+  const response = await request(url, { signal, accept: 'application/json' });
+  return response.json();
 }
 
 /* ── Ortssuche ─────────────────────────────────────────────────────────────
@@ -114,8 +119,41 @@ export async function cloudOverlays(options = {}) {
     variable: o.variable,
     validAt: new Date(o.valid_at),
     runAt: new Date(o.run_at),
+    model: o.model,
     url: o.url,
   }));
+}
+
+/** Ein Overlay-Feld als Bild samt der Grenzen, auf die es gehört.
+ *
+ *  Die Grenzen stehen im Antwortkopf `X-Image-Bounds`, nicht im Bild — Leaflet
+ *  braucht sie aber, bevor die Ebene entsteht. Deshalb wird das PNG als Blob
+ *  geholt statt als `<img>`-Quelle gesetzt: anders käme man an den Kopf nicht
+ *  heran. Gleicher Origin, also ist der Kopf lesbar und ein daraus gezeichnetes
+ *  Canvas bleibt auswertbar.
+ *
+ *  `url` kommt aus `cloudOverlays()` und ist bereits ein absoluter Pfad.
+ */
+export async function cloudOverlayImage(url, options = {}) {
+  const response = await request(new URL(url, location.origin), {
+    signal: options.signal,
+    accept: 'image/png',
+  });
+
+  const header = response.headers.get('X-Image-Bounds');
+  if (!header) throw new ApiError('Antwort ohne X-Image-Bounds', response.status);
+  const values = header.split(',').map(Number);
+  if (values.length !== 4 || values.some((v) => !Number.isFinite(v))) {
+    throw new ApiError(`X-Image-Bounds nicht lesbar: ${header}`, response.status);
+  }
+
+  const [latMin, lonMin, latMax, lonMax] = values;
+  return {
+    blob: await response.blob(),
+    // In der Form, die L.imageOverlay erwartet.
+    bounds: [[latMin, lonMin], [latMax, lonMax]],
+    runAt: response.headers.get('X-Run-At'),
+  };
 }
 
 /** Betriebszustand — für einen Hinweis, wenn die Prognose fehlt. */

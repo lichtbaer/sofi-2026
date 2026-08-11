@@ -233,6 +233,45 @@
       </div>
       <p data-l="de" style="font-size:11px;line-height:1.5;color:rgba(32,30,29,0.5);margin:4px 6px 0">Klicken Sie in die Karte, um einen beliebigen Punkt auszuwerten. Isolinien live aus den Besselschen Elementen berechnet.</p>
       <p data-l="en" style="font-size:11px;line-height:1.5;color:rgba(32,30,29,0.5);margin:4px 6px 0">Click anywhere on the map to evaluate that point. Contours computed live from the Besselian elements.</p>
+
+      <!-- ══ Wolkenfeld ═══════════════════════════════════════════════════════
+           Beantwortet die Frage, die über den Ausflug entscheidet: wo sind die
+           Lücken. Vorgabe ist aus — geht beim Holen oder Einfärben etwas
+           schief, steht die Karte unverändert da.                          -->
+      <sc-if value="{{ overlayAvail }}" hint-placeholder-val="{{ true }}">
+        <div style="border-top:1px solid rgba(32,30,29,0.12);margin-top:12px;padding:12px 6px 2px">
+          <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+            <span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(32,30,29,0.55)"><span data-l="de">Wolkenfeld</span><span data-l="en">Cloud field</span></span>
+            <button onClick="{{ overlayToggle }}" style="padding:5px 14px;border:1px solid rgba(32,30,29,0.2);border-radius:999px;cursor:pointer;font:inherit;font-size:12px;font-weight:600;background:{{ overlayToggleBg }};color:{{ overlayToggleFg }}">{{ overlayToggleLabel }}</button>
+            <span style="font-size:11px;color:rgba(32,30,29,0.5);font-variant-numeric:tabular-nums;margin-left:auto">{{ overlayRunLine }}</span>
+          </div>
+
+          <sc-if value="{{ overlayOn }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:12px">
+              <span style="display:inline-flex;border:1px solid rgba(32,30,29,0.18);border-radius:999px;overflow:hidden">
+                <sc-for list="{{ overlayVars }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.pick }}" style="padding:5px 12px;border:none;cursor:pointer;font:inherit;font-size:12px;font-weight:600;background:{{ o.bg }};color:{{ o.fg }}">{{ o.label }}</button>
+                </sc-for>
+              </span>
+              <span style="display:inline-flex;border:1px solid rgba(32,30,29,0.18);border-radius:999px;overflow:hidden">
+                <sc-for list="{{ overlayTimeChips }}" as="o" hint-placeholder-count="5">
+                  <button onClick="{{ o.pick }}" style="padding:5px 12px;border:none;cursor:pointer;font:inherit;font-size:12px;font-variant-numeric:tabular-nums;background:{{ o.bg }};color:{{ o.fg }}">{{ o.label }}</button>
+                </sc-for>
+              </span>
+              <span style="display:inline-flex;align-items:center;gap:7px;font-size:11px;color:rgba(32,30,29,0.55)">
+                <span data-l="de">klar</span><span data-l="en">clear</span>
+                <span style="width:84px;height:8px;border-radius:4px;border:1px solid rgba(32,30,29,0.14);background:{{ overlayLegendCss }}"></span>
+                <span data-l="de">bedeckt</span><span data-l="en">overcast</span>
+              </span>
+            </div>
+            <sc-if value="{{ overlayNote }}" hint-placeholder-val="{{ false }}">
+              <p style="font-size:11px;color:rgba(32,30,29,0.55);margin:8px 0 0">{{ overlayNoteText }}</p>
+            </sc-if>
+            <p data-l="de" style="font-size:11px;line-height:1.5;color:rgba(32,30,29,0.5);margin:8px 0 0">Durchsichtig heißt freier Himmel. Zwischen den Zeitschritten wird nicht interpoliert — gezeigt wird der Modellwert zur vollen Stunde.</p>
+            <p data-l="en" style="font-size:11px;line-height:1.5;color:rgba(32,30,29,0.5);margin:8px 0 0">Transparent means clear sky. No interpolation between steps — what you see is the model value on the hour.</p>
+          </sc-if>
+        </div>
+      </sc-if>
     </div>
 
     <div style="display:flex;flex-direction:column;gap:14px">
@@ -879,6 +918,64 @@ const LEVEL_COLORS = ['#e1eecc', '#ccdbb2', '#aebf92', '#8fa073', '#f6a06b', '#d
 const DEFAULT_LOC = { name: 'Frankfurt am Main', lat: 50.1109, lon: 8.6821 };
 const PAGES = ['start', 'zeiten', 'standorte', 'tipps', 'foto', 'sicherheit', 'faq', 'impressum', 'datenschutz'];
 
+/* ── Wolken-Overlay ──────────────────────────────────────────────────────────
+   Die vier Felder, die /api/v1/clouds/overlays führt. Reihenfolge wie auf der
+   Prognosekarte: gesamt zuerst, dann von unten nach oben.                    */
+const CLOUD_VARS = ['clct', 'clcl', 'clcm', 'clch'];
+
+/* Farbskala. Eine Definition für zwei Verbraucher — das Canvas, das die
+   Graustufen des Backends einfärbt, und den Legendenbalken darunter. Der
+   Alphakanal wächst mit der Bedeckung, klarer Himmel bleibt also vollständig
+   durchsichtig: Die Karte soll zeigen, wo die Lücken sind, nicht die Wolken
+   betonen. Der Exponent zieht das untere Ende etwas an, damit dünne Bewölkung
+   nicht ganz verschwindet. */
+const CLOUD_LO = [223, 231, 240];
+const CLOUD_HI = [56, 66, 79];
+function cloudColor(percent) {
+  const f = Math.max(0, Math.min(1, percent / 100));
+  return {
+    r: Math.round(CLOUD_LO[0] + (CLOUD_HI[0] - CLOUD_LO[0]) * f),
+    g: Math.round(CLOUD_LO[1] + (CLOUD_HI[1] - CLOUD_LO[1]) * f),
+    b: Math.round(CLOUD_LO[2] + (CLOUD_HI[2] - CLOUD_LO[2]) * f),
+    a: 0.72 * Math.pow(f, 0.85),
+  };
+}
+const cloudCss = (percent) => {
+  const c = cloudColor(percent);
+  return `rgba(${c.r},${c.g},${c.b},${c.a.toFixed(3)})`;
+};
+
+/* Graustufen-PNG des Backends in die Farbskala übersetzen. Der Graukanal trägt
+   den Bedeckungsgrad direkt in Prozent, Alpha 0 heißt „keine Daten" — die
+   bleiben durchsichtig, sonst läge über der Nordsee ein Feld, das es nicht
+   gibt. Eingefärbt wird im Browser, damit die Farbwahl im Design bleibt und
+   nicht in der API. Gleicher Origin, das Canvas ist also auswertbar. */
+async function colorizeField(blob) {
+  const bitmap = await createImageBitmap(blob);
+  const canvas = document.createElement('canvas');
+  canvas.width = bitmap.width;
+  canvas.height = bitmap.height;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(bitmap, 0, 0);
+  bitmap.close?.();
+
+  const image = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const d = image.data;
+  for (let i = 0; i < d.length; i += 4) {
+    if (d[i + 3] === 0) continue;
+    const c = cloudColor(d[i]);
+    d[i] = c.r; d[i + 1] = c.g; d[i + 2] = c.b; d[i + 3] = Math.round(c.a * 255);
+  }
+  ctx.putImageData(image, 0, 0);
+
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (out) => (out ? resolve(URL.createObjectURL(out)) : reject(new Error('toBlob lieferte nichts'))),
+      'image/png',
+    );
+  });
+}
+
 const T = {
   de: {
     search: 'Ort oder PLZ, z. B. Kassel oder 34117',
@@ -898,6 +995,10 @@ const T = {
     cloudTotalNote: 'alle Schichten zusammen, ohne Gewichtung',
     cloudRun: (m, t) => `${m}, Lauf ${t}`,
     cloudLoading: 'Prognose wird geladen …',
+    /* Kartenoverlay */
+    ovShow: 'einblenden', ovHide: 'ausblenden',
+    ovLoading: 'Feld wird geladen …',
+    ovError: 'Das Kartenfeld ist gerade nicht abrufbar.',
     cloudNoneT: 'Noch keine Prognose',
     cloudNone: 'Es ist kein Modelllauf eingespielt, oder dieser Ort liegt außerhalb des Modellgebiets. ICON-D2 deckt Deutschland und die Nachbarregionen ab und reicht 48 Stunden voraus.',
     cloudErrT: 'Prognose nicht erreichbar',
@@ -941,6 +1042,10 @@ const T = {
     cloudTotalNote: 'all layers combined, unweighted',
     cloudRun: (m, t) => `${m}, run ${t}`,
     cloudLoading: 'Loading forecast …',
+    /* Map overlay */
+    ovShow: 'show', ovHide: 'hide',
+    ovLoading: 'Loading field …',
+    ovError: 'The map field cannot be reached right now.',
     cloudNoneT: 'No forecast yet',
     cloudNone: 'No model run has been ingested, or this place lies outside the model domain. ICON-D2 covers Germany and the neighbouring regions and reaches 48 hours ahead.',
     cloudErrT: 'Forecast unavailable',
@@ -973,6 +1078,7 @@ class Component extends DCLogic {
     page: 'start', navOpen: false, ready: false, now: Date.now(), lang: 'de',
     q: '', sug: [], loc: DEFAULT_LOC, siteId: null, radius: null,
     clouds: null, cloudsStatus: 'idle',
+    overlays: [], overlayOn: false, overlayVar: 'clct', overlayIdx: 0, overlayStatus: 'idle',
   };
 
   componentDidMount() {
@@ -994,6 +1100,7 @@ class Component extends DCLogic {
       this.contours = E.coverageContours([47.0, 5.6, 55.3, 15.4], 0.2, LEVELS);
       this.setState({ ready: true });
       this.loadClouds();
+      this.loadOverlays();
     }).catch((e) => console.error('Module load failed', e));
   }
 
@@ -1002,8 +1109,9 @@ class Component extends DCLogic {
     clearTimeout(this.searchTimer);
     this.search?.abort();
     this.cloudReq?.abort();
+    this.overlayReq?.abort();
     window.removeEventListener('hashchange', this.onHash);
-    if (this.map) { this.map.remove(); this.map = null; }
+    if (this.map) { this.dropOverlay(); this.map.remove(); this.map = null; }
   }
 
   /* Wolkenprognose. Sie hängt nicht am Tippen, sondern am gewählten Ort —
@@ -1039,6 +1147,86 @@ class Component extends DCLogic {
       });
   };
 
+  /* Verzeichnis der Kartenoverlays. Einmal beim Start — es beschreibt den
+     jüngsten Lauf und hängt nicht am gewählten Ort. Kommt nichts zurück, ist
+     kein Lauf eingespielt und die gesamte Bedienleiste entfällt. */
+  loadOverlays = () => {
+    if (!this.A || this._overlaysAsked) return;
+    this._overlaysAsked = true;
+
+    this.A.cloudOverlays()
+      .then((list) => {
+        if (!list.length) return;
+        // Vorgabe ist der Zeitschritt, der dem Maximum am nächsten liegt. T0 ist
+        // 18:00 UTC und damit bundesweit höchstens elf Minuten davon entfernt —
+        // das reicht, um den richtigen Schritt zu treffen, und macht die Wahl
+        // unabhängig vom gewählten Ort.
+        const times = this.overlayTimes(list);
+        let idx = 0;
+        times.forEach((t, i) => {
+          if (Math.abs(t - this.E.T0_UTC_MS) < Math.abs(times[idx] - this.E.T0_UTC_MS)) idx = i;
+        });
+        this.setState({ overlays: list, overlayIdx: idx });
+      })
+      .catch((err) => console.warn('Overlay-Verzeichnis nicht verfügbar', err));
+  };
+
+  /** Die vorhandenen Gültigkeitszeitpunkte, aufsteigend und ohne Dopplung. */
+  overlayTimes(list = this.state.overlays) {
+    return [...new Set(list.map((o) => o.validAt.getTime()))].sort((a, b) => a - b);
+  }
+
+  dropOverlay = () => {
+    if (this._overlayLayer && this.map) this.map.removeLayer(this._overlayLayer);
+    this._overlayLayer = null;
+    // Ohne Freigabe hielte jeder Wechsel des Feldes ein Bild im Speicher fest.
+    if (this._overlayUrl) { URL.revokeObjectURL(this._overlayUrl); this._overlayUrl = null; }
+  };
+
+  /* Hält die Kartenebene mit Schalter, Feld und Zeitschritt im Gleichlauf. Der
+     Schlüssel verhindert, dass der Sekundentakt der Uhr das Bild neu holt. */
+  syncOverlay = () => {
+    if (!this.map || !this.A) return;
+    const S = this.state;
+    const times = this.overlayTimes();
+    const at = times[S.overlayIdx];
+    const entry = S.overlayOn && at !== undefined
+      ? S.overlays.find((o) => o.variable === S.overlayVar && o.validAt.getTime() === at)
+      : null;
+
+    const key = entry ? `${entry.variable}|${at}` : 'off';
+    if (this._overlayKey === key) return;
+    this._overlayKey = key;
+
+    this.overlayReq?.abort();
+    this.dropOverlay();
+    if (!entry) {
+      if (S.overlayStatus !== 'idle') this.setState({ overlayStatus: 'idle' });
+      return;
+    }
+
+    const controller = new AbortController();
+    this.overlayReq = controller;
+    this.setState({ overlayStatus: 'loading' });
+
+    this.A.cloudOverlayImage(entry.url, { signal: controller.signal })
+      .then(async ({ blob, bounds }) => ({ url: await colorizeField(blob), bounds }))
+      .then(({ url, bounds }) => {
+        // Zwischenzeitlich umgeschaltet oder Karte weg: Bild wegwerfen.
+        if (this._overlayKey !== key || !this.map) { URL.revokeObjectURL(url); return; }
+        this._overlayUrl = url;
+        this._overlayLayer = window.L
+          .imageOverlay(url, bounds, { pane: 'clouds', interactive: false })
+          .addTo(this.map);
+        this.setState({ overlayStatus: 'ok' });
+      })
+      .catch((err) => {
+        if (err.name === 'AbortError' || this._overlayKey !== key) return;
+        console.warn('Wolken-Overlay nicht verfügbar', err);
+        this.setState({ overlayStatus: 'error' });
+      });
+  };
+
   /* Ortssuche. Die API ist asynchron, das Tippen nicht — deshalb entprellen,
      die vorige Anfrage abbrechen und späte Antworten verwerfen, die zu einer
      inzwischen überholten Eingabe gehören. Fällt die API aus, übernimmt die
@@ -1067,7 +1255,7 @@ class Component extends DCLogic {
   componentDidUpdate() {
     if (this.map && this.marker) this.marker.setLatLng([this.state.loc.lat, this.state.loc.lon]);
     if (this.mapEl && !this.map) this.initMap();
-    if (this.state.ready) this.loadClouds();
+    if (this.state.ready) { this.loadClouds(); this.syncOverlay(); }
   }
 
   setLang = (lang) => {
@@ -1077,7 +1265,11 @@ class Component extends DCLogic {
   };
 
   setMapEl = (el) => {
-    if (!el) { if (this.map) { this.map.remove(); this.map = null; } this.mapEl = null; return; }
+    if (!el) {
+      if (this.map) { this.dropOverlay(); this._overlayKey = null; this.map.remove(); this.map = null; }
+      this.mapEl = null;
+      return;
+    }
     this.mapEl = el;
     this.initMap();
   };
@@ -1090,6 +1282,10 @@ class Component extends DCLogic {
     const L = window.L;
     const map = L.map(this.mapEl, { center: [51.2, 10.4], zoom: 5, scrollWheelZoom: false });
     this.map = map;
+    // Eigene Ebene zwischen Kacheln (200) und dem Standard-Overlay (400): das
+    // Wolkenfeld deckt die Karte, bleibt aber unter den Isolinien und dem
+    // Ortsmarker. Ohne eigene Pane entschiede die Einfügereihenfolge.
+    map.createPane('clouds').style.zIndex = 350;
     const base = this.C.basemapLayer(this.props.mapStyle);
     L.tileLayer(base.url, base.options).addTo(map);
     if (this.props.showContours !== false) this.contours.forEach((c, i) => {
@@ -1186,6 +1382,10 @@ class Component extends DCLogic {
       cloudsShow: false, cloudsNote: false, cloudsNoteTitle: '', cloudsNoteBody: '',
       cloudFreePct: '—', cloudVerdict: '', cloudLayers: [], cloudSeries: [],
       cloudRunLine: '', cloudMaxAt: '—',
+      overlayAvail: false, overlayOn: false, overlayToggle: () => {}, overlayToggleLabel: '',
+      overlayToggleBg: 'transparent', overlayToggleFg: '#201e1d',
+      overlayVars: [], overlayTimeChips: [], overlayLegendCss: '', overlayRunLine: '',
+      overlayNote: false, overlayNoteText: '',
       sites: [], noSites: false, detName: '—', detSub: '', detVerdict: '', detAccess: '',
       detBars: [], hzPath: '', sunPath: '', hzX: [], hzY: [], sunMaxX: 300, sunMaxY: 150,
       sunMaxLX: 300, sunMaxLY: 130,
@@ -1197,6 +1397,56 @@ class Component extends DCLogic {
       pick: () => this.setState({ loc: { name: s.name, lat: s.lat, lon: s.lon }, q: '', sug: [] }),
     }));
     v.hasSug = v.sug.length > 0;
+
+    /* Wolkenfeld auf der Karte. Bewusst vor der Sichtbarkeitsprüfung: auch an
+       einem Ort, an dem die Finsternis nicht mehr sichtbar ist, bleibt die
+       Frage „wo ist es klar" sinnvoll. Ohne eingespielten Lauf ist die Liste
+       leer und die ganze Bedienleiste entfällt. */
+    const oTimes = this.overlayTimes();
+    if (oTimes.length) {
+      v.overlayAvail = true;
+      v.overlayOn = S.overlayOn;
+      v.overlayToggle = () => this.setState((s) => ({ overlayOn: !s.overlayOn }));
+      v.overlayToggleLabel = S.overlayOn ? t.ovHide : t.ovShow;
+      v.overlayToggleBg = S.overlayOn ? on : off;
+      v.overlayToggleFg = S.overlayOn ? onFg : '#201e1d';
+
+      const varLabel = { clct: t.cloudTotal, clcl: t.cloudLow, clcm: t.cloudMid, clch: t.cloudHigh };
+      const chip = (active) => ({
+        bg: active ? '#201e1d' : 'transparent',
+        fg: active ? '#f5ead8' : 'rgba(32,30,29,0.62)',
+      });
+
+      v.overlayVars = CLOUD_VARS.map((key) => ({
+        label: varLabel[key],
+        ...chip(key === S.overlayVar),
+        pick: () => this.setState({ overlayVar: key }),
+      }));
+
+      v.overlayTimeChips = oTimes.map((ms, i) => ({
+        label: this.E.fmtTime(new Date(ms), false),
+        ...chip(i === S.overlayIdx),
+        pick: () => this.setState({ overlayIdx: i }),
+      }));
+
+      // Dieselbe Skala wie im Canvas — eine Definition, zwei Verbraucher.
+      v.overlayLegendCss = `linear-gradient(to right, ${[0, 20, 40, 60, 80, 100]
+        .map((p) => `${cloudCss(p)} ${p}%`)
+        .join(', ')})`;
+
+      const run = S.overlays[0];
+      v.overlayRunLine = t.cloudRun(
+        (run.model || 'icon-d2').toUpperCase(),
+        run.runAt.toLocaleString(t.tzLocale, {
+          timeZone: 'Europe/Berlin', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit',
+        }),
+      );
+
+      if (S.overlayOn && (S.overlayStatus === 'loading' || S.overlayStatus === 'error')) {
+        v.overlayNote = true;
+        v.overlayNoteText = S.overlayStatus === 'loading' ? t.ovLoading : t.ovError;
+      }
+    }
 
     const c = this.circ();
     if (!c || !c.visible) return v;
