@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/organic-76e4d17e-bf5a-4ea9-b41b-8e8af38427ab/styles.css">
+<script src="_ds/organic-76e4d17e-bf5a-4ea9-b41b-8e8af38427ab/_ds_bundle.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="./image-slot.js"></script>
+<style>
+  body { margin: 0; }
+  a { color: var(--color-accent-700); }
+  a:hover { color: var(--color-accent); }
+  .noscroll::-webkit-scrollbar { display: none; }
+  .noscroll { scrollbar-width: none; }
+  .leaflet-container { font-family: var(--font-body); background: var(--color-neutral-200); }
+  .leaflet-control-attribution { font-size: 9px; }
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);overflow-x:hidden">
+
+  <header style="position:sticky;top:0;z-index:500;background:color-mix(in srgb, var(--color-bg) 88%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--color-divider)">
+    <div style="max-width:1120px;margin:0 auto;padding:10px clamp(14px,4vw,32px);display:flex;align-items:center;gap:14px">
+      <a href="#start" onClick="{{ goStart }}" style="display:flex;align-items:center;gap:9px;text-decoration:none;color:inherit;margin-right:auto">
+        <span style="width:26px;height:26px;border-radius:999px;background:var(--color-accent);box-shadow:inset -7px -2px 0 0 var(--color-bg);flex:none"></span>
+        <span style="font-family:var(--font-heading);font-size:19px;line-height:1">SoFi&nbsp;2026</span>
+      </a>
+      <span style="font-size:11px;padding:3px 10px;border-radius:999px;border:1px solid var(--color-divider);color:color-mix(in srgb, var(--color-text) 55%, transparent);white-space:nowrap">DE&nbsp;·&nbsp;EN folgt</span>
+    </div>
+    <nav class="noscroll" style="max-width:1120px;margin:0 auto;padding:0 clamp(14px,4vw,32px) 10px;display:flex;gap:7px;overflow-x:auto">
+      <sc-for list="{{ nav }}" as="item" hint-placeholder-count="6">
+        <a href="{{ item.href }}" onClick="{{ item.onClick }}" aria-current="{{ item.current }}" style="flex:none;text-decoration:none;font-size:13.5px;padding:6px 14px;border-radius:999px;border:1px solid var(--color-divider);color:var(--color-text);white-space:nowrap" style-hover="background:color-mix(in srgb, var(--color-text) 7%, transparent)">{{ item.label }}</a>
+      </sc-for>
+    </nav>
+  </header>
+
+  <!-- ══ START ══ -->
+  <sc-if value="{{ isStart }}" hint-placeholder-val="{{ true }}">
+  <main>
+    <section style="max-width:1120px;margin:0 auto;padding:clamp(28px,6vw,64px) clamp(14px,4vw,32px) 0;display:grid;gap:clamp(24px,4vw,44px);grid-template-columns:repeat(auto-fit,minmax(320px,1fr));align-items:center">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <span class="tag tag-accent">12. August 2026</span>
+          <span class="tag tag-accent-2">Partiell in Deutschland</span>
+        </div>
+        <h1 style="font-size:clamp(36px,7vw,60px);margin:0 0 16px;text-wrap:balance">Die Sonne geht als Sichel unter.</h1>
+        <p style="font-size:clamp(16px,2.2vw,19px);line-height:1.6;max-width:46ch;color:color-mix(in srgb, var(--color-text) 78%, transparent)">Am Abend des 12. August 2026 verdeckt der Mond über Deutschland bis zu 89 % der Sonne — und das kurz vor Sonnenuntergang, wenige Grad über dem Horizont. Wer etwas sehen will, braucht zwei Dinge: die richtige Zeit und eine freie Sicht nach Westnordwest.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:22px">
+          <a href="#zeiten" onClick="{{ goZeiten }}" class="btn btn-primary" style="text-decoration:none;padding:11px 22px;font-size:15px">Zeiten für meinen Ort</a>
+          <a href="#standorte" onClick="{{ goStandorte }}" class="btn btn-secondary" style="text-decoration:none;padding:11px 22px;font-size:15px">Beste Standorte finden</a>
+        </div>
+      </div>
+      <div style="position:relative">
+        <div class="washed" style="border-radius:var(--radius-lg);overflow:hidden;aspect-ratio:4/3;box-shadow:var(--shadow-lg)">
+          <image-slot id="sofi-hero" shape="rect" fit="cover" placeholder="Foto: partielle Sonnenfinsternis am Abendhimmel"></image-slot>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1120px;margin:0 auto;padding:clamp(28px,5vw,52px) clamp(14px,4vw,32px)">
+      <div style="background:var(--color-surface);border-radius:calc(var(--radius-lg) * 1.15);padding:clamp(18px,3.5vw,32px)">
+        <h6 style="margin:0 0 16px;color:var(--color-accent-700)">Countdown</h6>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(8px,2vw,18px)">
+          <sc-for list="{{ countdown }}" as="c" hint-placeholder-count="4">
+            <div style="text-align:left">
+              <div style="font-family:var(--font-heading);font-size:clamp(28px,7vw,54px);line-height:1;letter-spacing:-0.02em">{{ c.value }}</div>
+              <div style="font-size:11px;letter-spacing:0.09em;text-transform:uppercase;margin-top:7px;color:color-mix(in srgb, var(--color-text) 55%, transparent)">{{ c.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <p style="margin:18px 0 0;font-size:13px;color:color-mix(in srgb, var(--color-text) 60%, transparent)">Maximum in Köln um 20:29 MESZ · in Berlin um 20:37 MESZ</p>
+      </div>
+    </section>
+
+    <section style="max-width:1120px;margin:0 auto;padding:0 clamp(14px,4vw,32px) clamp(28px,5vw,52px)">
+      <div style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))">
+        <div class="card elev-sm">
+          <span class="card-kicker">Was passiert</span>
+          <div class="card-title">Eine Finsternis zur Abendstunde</div>
+          <p class="card-body">Der Kernschatten zieht über Island und Nordspanien. Deutschland liegt im Halbschatten — hier bleibt es eine partielle Finsternis, dafür in ungewöhnlicher Lage: dicht über dem Horizont, in der Dämmerungsfarbe.</p>
+        </div>
+        <div class="card elev-sm">
+          <span class="card-kicker">Wo am meisten</span>
+          <div class="card-title">Der Westen sieht mehr</div>
+          <p class="card-body">Die Bedeckung nimmt von Südwesten nach Nordosten ab: rund 89 % an der belgischen Grenze, etwa 81 % in Berlin und Dresden. Gleichzeitig steht die Sonne im Osten noch tiefer.</p>
+        </div>
+        <div class="card elev-sm">
+          <span class="card-kicker">Warum der Horizont zählt</span>
+          <div class="card-title">Zwei Grad entscheiden</div>
+          <p class="card-body">Zum Maximum steht die Sonne je nach Ort nur 1° bis 6° hoch. Ein Waldrand, eine Häuserzeile oder ein Hügel im Westen genügt, um alles zu verdecken. Deshalb berechnen wir das Horizontprofil.</p>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1120px;margin:0 auto;padding:0 clamp(14px,4vw,32px) clamp(36px,6vw,72px)">
+      <div style="display:grid;gap:clamp(20px,3vw,36px);grid-template-columns:repeat(auto-fit,minmax(280px,1fr));align-items:start">
+        <div>
+          <h2 style="font-size:clamp(26px,4.5vw,36px)">Ohne Filter geht gar nichts.</h2>
+          <p style="max-width:44ch;color:color-mix(in srgb, var(--color-text) 78%, transparent)">Auch eine zu 89 % bedeckte Sonne ist zehntausendfach zu hell für das Auge. Sonnenbrille, Rettungsdecke, belichteter Film, CD, geschwärztes Glas — nichts davon schützt. Nötig ist eine Finsternisbrille nach ISO 12312-2 oder ein zertifizierter Objektivfilter <em>vor</em> der Optik.</p>
+          <p style="font-size:13px;color:color-mix(in srgb, var(--color-text) 60%, transparent)">Die tiefe Sonne täuscht: Sie wirkt harmlos rot, sendet aber weiterhin Infrarot, das die Netzhaut schmerzfrei verbrennt.</p>
+        </div>
+        <div style="background:var(--color-accent-100);border-radius:calc(var(--radius-lg) * 1.15);padding:clamp(18px,3vw,28px)">
+          <h6 style="margin:0 0 14px;color:var(--color-accent-800)">Drei Regeln</h6>
+          <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:12px;font-size:14.5px;color:var(--color-accent-900)">
+            <li>Brille aufsetzen, <em>bevor</em> du zur Sonne schaust — nicht danach.</li>
+            <li>Filter gehören vor das Objektiv, nie zwischen Okular und Auge.</li>
+            <li>Kinder schauen nur mit Erwachsenen und geprüfter Brille.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+  </main>
+  </sc-if>
+
+  <!-- ══ ZEITEN & ORTE ══ -->
+  <sc-if value="{{ isZeiten }}" hint-placeholder-val="{{ true }}">
+  <main style="max-width:1120px;margin:0 auto;padding:clamp(24px,5vw,48px) clamp(14px,4vw,32px) clamp(36px,6vw,72px)">
+    <h6 style="color:var(--color-accent-700);margin-bottom:10px">Zeiten &amp; Orte</h6>
+    <h1 style="font-size:clamp(30px,6vw,48px);margin-bottom:12px">Was passiert bei dir?</h1>
+    <p style="max-width:52ch;color:color-mix(in srgb, var(--color-text) 78%, transparent);margin-bottom:26px">Suche einen Ort, nutze deinen Standort oder tippe auf die Karte. Alle Zeiten in MESZ, berechnet für den 12. August 2026.</p>
+
+    <div style="display:flex;flex-wrap:wrap;gap:9px;margin-bottom:18px;align-items:center">
+      <div style="position:relative;flex:1 1 260px;min-width:220px">
+        <input class="input" type="search" placeholder="Ort oder PLZ — z. B. Köln, Ulm, 20095" value="{{ query }}" onInput="{{ onQuery }}" style="min-height:46px;font-size:15px">
+        <sc-if value="{{ hasSuggestions }}">
+          <div class="elev-lg" style="position:absolute;top:52px;left:0;right:0;z-index:600;background:var(--color-surface);border-radius:var(--radius-md);padding:6px;max-height:280px;overflow:auto">
+            <sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="4">
+              <button type="button" onClick="{{ s.onPick }}" style="display:flex;width:100%;align-items:baseline;gap:10px;text-align:left;background:transparent;border:0;cursor:pointer;font:inherit;font-size:14px;padding:9px 12px;border-radius:999px;color:var(--color-text)" style-hover="background:color-mix(in srgb, var(--color-text) 8%, transparent)">
+                <span style="font-weight:600">{{ s.name }}</span>
+                <span style="font-size:12px;color:color-mix(in srgb, var(--color-text) 55%, transparent)">{{ s.state }}</span>
+                <span style="margin-left:auto;font-size:12px;color:var(--color-accent-700)">{{ s.obsc }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+      <button type="button" class="btn btn-secondary" onClick="{{ useGeolocation }}" style="min-height:46px;padding-inline:18px">Mein Standort</button>
+    </div>
+
+    <div style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));align-items:start">
+
+      <div style="background:var(--color-surface);border-radius:calc(var(--radius-lg) * 1.15);overflow:hidden;box-shadow:var(--shadow-md)">
+        <div ref="{{ mapRef }}" style="width:100%;height:clamp(320px,52vw,460px)"></div>
+        <div style="padding:14px 18px;display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+          <span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 55%, transparent)">Bedeckung</span>
+          <sc-for list="{{ legend }}" as="l" hint-placeholder-count="5">
+            <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px">
+              <span style="width:16px;height:4px;border-radius:999px;background:{{ l.color }}"></span>{{ l.label }}
+            </span>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="background:var(--color-surface);border-radius:calc(var(--radius-lg) * 1.15);padding:clamp(18px,3vw,26px)">
+          <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px">
+            <h2 style="font-size:clamp(24px,4vw,32px);margin:0">{{ sel.name }}</h2>
+            <span style="font-size:13px;color:color-mix(in srgb, var(--color-text) 55%, transparent)">{{ sel.coords }}</span>
+          </div>
+
+          <div style="display:flex;gap:clamp(16px,3vw,28px);align-items:center;flex-wrap:wrap;margin:18px 0 6px">
+            <div style="position:relative;width:112px;height:112px;flex:none;border-radius:999px;background:radial-gradient(circle at 50% 50%, var(--color-accent-300), var(--color-accent-200));display:grid;place-items:center">
+              <div style="position:relative;width:88px;height:88px;border-radius:999px;background:var(--color-accent-500);overflow:hidden">
+                <div style="position:absolute;width:88px;height:88px;border-radius:999px;background:var(--color-surface);left:{{ sel.moonX }};top:{{ sel.moonY }}"></div>
+              </div>
+            </div>
+            <div>
+              <div style="font-family:var(--font-heading);font-size:clamp(38px,8vw,52px);line-height:1">{{ sel.obsc }}</div>
+              <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 55%, transparent);margin-top:4px">max. Bedeckung um {{ sel.maxTime }}</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px;margin-top:22px">
+            <sc-for list="{{ sel.facts }}" as="f" hint-placeholder-count="6">
+              <div>
+                <div style="font-size:10.5px;letter-spacing:0.09em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 50%, transparent)">{{ f.label }}</div>
+                <div style="font-family:var(--font-heading);font-size:20px;margin-top:3px">{{ f.value }}</div>
+                <div style="font-size:11.5px;color:color-mix(in srgb, var(--color-text) 55%, transparent)">{{ f.note }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="background:var(--color-surface);border-radius:calc(var(--radius-lg) * 1.15);padding:clamp(18px,3vw,26px)">
+          <h6 style="margin:0 0 4px;color:var(--color-accent-700)">Verlauf</h6>
+          <p style="font-size:13px;margin:0 0 16px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">Bedeckungsgrad über die Zeit. Die schraffierte Fläche liegt unter dem Horizont — dort ist die Sonne bereits untergegangen.</p>
+          <div style="display:flex;align-items:flex-end;gap:2px;height:130px">
+            <sc-for list="{{ sel.curve }}" as="p" hint-placeholder-count="18">
+              <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%">
+                <div style="width:100%;border-radius:999px 999px 3px 3px;height:{{ p.h }};background:{{ p.color }}"></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11.5px;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+            <span>{{ sel.c1 }}</span><span>{{ sel.maxTime }}</span><span>{{ sel.endLabel }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:clamp(28px,5vw,48px)">
+      <h3 style="margin-bottom:14px">Städte im Vergleich</h3>
+      <div style="overflow-x:auto;background:var(--color-surface);border-radius:calc(var(--radius-lg) * 1.15);padding:clamp(10px,2vw,20px)">
+        <table class="table" style="min-width:560px">
+          <thead>
+            <tr><th>Ort</th><th>1. Kontakt</th><th>Maximum</th><th>Bedeckung</th><th>Sonnenhöhe</th><th>Untergang</th></tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ table }}" as="r" hint-placeholder-count="10">
+              <tr onClick="{{ r.onPick }}" style="cursor:pointer">
+                <td style="font-weight:600">{{ r.name }}</td>
+                <td>{{ r.c1 }}</td>
+                <td>{{ r.maxTime }}</td>
+                <td>{{ r.obsc }}</td>
+                <td>{{ r.alt }}</td>
+                <td>{{ r.sunset }}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12px;margin-top:12px;color:color-mix(in srgb, var(--color-text) 55%, transparent)">Vorschauwerte aus dem Mock-Backend. Die produktive Berechnung läuft über <code>/api/v1/circumstances</code> mit Besselschen Elementen und liefert Zeiten auf die Sekunde.</p>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ══ BESTE STANDORTE ══ -->
+  <sc-if value="{{ isStandorte }}" hint-placeholder-val="{{ true }}">
+  <main style="max-width:1120px;margin:0 auto;padding:clamp(24px,5vw,48px) clamp(14px,4vw,32px) clamp(36px,6vw,72px)">
+    <h6 style="color:var(--color-accent-700);margin-bottom:10px">Beste Standorte</h6>
+    <h1 style="font-size:clamp(30px,6vw,48px);margin-bottom:12px">Freie Sicht nach Westnordwest.</h1>
+    <p style="max-width:56ch;color:color-mix(in srgb, var(--color-text) 78%, transparent);margin-bottom:24px">Zum Maximum steht die Sonne im Azimut um 288° und nur wenige Grad hoch. Wir berechnen für jeden Punkt das echte Horizontprofil — Nahfeld aus dem Oberflächenmodell DOM1 (inklusive Bäume und Gebäude), Fernfeld aus dem Geländemodell DGM bis 180 km — und prüfen, ob die Sonnenbahn frei durchläuft.</p>
+
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px">
+      <sc-for list="{{ spotChips }}" as="s" hint-placeholder-count="6">
+        <button type="button" onClick="{{ s.onPick }}" style="cursor:pointer;font:inherit;font-size:13.5px;padding:7px 15px;border-radius:999px;border:1px solid var(--color-divider);background:{{ s.bg }};color:{{ s.fg }}">{{ s.name }}</button>
+      </sc-for>
+    </div>
+
+    <div style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));align-items:start">
+      <div style="background:var(--color-surface);border-radius:calc(var(--radius-lg) * 1.15);padding:clamp(18px,3vw,26px)">
+        <h6 style="margin:0 0 4px;color:var(--color-accent-700)">Horizontprofil · HORAYZON</h6>
+        <p style="font-size:13px;margin:0 0 16px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">Blick nach Westen, Azimut 265° bis 305°. Die dunkle Silhouette ist der berechnete Horizont, die Punkte sind die Sonne im Abstand von zehn Minuten.</p>
+
+        <div style="position:relative;height:210px;border-radius:var(--radius-md);overflow:hidden;background:linear-gradient(to bottom, var(--color-accent-200), var(--color-accent-300) 55%, var(--color-accent-400))">
+          <sc-for list="{{ sunTrack }}" as="p" hint-placeholder-count="8">
+            <div style="position:absolute;width:13px;height:13px;border-radius:999px;transform:translate(-50%,50%);left:{{ p.x }};bottom:{{ p.y }};background:{{ p.color }};box-shadow:{{ p.glow }}"></div>
+          </sc-for>
+          <div style="position:absolute;inset:auto 0 0 0;display:flex;align-items:flex-end;height:100%">
+            <sc-for list="{{ horizon }}" as="h" hint-placeholder-count="24">
+              <div style="flex:1;height:{{ h.h }};background:var(--color-neutral-900)"></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11.5px;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+          <span>265° W</span><span>285° WNW</span><span>305° NW</span>
+        </div>
+        <p style="font-size:13px;margin:14px 0 0">{{ spot.verdict }}</p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="background:var(--color-surface);border-radius:calc(var(--radius-lg) * 1.15);padding:clamp(18px,3vw,26px)">
+          <div style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap">
+            <div style="flex:1 1 180px">
+              <h2 style="font-size:clamp(23px,3.6vw,30px);margin:0 0 4px">{{ spot.name }}</h2>
+              <div style="font-size:13px;color:color-mix(in srgb, var(--color-text) 58%, transparent)">{{ spot.sub }}</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-family:var(--font-heading);font-size:44px;line-height:1;color:var(--color-accent-700)">{{ spot.score }}</div>
+              <div style="font-size:10.5px;letter-spacing:0.09em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 50%, transparent)">Standort-Score</div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:14px;margin-top:22px">
+            <sc-for list="{{ spot.factors }}" as="f" hint-placeholder-count="4">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+                  <span>{{ f.label }}</span>
+                  <span style="color:color-mix(in srgb, var(--color-text) 58%, transparent)">{{ f.value }}</span>
+                </div>
+                <div style="height:7px;border-radius:999px;background:color-mix(in srgb, var(--color-text) 10%, transparent);overflow:hidden">
+                  <div style="height:100%;border-radius:999px;width:{{ f.w }};background:{{ f.color }}"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <p style="font-size:13px;margin:20px 0 0;color:color-mix(in srgb, var(--color-text) 70%, transparent)">{{ spot.access }}</p>
+        </div>
+
+        <div style="background:var(--color-accent-2-100);border-radius:calc(var(--radius-lg) * 1.15);padding:clamp(18px,3vw,26px)">
+          <h6 style="margin:0 0 12px;color:var(--color-accent-2-800)">Umkreissuche</h6>
+          <p style="font-size:13.5px;margin:0 0 14px;color:var(--color-accent-2-900)">Beste Beobachtungspunkte im Umkreis von <strong>{{ radius }} km</strong> um {{ sel.name }}.</p>
+          <input type="range" min="10" max="200" step="10" value="{{ radiusRaw }}" onInput="{{ onRadius }}" style="width:100%;accent-color:var(--color-accent)">
+          <div style="display:flex;flex-direction:column;gap:2px;margin-top:14px">
+            <sc-for list="{{ nearby }}" as="n" hint-placeholder-count="4">
+              <button type="button" onClick="{{ n.onPick }}" style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:transparent;border:0;cursor:pointer;font:inherit;font-size:13.5px;padding:9px 12px;border-radius:999px;color:var(--color-accent-2-900)" style-hover="background:color-mix(in srgb, var(--color-accent-2) 18%, transparent)">
+                <span style="font-family:var(--font-heading);width:30px">{{ n.score }}</span>
+                <span style="flex:1">{{ n.name }}</span>
+                <span style="font-size:12px;opacity:0.7">{{ n.dist }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <sc-if value="{{ showApi }}" hint-placeholder-val="{{ true }}">
+    <div style="margin-top:clamp(28px,5vw,48px);background:var(--color-neutral-900);color:var(--color-neutral-200);border-radius:calc(var(--radius-lg) * 1.15);padding:clamp(20px,4vw,34px)">
+      <h6 style="margin:0 0 6px;color:var(--color-accent-400)">Für die Umsetzung</h6>
+      <h3 style="color:var(--color-neutral-100);margin-bottom:16px">Der API-Vertrag</h3>
+      <p style="font-size:14px;max-width:62ch;color:var(--color-neutral-300)">Das Frontend arbeitet hier gegen Mock-Daten. Produktiv braucht es vier Endpunkte; alle antworten mit JSON und sind für ein CDN cachebar, weil sich zu einem festen Ereignis nur Ort und Radius ändern.</p>
+      <div style="display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:20px">
+        <sc-for list="{{ api }}" as="e" hint-placeholder-count="4">
+          <div style="background:color-mix(in srgb, #f9f4ed 8%, transparent);border-radius:var(--radius-md);padding:16px 18px">
+            <div style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;color:var(--color-accent-300);word-break:break-word">{{ e.path }}</div>
+            <div style="font-size:13px;margin-top:8px;color:var(--color-neutral-300);line-height:1.5">{{ e.desc }}</div>
+            <div style="font-size:11.5px;margin-top:8px;color:var(--color-neutral-500)">{{ e.impl }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+  </main>
+  </sc-if>
+
+  <!-- ══ PLATZHALTER-SEITEN ══ -->
+  <sc-if value="{{ isSoon }}">
+  <main style="max-width:1120px;margin:0 auto;padding:clamp(40px,8vw,90px) clamp(14px,4vw,32px)">
+    <h6 style="color:var(--color-accent-700);margin-bottom:10px">In Arbeit</h6>
+    <h1 style="font-size:clamp(30px,6vw,48px);margin-bottom:14px">{{ soonTitle }}</h1>
+    <p style="max-width:50ch;color:color-mix(in srgb, var(--color-text) 75%, transparent)">{{ soonText }}</p>
+    <a href="#start" onClick="{{ goStart }}" class="btn btn-secondary" style="text-decoration:none;margin-top:18px;padding:11px 22px">Zurück zur Startseite</a>
+  </main>
+  </sc-if>
+
+  <footer style="border-top:1px solid var(--color-divider);margin-top:auto">
+    <div style="max-width:1120px;margin:0 auto;padding:clamp(24px,4vw,40px) clamp(14px,4vw,32px);display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:baseline">
+      <div style="font-size:13px;color:color-mix(in srgb, var(--color-text) 58%, transparent);max-width:44ch">Alle Angaben ohne Gewähr. Sonnenbeobachtung ausschließlich mit geprüften Filtern nach ISO 12312-2. Kartendaten © OpenStreetMap-Mitwirkende, Höhendaten DOM1/DGM1 der Landesvermessungsämter (dl-de/by-2-0).</div>
+      <div style="font-size:13px;color:color-mix(in srgb, var(--color-text) 58%, transparent)">SoFi 2026 · 12. August 2026</div>
+    </div>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showApiSpec&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Inhalt&quot;},&quot;startPage&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;start&quot;,&quot;zeiten&quot;,&quot;standorte&quot;],&quot;default&quot;:&quot;start&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Inhalt&quot;}}">
+const EVENT = new Date('2026-08-12T20:30:00+02:00');
+
+const CITIES = [
+  ['Aachen','NRW',50.78,6.08],['Köln','NRW',50.94,6.96],['Düsseldorf','NRW',51.23,6.78],
+  ['Dortmund','NRW',51.51,7.47],['Münster','NRW',51.96,7.63],['Trier','RLP',49.75,6.64],
+  ['Saarbrücken','SL',49.24,7.00],['Mainz','RLP',49.99,8.25],['Frankfurt am Main','HE',50.11,8.68],
+  ['Kassel','HE',51.32,9.50],['Freiburg im Breisgau','BW',48.00,7.85],['Karlsruhe','BW',49.01,8.40],
+  ['Stuttgart','BW',48.78,9.18],['Ulm','BW',48.40,9.99],['Konstanz','BW',47.66,9.18],
+  ['München','BY',48.14,11.58],['Nürnberg','BY',49.45,11.08],['Regensburg','BY',49.02,12.10],
+  ['Passau','BY',48.57,13.43],['Garmisch-Partenkirchen','BY',47.49,11.09],['Erfurt','TH',50.98,11.03],
+  ['Leipzig','SN',51.34,12.37],['Dresden','SN',51.05,13.74],['Magdeburg','ST',52.13,11.63],
+  ['Hannover','NI',52.37,9.73],['Bremen','HB',53.08,8.80],['Hamburg','HH',53.55,10.00],
+  ['Kiel','SH',54.32,10.14],['Flensburg','SH',54.78,9.44],['Rostock','MV',54.09,12.14],
+  ['Berlin','BE',52.52,13.40],['Potsdam','BB',52.40,13.06],['Cottbus','BB',51.76,14.33],
+  ['Bielefeld','NRW',52.02,8.53],['Braunschweig','NI',52.27,10.52],['Würzburg','BY',49.79,9.95],
+];
+
+const SPOTS = [
+  { id:'schauinsland', name:'Schauinsland', sub:'Schwarzwald · 1284 m · Baden-Württemberg', lat:47.91, lon:7.90,
+    hz:0.3, cloud:62, access:'Ganzjährig per Bergbahn und Straße erreichbar, großer Parkplatz am Gipfel. Der Westhang fällt frei zur Rheinebene ab — der beste offene Blick Süddeutschlands.' },
+  { id:'hoheacht', name:'Hohe Acht', sub:'Eifel · 747 m · Rheinland-Pfalz', lat:50.39, lon:7.00,
+    hz:0.5, cloud:55, access:'Aussichtsturm und Wanderparkplatz an der L10. Nach Westen nur flaches Eifelplateau — bei hoher Bedeckung der stärkste Standort im Westen.' },
+  { id:'kahlerasten', name:'Kahler Asten', sub:'Rothaargebirge · 841 m · Nordrhein-Westfalen', lat:51.18, lon:8.49,
+    hz:0.7, cloud:52, access:'Direkte Zufahrt von Winterberg, Parkplatz am Turm. Einzelne Fichtenreihen im Westsektor drücken das Profil leicht nach oben.' },
+  { id:'cuxhaven', name:'Deich bei Duhnen', sub:'Nordseeküste · 5 m · Niedersachsen', lat:53.89, lon:8.62,
+    hz:0.0, cloud:58, access:'Meereshorizont — kein Hindernis über 0,1°. Bei Springtide und Westwind kann der Deichfuß nass sein; Zugang über die Strandpromenade.' },
+  { id:'brocken', name:'Brocken', sub:'Harz · 1141 m · Sachsen-Anhalt', lat:51.80, lon:10.62,
+    hz:0.4, cloud:48, access:'Nur zu Fuß, per Rad oder Brockenbahn — Nationalpark, keine Zufahrt. Letzte Bahn beachten, sonst zweistündiger Abstieg im Dunkeln.' },
+  { id:'wasserkuppe', name:'Wasserkuppe', sub:'Rhön · 950 m · Hessen', lat:50.50, lon:9.95,
+    hz:0.9, cloud:53, access:'Segelfluggelände mit großer Freifläche, Zufahrt bis kurz unter den Gipfel. Der Westsektor wird vom Abtsrodaer Kuppe-Rücken leicht angehoben.' },
+  { id:'peissenberg', name:'Hoher Peißenberg', sub:'Voralpenland · 988 m · Bayern', lat:47.80, lon:11.01,
+    hz:1.2, cloud:57, access:'Wetterwarte und Wallfahrtskirche, Parkplätze am Ort. Nach Westen liegen die Ammergauer Vorberge — erst ab etwa 1,2° freie Sicht.' },
+  { id:'ruegen', name:'Kap Arkona', sub:'Rügen · 45 m · Mecklenburg-Vorpommern', lat:54.68, lon:13.43,
+    hz:0.1, cloud:50, access:'Freier Blick über die Ostsee nach Nordwesten. Naturschutzgebiet: Wege nicht verlassen, Steilkante gesperrt. Zufahrt nur bis Putgarten.' },
+];
+
+const API = [
+  { path:'GET /api/v1/circumstances?lat&lon', desc:'Kontaktzeiten C1–C4, Maximum, Bedeckungsgrad, Sonnenhöhe und Azimut für einen Punkt.', impl:'Besselsche Elemente aus dem NASA-Katalog, Auswertung serverseitig; Antwort < 5 ms, unbegrenzt cachebar.' },
+  { path:'GET /api/v1/geocode?q', desc:'Ortsname oder PLZ zu Koordinaten, mit Bundesland und Einwohnerzahl zur Sortierung.', impl:'Photon oder Nominatim auf eigener Instanz, beschränkt auf DE.' },
+  { path:'GET /api/v1/horizon?lat&lon', desc:'Horizontprofil in 0,25°-Schritten über 360°, plus Verdeckungsprüfung gegen die Sonnenbahn.', impl:'HORAYZON — DOM1 im Nahfeld bis 5 km, DGM1/DGM25 im Fernfeld bis 180 km, Erdkrümmung und Refraktion korrigiert. Kaltberechnung ~2 s, danach im Kachelcache.' },
+  { path:'GET /api/v1/spots?lat&lon&radius', desc:'Gerankte Beobachtungspunkte im Umkreis, mit aufgeschlüsseltem Score.', impl:'Vorberechnetes Raster aus Horizontfreiheit, Wolkenklimatologie, Bedeckungsgrad und Zugangsstatus; PostGIS-Abfrage.' },
+];
+
+const pad = n => String(n).padStart(2,'0');
+const hm = m => pad(Math.floor(((m%1440)+1440)%1440/60)) + ':' + pad(Math.round(m)%60);
+
+function calc(lat, lon) {
+  const c = lat + 1.57 * lon;
+  const obsc = Math.max(70, Math.min(92, 89 - 0.62 * (c - 60.3)));
+  const max = 1220 + 1.0 * (lon - 6) + 0.8 * (lat - 48);
+  const sunset = 1220 + 4 * (15 - lon) + 3.2 * (lat - 48);
+  const alt = Math.max(0, (sunset - max) * 0.13);
+  return { obsc, max, sunset, alt, c1: max - 58, c4: max + 56, az: 292 - alt * 0.9 };
+}
+
+// separation of two equal discs for a given overlap fraction
+function sep(frac) {
+  let lo = 0, hi = 2;
+  for (let i = 0; i < 40; i++) {
+    const x = (lo + hi) / 2;
+    const a = 2 * Math.acos(x / 2) - (x / 2) * Math.sqrt(Math.max(0, 4 - x * x));
+    if (a / Math.PI > frac) lo = x; else hi = x;
+  }
+  return (lo + hi) / 2;
+}
+
+function haversine(a, b, c, d) {
+  const R = 6371, t = Math.PI / 180;
+  const dl = (c - a) * t, dg = (d - b) * t;
+  const h = Math.sin(dl/2)**2 + Math.cos(a*t) * Math.cos(c*t) * Math.sin(dg/2)**2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+class Component extends DCLogic {
+  state = {
+    page: 'start', query: '', typing: false, cityIdx: 1,
+    spotId: 'hoheacht', radius: 120, now: Date.now(),
+  };
+
+  componentDidMount() {
+    const p = this.props.startPage;
+    if (p && p !== this.state.page) this.setState({ page: p });
+    this.timer = setInterval(() => this.setState({ now: Date.now() }), 1000);
+    this.mountMap();
+  }
+  componentDidUpdate() { this.mountMap(); }
+  componentWillUnmount() { clearInterval(this.timer); if (this.map) { this.map.remove(); this.map = null; } }
+
+  mountMap() {
+    const el = this.mapEl;
+    if (!el || !window.L) return;
+    if (this.map && this.map._container !== el) { this.map.remove(); this.map = null; }
+    if (this.map) { this.map.invalidateSize(); this.placeMarker(); return; }
+    const map = window.L.map(el, { scrollWheelZoom: false, zoomControl: true }).setView([51.1, 10.2], 5);
+    window.L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© OpenStreetMap · © CARTO', maxZoom: 18,
+    }).addTo(map);
+    // Isolinien gleicher Bedeckung: lat + 1.57·lon = const
+    [[89,'#8c491a'],[87,'#b2622d'],[85,'#d67f48'],[83,'#f6a06b'],[81,'#ffc6a5']].forEach(([v, color]) => {
+      const c = 60.3 + (89 - v) / 0.62;
+      const pts = [];
+      for (let lo = 4.5; lo <= 16; lo += 0.5) pts.push([c - 1.57 * lo, lo]);
+      window.L.polyline(pts, { color, weight: 3, opacity: 0.9 }).addTo(map)
+        .bindTooltip(v + ' %', { permanent: false, sticky: true });
+    });
+    map.on('click', e => {
+      this.custom = { name: 'Gewählter Punkt', state: '', lat: e.latlng.lat, lon: e.latlng.lng };
+      this.setState({ cityIdx: -1, typing: false });
+    });
+    this.map = map;
+    this.placeMarker();
+  }
+
+  placeMarker() {
+    if (!this.map) return;
+    const s = this.city();
+    if (this.marker) this.map.removeLayer(this.marker);
+    this.marker = window.L.circleMarker([s.lat, s.lon], {
+      radius: 8, color: '#201e1d', weight: 2, fillColor: '#c67139', fillOpacity: 1,
+    }).addTo(this.map).bindTooltip(s.name, { permanent: true, direction: 'top', offset: [0, -8] });
+  }
+
+  city() {
+    if (this.state.cityIdx === -1 && this.custom) return this.custom;
+    const c = CITIES[Math.max(0, this.state.cityIdx)];
+    return { name: c[0], state: c[1], lat: c[2], lon: c[3] };
+  }
+
+  go = p => e => { if (e) e.preventDefault(); this.setState({ page: p, typing: false }); window.scrollTo(0, 0); };
+
+  renderVals() {
+    const st = this.state;
+    const page = st.page;
+    const navDef = [
+      ['start','Start'],['zeiten','Zeiten & Orte'],['standorte','Beste Standorte'],
+      ['tipps','Beobachtung'],['sicherheit','Sicherheit'],['fotografie','Fotografie'],['faq','FAQ'],
+    ];
+
+    // ── Countdown ──
+    let d = Math.max(0, EVENT.getTime() - st.now) / 1000;
+    const cd = [
+      { label: 'Tage', value: Math.floor(d / 86400) },
+      { label: 'Stunden', value: pad(Math.floor(d / 3600) % 24) },
+      { label: 'Minuten', value: pad(Math.floor(d / 60) % 60) },
+      { label: 'Sekunden', value: pad(Math.floor(d) % 60) },
+    ];
+
+    // ── Ausgewählter Ort ──
+    const c = this.city();
+    const k = calc(c.lat, c.lon);
+    const frac = k.obsc / 100;
+    const dx = sep(frac) * 44; // 44 = Radius der Scheibe in px
+    const ang = 145 * Math.PI / 180;
+
+    const endMin = Math.min(k.c4, k.sunset);
+    const curve = [];
+    for (let i = 0; i <= 20; i++) {
+      const t = k.c1 + (k.c4 - k.c1) * i / 20;
+      const rel = 1 - Math.abs(t - k.max) / ((k.c4 - k.c1) / 2);
+      const v = Math.max(0, rel) * k.obsc;
+      curve.push({
+        h: Math.max(2, v / 92 * 100).toFixed(1) + '%',
+        color: t > k.sunset ? 'repeating-linear-gradient(45deg, var(--color-neutral-400) 0 4px, var(--color-neutral-300) 4px 8px)' : 'var(--color-accent-500)',
+      });
+    }
+
+    const q = st.query.trim().toLowerCase();
+    const suggestions = st.typing && q.length > 0
+      ? CITIES.map((x, i) => ({ x, i }))
+          .filter(({ x }) => x[0].toLowerCase().includes(q))
+          .slice(0, 6)
+          .map(({ x, i }) => ({
+            name: x[0], state: x[1], obsc: calc(x[2], x[3]).obsc.toFixed(1) + ' %',
+            onPick: () => this.setState({ cityIdx: i, query: x[0], typing: false }),
+          }))
+      : [];
+
+    const table = CITIES.slice(0, 12).map((x, i) => {
+      const r = calc(x[2], x[3]);
+      return {
+        name: x[0], c1: hm(r.c1) + ' Uhr', maxTime: hm(r.max) + ' Uhr',
+        obsc: r.obsc.toFixed(1) + ' %', alt: r.alt.toFixed(1) + '°', sunset: hm(r.sunset) + ' Uhr',
+        onPick: () => this.setState({ cityIdx: i, query: x[0], typing: false }),
+      };
+    });
+
+    // ── Standorte ──
+    const spot = SPOTS.find(s => s.id === st.spotId) || SPOTS[0];
+    const sk = calc(spot.lat, spot.lon);
+    const hzScore = Math.max(0, 100 - spot.hz * 34);
+    const obscScore = (sk.obsc - 78) / 12 * 100;
+    const accessScore = /Nationalpark|Naturschutz/.test(spot.access) ? 62 : 88;
+    const score = Math.round(hzScore * 0.42 + spot.cloud * 0.22 + obscScore * 0.22 + accessScore * 0.14);
+
+    // Horizontprofil: 28 Balken über 265°–305°
+    const horizon = [];
+    let seed = spot.id.split('').reduce((a, ch) => a + ch.charCodeAt(0), 0);
+    for (let i = 0; i < 28; i++) {
+      seed = (seed * 1103515245 + 12345) % 2147483648;
+      const n = (seed / 2147483648);
+      const bumps = Math.sin(i / 3.1 + spot.lat) * 0.35 + Math.sin(i / 1.7) * 0.2;
+      const deg = Math.max(0, spot.hz * (0.55 + n * 0.9 + bumps * 0.8));
+      horizon.push({ h: (deg / 12 * 100).toFixed(1) + '%' });
+    }
+
+    // Sonnenbahn: Azimut 265–305 → x, Höhe 0–12° → y
+    const sunTrack = [];
+    for (let m = -40; m <= 40; m += 10) {
+      const t = sk.max + m;
+      const alt = Math.max(-1, sk.alt + (sk.max - t) * 0.13);
+      const az = sk.az + m * 0.16;
+      if (alt < -0.5) continue;
+      const below = alt < spot.hz * 1.1;
+      sunTrack.push({
+        x: ((az - 265) / 40 * 100).toFixed(1) + '%',
+        y: (alt / 12 * 100).toFixed(1) + '%',
+        color: below ? 'var(--color-neutral-600)' : 'var(--color-accent-800)',
+        glow: below ? 'none' : '0 0 0 4px color-mix(in srgb, #8c491a 22%, transparent)',
+      });
+    }
+
+    const nearby = SPOTS
+      .map(s => ({ s, dist: haversine(c.lat, c.lon, s.lat, s.lon) }))
+      .filter(o => o.dist <= st.radius)
+      .sort((a, b) => a.dist - b.dist)
+      .slice(0, 5)
+      .map(o => {
+        const kk = calc(o.s.lat, o.s.lon);
+        const sc = Math.round(Math.max(0, 100 - o.s.hz * 34) * 0.42 + o.s.cloud * 0.22
+          + (kk.obsc - 78) / 12 * 100 * 0.22 + 88 * 0.14);
+        return { name: o.s.name, dist: Math.round(o.dist) + ' km', score: sc,
+          onPick: () => this.setState({ spotId: o.s.id }) };
+      });
+
+    const soonMap = {
+      tipps: ['Beobachtungstipps', 'Ablaufplan für den Abend, Ausrüstungsliste, Projektionsmethoden und was in der Dämmerung sonst noch am Himmel steht. Kommt im nächsten Schritt.'],
+      sicherheit: ['Sicherheit', 'Ausführlich zu Filternormen, Prüfung gebrauchter Brillen, Teleskopfiltern und Beobachtung mit Kindern. Die Kurzfassung steht auf der Startseite.'],
+      fotografie: ['Fotografie', 'Brennweiten, Belichtungsreihen, Filterwechsel und die Frage, ob sich bei 3° Sonnenhöhe eine Landschaftsaufnahme mehr lohnt als das Teleobjektiv.'],
+      faq: ['Häufige Fragen', 'Warum keine Totalität in Deutschland, wann die nächste kommt, ob man etwas hört oder spürt — gesammelt und beantwortet.'],
+    };
+    const soon = soonMap[page];
+
+    return {
+      nav: navDef.map(([id, label]) => ({
+        href: '#' + id, label, current: page === id ? 'page' : null, onClick: this.go(id),
+      })),
+      isStart: page === 'start', isZeiten: page === 'zeiten', isStandorte: page === 'standorte',
+      isSoon: !!soon, soonTitle: soon ? soon[0] : '', soonText: soon ? soon[1] : '',
+      goStart: this.go('start'), goZeiten: this.go('zeiten'), goStandorte: this.go('standorte'),
+      countdown: cd,
+      query: st.query,
+      onQuery: e => this.setState({ query: e.target.value, typing: true }),
+      hasSuggestions: suggestions.length > 0,
+      suggestions,
+      useGeolocation: () => {
+        if (!navigator.geolocation) return;
+        navigator.geolocation.getCurrentPosition(p => {
+          this.custom = { name: 'Mein Standort', state: '', lat: p.coords.latitude, lon: p.coords.longitude };
+          this.setState({ cityIdx: -1, query: '', typing: false });
+        });
+      },
+      mapRef: el => { this.mapEl = el; },
+      legend: [
+        { color: '#8c491a', label: '89 %' }, { color: '#b2622d', label: '87 %' },
+        { color: '#d67f48', label: '85 %' }, { color: '#f6a06b', label: '83 %' },
+        { color: '#ffc6a5', label: '81 %' },
+      ],
+      sel: {
+        name: c.name,
+        coords: c.lat.toFixed(3) + '° N, ' + c.lon.toFixed(3) + '° O',
+        obsc: k.obsc.toFixed(1) + ' %',
+        maxTime: hm(k.max) + ' Uhr',
+        c1: hm(k.c1) + ' Uhr',
+        endLabel: (k.c4 > k.sunset ? 'Untergang ' + hm(k.sunset) : hm(k.c4)) + ' Uhr',
+        moonX: (-dx * Math.cos(ang)).toFixed(1) + 'px',
+        moonY: (-dx * Math.sin(ang)).toFixed(1) + 'px',
+        facts: [
+          { label: '1. Kontakt (C1)', value: hm(k.c1), note: 'Mond berührt den Sonnenrand' },
+          { label: 'Maximum', value: hm(k.max), note: k.obsc.toFixed(1) + ' % bedeckt' },
+          { label: '4. Kontakt (C4)', value: hm(k.c4), note: k.c4 > k.sunset ? 'erst nach Sonnenuntergang' : 'Finsternis endet' },
+          { label: 'Sonnenhöhe', value: k.alt.toFixed(1) + '°', note: 'zum Maximum' },
+          { label: 'Azimut', value: Math.round(k.az) + '°', note: 'Westnordwest' },
+          { label: 'Sonnenuntergang', value: hm(k.sunset), note: 'am Beobachtungsort' },
+        ],
+        curve,
+      },
+      table,
+      spotChips: SPOTS.map(s => ({
+        name: s.name,
+        bg: s.id === st.spotId ? 'var(--color-accent)' : 'transparent',
+        fg: s.id === st.spotId ? 'var(--color-bg)' : 'var(--color-text)',
+        onPick: () => this.setState({ spotId: s.id }),
+      })),
+      horizon,
+      sunTrack,
+      spot: {
+        name: spot.name, sub: spot.sub, score,
+        access: spot.access,
+        verdict: spot.hz < 0.4
+          ? 'Die Sonnenbahn läuft über die gesamte Finsternis frei — bis zum Untergang keine Verdeckung.'
+          : spot.hz < 1
+            ? 'Frei bis etwa ' + (spot.hz * 1.1).toFixed(1) + '° Höhe; die letzten Minuten vor Untergang verschwinden hinter dem Profil.'
+            : 'Erst ab ' + (spot.hz * 1.1).toFixed(1) + '° sichtbar — das Maximum ist knapp, danach steht die Sonne hinter dem Gelände.',
+        factors: [
+          { label: 'Horizontfreiheit West/NW', value: 'min. ' + spot.hz.toFixed(1) + '° · HORAYZON', w: hzScore.toFixed(0) + '%', color: 'var(--color-accent)' },
+          { label: 'Wolkenklimatologie', value: spot.cloud + ' % klare Sicht (Aug., 20 Uhr)', w: spot.cloud + '%', color: 'var(--color-accent-2)' },
+          { label: 'Bedeckungsgrad am Ort', value: sk.obsc.toFixed(1) + ' %', w: obscScore.toFixed(0) + '%', color: 'var(--color-accent-600)' },
+          { label: 'Zugang', value: accessScore > 70 ? 'frei zugänglich' : 'Schutzgebiet · eingeschränkt', w: accessScore + '%', color: 'var(--color-neutral-600)' },
+        ],
+      },
+      radius: st.radius,
+      radiusRaw: st.radius,
+      onRadius: e => this.setState({ radius: Number(e.target.value) }),
+      nearby,
+      showApi: this.props.showApiSpec !== false,
+      api: API,
+    };
+  }
+}
+
+</script>
+</body>
+</html>
