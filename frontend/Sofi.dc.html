@@ -373,8 +373,8 @@
 <sc-if value="{{ isStandorte }}" hint-placeholder-val="{{ false }}">
 <div style="max-width:1180px;margin:0 auto;padding:36px 20px 64px">
   <h1 style="font-family:'Caprasimo',serif;font-size:clamp(30px,5vw,44px);margin:0 0 8px;letter-spacing:-0.02em"><span data-l="de">Beste Standorte</span><span data-l="en">Best Locations</span></h1>
-  <p data-l="de" style="font-size:16px;color:rgba(32,30,29,0.62);max-width:64ch;margin:0 0 20px">Bewertet wird, was bei dieser Finsternis zählt: ob die Sonne zum Maximum über der realen Horizontlinie steht. Die Horizontprofile stammen aus Geländemodellen — DOM1 im Nahbereich, DGM für die Fernsicht — ausgewertet mit HORAYZON.</p>
-  <p data-l="en" style="font-size:16px;color:rgba(32,30,29,0.62);max-width:64ch;margin:0 0 20px">The rating measures what counts for this eclipse: whether the Sun at maximum clears the real horizon line. Horizon profiles come from terrain models — DOM1 near field, DGM for the distance — evaluated with HORAYZON.</p>
+  <p data-l="de" style="font-size:16px;color:rgba(32,30,29,0.62);max-width:64ch;margin:0 0 20px">Bewertet wird, was bei dieser Finsternis zählt: ob die Sonne zum Maximum über der realen Horizontlinie steht. Die Horizontprofile werden aus Copernicus GLO-30 gerechnet — einem Oberflächenmodell mit 30 m Rasterweite, das Bewuchs enthält, Gebäude aber nicht. Ein „frei“ ist deshalb eine Obergrenze, ein „verdeckt“ eine Aussage.</p>
+  <p data-l="en" style="font-size:16px;color:rgba(32,30,29,0.62);max-width:64ch;margin:0 0 20px">The rating measures what counts for this eclipse: whether the Sun at maximum clears the real horizon line. Horizon profiles are computed from Copernicus GLO-30, a 30 m surface model that includes vegetation but not buildings. A “clear” is therefore an upper bound; a “blocked” is a statement.</p>
 
   <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;background:#ebddc5;border-radius:28px;padding:12px 20px;margin-bottom:22px">
     <span style="font-size:13px;color:rgba(32,30,29,0.65)"><span data-l="de">Umkreis um</span><span data-l="en">Radius around</span> <strong>{{ locName }}</strong></span>
@@ -456,8 +456,8 @@
       </div>
 
       <div style="background:rgba(198,113,57,0.12);border-radius:20px;padding:16px 20px;font-size:12px;line-height:1.55;color:rgba(32,30,29,0.72)">
-        <span data-l="de"><strong>Datenstand:</strong> Bedeckungsgrad und Sonnenstand werden live berechnet. Horizontprofile, Wolkenklimatologie und Zugangshinweise sind in dieser Fassung Beispielwerte — die HORAYZON-Auswertung läuft im Backend, siehe API-Beschreibung.</span>
-        <span data-l="en"><strong>Data status:</strong> obscuration and sun position are computed live. Horizon profiles, cloud climatology and access notes are sample values in this build — the HORAYZON evaluation runs in the backend, see the API description.</span>
+        <span data-l="de"><strong>Datenstand:</strong> Bedeckungsgrad und Sonnenstand rechnet der Browser. Der Horizont kommt aus Copernicus GLO-30 über <code>/api/v1/horizon</code>: Gelände und Bewuchs sind erfasst, Gebäude und alles unterhalb von 30 m Rasterweite nicht — die wirkliche Sicht ist nie besser als die angezeigte. Wolkenklimatologie und Zugangshinweise sind weiterhin Beispielwerte.</span>
+        <span data-l="en"><strong>Data status:</strong> obscuration and sun position are computed in your browser. The horizon comes from Copernicus GLO-30 via <code>/api/v1/horizon</code>: terrain and vegetation are modelled, buildings and anything below the 30 m grid are not — the real view is never better than the one shown. Cloud climatology and access notes are still sample values.</span>
       </div>
     </div>
   </div>
@@ -680,8 +680,8 @@
     </div>
     <div style="padding:20px 0;border-bottom:1px solid rgba(32,30,29,0.12)">
       <h3 style="font-family:'Caprasimo',serif;font-size:19px;margin:0 0 8px"><span data-l="de">Woher kommen die Horizontprofile?</span><span data-l="en">Where do the horizon profiles come from?</span></h3>
-      <p data-l="de" style="font-size:15px;line-height:1.6;color:rgba(32,30,29,0.72);margin:0">Geplant ist eine Auswertung mit HORAYZON: im Nahbereich aus dem digitalen Oberflächenmodell DOM1, das Gebäude und Bewuchs enthält, darüber hinaus aus dem Geländemodell DGM. In der jetzigen Fassung sind es Beispielwerte — die Berechnung läuft im Backend, das noch entsteht.</p>
-      <p data-l="en" style="font-size:15px;line-height:1.6;color:rgba(32,30,29,0.72);margin:0">The plan is an evaluation with HORAYZON: near field from the DOM1 surface model, which includes buildings and vegetation, and beyond that from the DGM terrain model. In this build they are sample values — the computation runs in a backend still being built.</p>
+      <p data-l="de" style="font-size:15px;line-height:1.6;color:rgba(32,30,29,0.72);margin:0">Aus Copernicus GLO-30 (ESA), einem Oberflächenmodell mit 30 m Rasterweite. Der Server schickt einen Strahl je Viertelgrad Azimut bis 40 km hinaus und nimmt den größten Erhebungswinkel — mit Erdkrümmung und Refraktion. GLO-30 enthält Bewuchs: ein Waldrand liegt darin rund 17 m über der offenen Fläche daneben. Was fehlt, sind Gebäude und alles unterhalb der Rasterweite, also die einzelne Hecke am Feldrand. Beides verdeckt zusätzlich — deshalb ist ein „frei“ hier immer eine Obergrenze. Ein DOM1 der Länder wäre genauer, liegt aber in sechzehn Formaten und Lizenzen vor.</p>
+      <p data-l="en" style="font-size:15px;line-height:1.6;color:rgba(32,30,29,0.72);margin:0">From Copernicus GLO-30 (ESA), a surface model at 30 m resolution. The server casts one ray per quarter degree of azimuth out to 40 km and takes the largest elevation angle, accounting for Earth curvature and refraction. GLO-30 includes vegetation: a forest edge sits about 17 m above the open ground beside it. What it misses are buildings and anything below the grid size — the single hedge at the field boundary. Both add obstruction, which is why a “clear” here is always an upper bound.</p>
     </div>
     <div style="padding:20px 0;border-bottom:1px solid rgba(32,30,29,0.12)">
       <h3 style="font-family:'Caprasimo',serif;font-size:19px;margin:0 0 8px"><span data-l="de">Wann ist die nächste Finsternis bei uns?</span><span data-l="en">When is the next one here?</span></h3>
@@ -761,7 +761,7 @@
     <li><span data-l="de">Ortsverzeichnis: GeoNames (CC BY 4.0)</span><span data-l="en">Place index: GeoNames (CC BY 4.0)</span></li>
     <li><span data-l="de">Wolkenprognose: Deutscher Wetterdienst, ICON-D2 (Open Data)</span><span data-l="en">Cloud forecast: Deutscher Wetterdienst, ICON-D2 (open data)</span></li>
     <li><span data-l="de">Schriften: Caprasimo und Figtree (SIL Open Font License 1.1)</span><span data-l="en">Typefaces: Caprasimo and Figtree (SIL Open Font License 1.1)</span></li>
-    <li><span data-l="de">Geländemodelle DOM1 und DGM: Landesvermessungsämter, Auswertung mit HORAYZON</span><span data-l="en">Terrain models DOM1 and DGM: state survey authorities, evaluated with HORAYZON</span></li>
+    <li><span data-l="de">Höhenmodell: Copernicus DEM GLO-30 (ESA / Copernicus Programme), Horizontrechnung im eigenen Backend</span><span data-l="en">Elevation model: Copernicus DEM GLO-30 (ESA / Copernicus Programme), horizon computed in our own backend</span></li>
     <li><span data-l="de">Wolkenklimatologie: CM SAF / EUMETSAT</span><span data-l="en">Cloud climatology: CM SAF / EUMETSAT</span></li>
   </ul>
   <p data-l="de" style="font-size:13px;line-height:1.6;color:rgba(32,30,29,0.55);margin:0 0 28px">Die letzten beiden Einträge nennen Quellen, die noch nicht ausgewertet werden. Vor der Veröffentlichung entweder streichen oder als geplant kennzeichnen.</p>
@@ -903,13 +903,19 @@ const T = {
     cvMixed: (p) => `Wechselnd bewölkt, rund ${p} % freie Sicht. Bei dieser Sonnenhöhe können wenige Kilometer entscheiden.`,
     cvBad: (p) => `Tiefe Bewölkung, nur rund ${p} % freie Sicht. Ein Ausweichort in der Nähe lohnt die Fahrt.`,
     barH: 'Horizont', barC: 'Wolken', barO: 'Bedeckung', barA: 'Zugang',
-    facH: 'Horizontfreiheit West/NW', facHV: (c) => `${c} über Geländekante`,
+    facH: 'Horizontfreiheit West/NW', facHV: (c) => `${c} Reserve über Gelände + Bewuchs`,
     facC: 'Wolkenklimatologie', facCV: (p) => `${p} % klare Sicht im Mittel`,
     facO: 'Bedeckungsgrad', facOV: (o) => `${o} % im Maximum`,
     facA: 'Zugang', accFree: 'frei zugänglich', accLtd: 'eingeschränkt',
-    vGood: (c) => `Die Sonne steht im Maximum ${c}° über der Horizontlinie — sicher frei.`,
-    vTight: (c) => `Knapp: nur ${c}° Luft zwischen Sonne und Horizontlinie. Dunst am Horizont kann die Sicht kosten.`,
-    vBad: (c) => `Die Horizontlinie verdeckt die Sonne im Maximum um ${c}°. Ein höher gelegener Punkt in der Nähe ist nötig.`,
+    // Die beiden Richtungen sind nicht gleichwertig, und das steht so im Text:
+    // „verdeckt" ist eine Aussage, „frei" ist eine Obergrenze. Das Geländemodell
+    // kennt Bewuchs, aber keine Gebäude und nichts unter 30 m Rasterweite —
+    // was fehlt, verdeckt zusätzlich, nie weniger.
+    vBlocked: (c) => `Verdeckt: Gelände und Bewuchs stehen im Maximum ${c}° über der Sonne. Das ist belastbar — genauere Daten können nur mehr verdecken, nicht weniger.`,
+    vTight: (c) => `Höchstens ${c}° Reserve über der Geländekante. Knapp: erfasst sind Gelände und Bewuchs, nicht aber Gebäude oder eine einzelne Baumreihe — davon reicht hier schon eine.`,
+    vClear: (c) => `Frei bis höchstens ${c}° Reserve über Gelände und Bewuchs. Gebäude und Einzelhindernisse unter 30 m Rasterweite sind nicht erfasst: vor Ort den Westhorizont prüfen.`,
+    hzLoading: 'Horizontprofil wird geladen …',
+    hzMissing: 'Kein Horizontprofil verfügbar. Das Höhenmodell ist noch nicht eingespielt oder der Dienst antwortet nicht — hier steht bewusst keine geschätzte Zahl.',
     tl: (r) => [
       { time: r.arrive, title: 'Ankunft und Aufbau', body: 'Eine halbe Stunde vor C1 am Platz sein. Sichtlinie nach Westnordwest prüfen, Brillen verteilen, Kamera ausrichten.' },
       { time: r.c1, title: 'Erster Kontakt (C1)', body: 'Der Mondrand berührt die Sonne. Ohne Filter ist noch nichts zu erkennen — die erste Delle sieht man nur durch die Brille.' },
@@ -946,13 +952,15 @@ const T = {
     cvMixed: (p) => `Broken cloud, around ${p} % clear view. At this solar altitude a few kilometres can decide it.`,
     cvBad: (p) => `Low cloud, only around ${p} % clear view. A different spot nearby is worth the drive.`,
     barH: 'Horizon', barC: 'Cloud', barO: 'Cover', barA: 'Access',
-    facH: 'Horizon clearance W/NW', facHV: (c) => `${c} above the terrain edge`,
+    facH: 'Horizon clearance W/NW', facHV: (c) => `${c} above terrain + vegetation`,
     facC: 'Cloud climatology', facCV: (p) => `${p} % clear sky on average`,
     facO: 'Obscuration', facOV: (o) => `${o} % at maximum`,
     facA: 'Access', accFree: 'freely accessible', accLtd: 'restricted',
-    vGood: (c) => `At maximum the Sun stands ${c}° above the horizon line — safely clear.`,
-    vTight: (c) => `Tight: only ${c}° between the Sun and the horizon line. Haze near the horizon could cost you the view.`,
-    vBad: (c) => `The horizon line hides the Sun at maximum by ${c}°. A higher spot nearby is needed.`,
+    vBlocked: (c) => `Blocked: terrain and vegetation stand ${c}° above the Sun at maximum. This one holds — better data can only add obstruction, never remove it.`,
+    vTight: (c) => `At most ${c}° of clearance above the terrain edge. Tight: terrain and vegetation are modelled, buildings and a single tree line are not — and one would be enough here.`,
+    vClear: (c) => `Clear, with at most ${c}° above terrain and vegetation. Buildings and obstacles below the 30 m grid are not modelled: check your western horizon on site.`,
+    hzLoading: 'Loading horizon profile …',
+    hzMissing: 'No horizon profile available. The elevation model is not ingested yet, or the service is not responding — no estimated number is shown here on purpose.',
     tl: (r) => [
       { time: r.arrive, title: 'Arrive and set up', body: 'Be on site half an hour before C1. Check the sight line to west-northwest, hand out filters, aim the camera.' },
       { time: r.c1, title: 'First contact (C1)', body: 'The lunar limb touches the Sun. Nothing shows unfiltered — the first notch is visible only through the glasses.' },
@@ -969,6 +977,7 @@ class Component extends DCLogic {
     page: 'start', navOpen: false, ready: false, now: Date.now(), lang: 'de',
     q: '', sug: [], loc: DEFAULT_LOC, siteId: null, radius: null,
     clouds: null, cloudsStatus: 'idle',
+    horizons: {}, horizonStatus: 'idle',
   };
 
   componentDidMount() {
@@ -990,6 +999,7 @@ class Component extends DCLogic {
       this.contours = E.coverageContours([47.0, 5.6, 55.3, 15.4], 0.2, LEVELS);
       this.setState({ ready: true });
       this.loadClouds();
+      this.loadHorizons();
     }).catch((e) => console.error('Module load failed', e));
   }
 
@@ -1111,23 +1121,50 @@ class Component extends DCLogic {
     return this._c;
   }
 
+  /* Der Horizont kommt aus /api/v1/horizon und ist damit asynchron. Solange er
+     fehlt, gibt es *keinen* Score: er wiegt 0,42, und die restlichen drei
+     Faktoren umzugewichten ergäbe eine Zahl, die aussieht wie eine Bewertung
+     und die entscheidende Größe nicht kennt. Genau das war der Zustand, den
+     das Sinusprofil erzeugt hat. Fehlt der Horizont, steht dort ein Strich. */
   siteData() {
     if (!this.E) return [];
-    if (!this._sd) {
-      this._sd = this.D.SITES.map((s) => {
-        const c = this.E.localCircumstances(s.lat, s.lon, s.h);
-        const prof = this.D.horizonProfile(s);
-        const clear = c.max.alt - this.D.horizonAt(prof, c.max.az);
-        const hScore = Math.max(0, Math.min(1, (clear + 0.5) / 4));
-        const cScore = 1 - s.cloud;
-        const oScore = Math.max(0, Math.min(1, (c.max.obs - 0.82) / 0.09));
-        const aScore = s.access === 'frei' ? 1 : 0.6;
-        const score = Math.round((0.42 * hScore + 0.25 * cScore + 0.18 * oScore + 0.15 * aScore) * 100);
-        return { ...s, c, prof, clear, hScore, cScore, oScore, aScore, score };
-      });
-    }
-    return this._sd;
+    const loaded = this.state.horizons;
+    return this.D.SITES.map((s) => {
+      const c = this.E.localCircumstances(s.lat, s.lon, s.h);
+      const cScore = 1 - s.cloud;
+      const oScore = Math.max(0, Math.min(1, (c.max.obs - 0.82) / 0.09));
+      const aScore = s.access === 'frei' ? 1 : 0.6;
+      const hz = loaded[s.id];
+      if (!hz) return { ...s, c, hz: null, cScore, oScore, aScore, score: null, hScore: null };
+      const hScore = Math.max(0, Math.min(1, (hz.clearance + 0.5) / 4));
+      const score = Math.round((0.42 * hScore + 0.25 * cScore + 0.18 * oScore + 0.15 * aScore) * 100);
+      return { ...s, c, hz, clear: hz.clearance, hScore, cScore, oScore, aScore, score };
+    });
   }
+
+  /* Zwölf Standorte, zwölf Punktabfragen — die Auswertung eines Sektors aus
+     dem 30-m-Raster liegt serverseitig bei rund 25 ms, das trägt parallel.
+     Fällt die API aus, bleibt `horizons` leer und die Seite sagt das; einen
+     lokalen Ersatz gibt es für den Horizont bewusst nicht. */
+  loadHorizons = () => {
+    if (!this.A || this._horizonsRequested) return;
+    this._horizonsRequested = true;
+    this.setState({ horizonStatus: 'loading' });
+
+    Promise.all(this.D.SITES.map((s) =>
+      this.A.horizon(s.lat, s.lon)
+        .then((hz) => [s.id, hz])
+        .catch((err) => { this._horizonError = err; return [s.id, null]; })))
+      .then((pairs) => {
+        const horizons = {};
+        for (const [id, hz] of pairs) if (hz) horizons[id] = hz;
+        const got = Object.keys(horizons).length;
+        this.setState({
+          horizons,
+          horizonStatus: got === 0 ? 'error' : got < pairs.length ? 'partial' : 'ok',
+        });
+      });
+  };
 
   dist(a, b) {
     const R = 6371, r = Math.PI / 180;
@@ -1317,7 +1354,8 @@ class Component extends DCLogic {
     }
 
     const all = this.siteData().map((s) => ({ ...s, d: this.dist(S.loc, s) }))
-      .filter((s) => s.d <= radius).sort((a, b) => b.score - a.score);
+      .filter((s) => s.d <= radius)
+      .sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
     v.noSites = all.length === 0;
     const selId = all.some((s) => s.id === S.siteId) ? S.siteId : (all[0] && all[0].id);
     v.sites = all.map((s) => {
@@ -1325,12 +1363,13 @@ class Component extends DCLogic {
       const track = sel ? 'rgba(245,234,216,0.18)' : 'rgba(32,30,29,0.12)';
       return {
         id: s.id, name: s.name, sub: `${s.region} · ${Math.round(s.d)} km · ${s.h} m`,
-        score: String(s.score), scoreColor: sel ? '#f6a06b' : '#b2622d',
+        score: s.score === null ? '—' : String(s.score),
+        scoreColor: sel ? '#f6a06b' : '#b2622d',
         bg: sel ? '#201e1d' : '#ebddc5', fg: sel ? '#f5ead8' : '#201e1d',
         border: sel ? '#201e1d' : 'rgba(32,30,29,0.08)',
         pick: () => this.setState({ siteId: s.id }),
         bars: [
-          { short: t.barH, pct: Math.round(s.hScore * 100), color: '#c67139', track },
+          { short: t.barH, pct: s.hScore === null ? 0 : Math.round(s.hScore * 100), color: '#c67139', track },
           { short: t.barC, pct: Math.round(s.cScore * 100), color: '#7a8a5e', track },
           { short: t.barO, pct: Math.round(s.oScore * 100), color: '#d67f48', track },
           { short: t.barA, pct: Math.round(s.aScore * 100), color: '#8fa073', track },
@@ -1345,9 +1384,11 @@ class Component extends DCLogic {
       const AZ0 = 255, AZ1 = 315, EL1 = 12;
       const hx = (az) => 34 + ((az - AZ0) / (AZ1 - AZ0)) * (592 - 34);
       const hy = (el) => 200 - (el / EL1) * (200 - 16);
-      const seg = [];
-      for (let az = AZ0; az <= AZ1; az += 1) seg.push(`${hx(az).toFixed(1)},${hy(this.D.horizonAt(det.prof, az)).toFixed(1)}`);
-      v.hzPath = `M${hx(AZ0)},200L${seg.join('L')}L${hx(AZ1)},200Z`;
+
+      // Die Sonnenbahn wird immer gezeichnet — sie kommt aus eclipse.js und
+      // steht unabhängig von der API. Die Geländesilhouette nur dann, wenn es
+      // ein gemessenes Profil gibt: eine Fläche ohne Daten wäre wieder das
+      // Bild, das nach Messung aussieht.
       const sp = det.c.track.map((p) => det.c.sample(p.t))
         .filter((st) => st.alt > -0.5 && st.alt <= EL1 && st.az >= AZ0 && st.az <= AZ1)
         .map((st) => `${hx(st.az).toFixed(1)},${hy(st.alt).toFixed(1)}`);
@@ -1356,14 +1397,36 @@ class Component extends DCLogic {
       v.sunMaxLX = Math.min(540, Math.max(60, v.sunMaxX)); v.sunMaxLY = v.sunMaxY - 16;
       v.hzY = [0, 3, 6, 9, 12].map((el) => ({ y: hy(el), ty: hy(el) + 4, label: `${el}°` }));
       v.hzX = [255, 270, 285, 300, 315].map((az) => ({ x: hx(az), label: `${az}°` }));
-      const cl = det.clear.toFixed(1);
-      v.detVerdict = det.clear > 1.5 ? t.vGood(cl) : det.clear > 0 ? t.vTight(cl) : t.vBad(Math.abs(det.clear).toFixed(1));
-      v.detBars = [
-        { label: t.facH, value: t.facHV(`${det.clear >= 0 ? '+' : ''}${cl}°`), pct: Math.round(det.hScore * 100), color: '#c67139' },
-        { label: t.facC, value: t.facCV(Math.round((1 - det.cloud) * 100)), pct: Math.round(det.cScore * 100), color: '#7a8a5e' },
-        { label: t.facO, value: t.facOV((det.c.max.obs * 100).toFixed(1)), pct: Math.round(det.oScore * 100), color: '#d67f48' },
-        { label: t.facA, value: det.access === 'frei' ? t.accFree : t.accLtd, pct: Math.round(det.aScore * 100), color: '#8fa073' },
-      ];
+
+      if (det.hz) {
+        const seg = [];
+        for (let az = AZ0; az <= AZ1; az += 1) {
+          const el = this.A.horizonAt(det.hz, az);
+          // Unter der Augenhöhe ist der Horizont frei; für die Fläche auf die
+          // Grundlinie setzen, ohne den negativen Wert zu verfälschen.
+          seg.push(`${hx(az).toFixed(1)},${hy(Math.max(0, el ?? 0)).toFixed(1)}`);
+        }
+        v.hzPath = `M${hx(AZ0)},200L${seg.join('L')}L${hx(AZ1)},200Z`;
+
+        const cl = Math.abs(det.hz.clearance).toFixed(1);
+        v.detVerdict = det.hz.blocked ? t.vBlocked(cl)
+          : det.hz.tight ? t.vTight(cl) : t.vClear(cl);
+        v.detBars = [
+          { label: t.facH, value: t.facHV(`${det.hz.clearance >= 0 ? '+' : '−'}${cl}°`),
+            pct: Math.round(det.hScore * 100), color: '#c67139' },
+          { label: t.facC, value: t.facCV(Math.round((1 - det.cloud) * 100)), pct: Math.round(det.cScore * 100), color: '#7a8a5e' },
+          { label: t.facO, value: t.facOV((det.c.max.obs * 100).toFixed(1)), pct: Math.round(det.oScore * 100), color: '#d67f48' },
+          { label: t.facA, value: det.access === 'frei' ? t.accFree : t.accLtd, pct: Math.round(det.aScore * 100), color: '#8fa073' },
+        ];
+      } else {
+        v.hzPath = '';
+        v.detVerdict = S.horizonStatus === 'loading' ? t.hzLoading : t.hzMissing;
+        v.detBars = [
+          { label: t.facC, value: t.facCV(Math.round((1 - det.cloud) * 100)), pct: Math.round(det.cScore * 100), color: '#7a8a5e' },
+          { label: t.facO, value: t.facOV((det.c.max.obs * 100).toFixed(1)), pct: Math.round(det.oScore * 100), color: '#d67f48' },
+          { label: t.facA, value: det.access === 'frei' ? t.accFree : t.accLtd, pct: Math.round(det.aScore * 100), color: '#8fa073' },
+        ];
+      }
       v.detAccess = (S.lang === 'en' && det.accessNoteEn) ? det.accessNoteEn : det.accessNote;
     }
     return v;

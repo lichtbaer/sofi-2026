@@ -104,28 +104,51 @@ bis zu eine Maschenweite ab und gehören so an Leaflet übergeben.
 ## ✅ GET /api/v1/health
 
 ```json
-{ "status": "ok", "database": true, "forecast_run": "2026-08-11T06:00:00Z" }
+{ "status": "ok", "database": true, "forecast_run": "2026-08-11T06:00:00Z",
+  "terrain": true }
 ```
 
 ---
 
-## 🔜 GET /api/v1/elevation?lat=&lon=
+## ✅ GET /api/v1/elevation?lat=&lon=
 
-Geländehöhe für die Beobachterhöhe in der Kontaktzeitberechnung.
-Geplant aus Copernicus GLO-30 als lokales COG.
+Geländehöhe aus Copernicus GLO-30.
 
-## 🔜 GET /api/v1/horizon?lat=&lon=&observerHeight=1.6
+```json
+{ "lat": 50.1553, "lon": 8.6394, "elevation": 116.5,
+  "source": { "model": "copernicus-glo30", "kind": "dsm", "resolution_m": 30,
+              "contains_vegetation": true, "contains_buildings": false } }
+```
 
-Horizontprofil. Die Spec sah ursprünglich 360° in 1°- bzw. 0,25°-Schritten vor
-— das ist zehnfacher Overkill: der Azimut der Sonne liegt im Maximum
-bundesweit zwischen 285° und 290°, über den ganzen Verlauf von C1 bis zum
-Untergang zwischen etwa 275° und 300°, und die Höhe bleibt unter 15°.
-Gebraucht wird ein Sektor, kein Vollkreis. Damit fällt auch die asynchrone
-Job-Mechanik (`202 Accepted`) weg: die Auswertung eines 30°-Sektors aus einem
-30-m-Raster liegt im Millisekundenbereich.
+`503`, solange das Höhenraster noch nicht eingespielt ist — siehe unten.
 
-Wichtiger als die Auflösung ist die Datenquelle. Bei 2–7° Sonnenhöhe dominiert
-das Nahfeld alles:
+## ✅ GET /api/v1/horizon?lat=&lon=&observerHeight=1.6
+
+Horizontprofil im Westsektor. Die Spec sah ursprünglich 360° in 1°- bzw.
+0,25°-Schritten vor — das ist zehnfacher Overkill: der Azimut der Sonne liegt
+im Maximum bundesweit zwischen 285° und 290°, über den ganzen Verlauf von C1
+bis zum Untergang zwischen etwa 275° und 300°, und die Höhe bleibt unter 15°.
+Geliefert wird deshalb 240°–330° in 0,25°-Schritten. Damit fällt auch die
+asynchrone Job-Mechanik (`202 Accepted`) weg: ein Punkt kostet **rund 25 ms**.
+
+```json
+{ "lat": 50.1553, "lon": 8.6394,
+  "source": { "model": "copernicus-glo30", "kind": "dsm", "resolution_m": 30,
+              "contains_vegetation": true, "contains_buildings": false },
+  "observer": { "ground": 116.5, "height": 1.6 },
+  "azimuth": { "start": 240.0, "end": 330.0, "step": 0.25 },
+  "elevation": [2.16, 2.17, 2.19, "…361 Werte…"],
+  "at_maximum": { "sun_altitude": 4.6, "sun_azimuth": 287.7,
+                  "horizon": 2.17, "horizon_far": 1.73, "clearance": 2.43,
+                  "verdict": "clear", "tight": false } }
+```
+
+`elevation` enthält `null`, wo in dieser Richtung keine Höhendaten liegen —
+das ist etwas anderes als ein Horizont bei 0°.
+
+### Warum die beiden Urteile nicht gleichwertig sind
+
+Bei 2–7° Sonnenhöhe dominiert das Nahfeld alles:
 
 | Hindernis | Elevation |
 | --- | --- |
@@ -133,12 +156,34 @@ das Nahfeld alles:
 | 20 m Baumreihe in 150 m | 7,6° — verdeckt ganz Deutschland |
 | Berg 800 m höher in 40 km (mit Krümmung, k = 0,13) | 1,0° |
 
-Das Fernfeld bis 200 km trägt also rund 1° bei, eine Baumreihe am Feldrand das
-Achtfache. Ohne DOM1 (Gebäude und Bewuchs) ist ein Horizontprofil für diese
-Finsternis von begrenztem Wert — und DOM1 liegt pro Bundesland in eigenen
-Formaten und Größenordnungen vor. Bis dahin ist die ehrlichere Auskunft ein
-Hinweis „prüfe deinen Westhorizont selbst" statt eines Scores, der die
-Baumreihe nicht kennt.
+GLO-30 ist ein **Oberflächenmodell** und erfasst Bewuchs: an der Kachel
+N50/E008 liegt der Frankfurter Stadtwald 17 m über dem Vorfeld des Flughafens
+daneben, bei gleicher Geländehöhe. Gebäude erfasst es nicht — der
+Commerzbank-Tower (259 m) liest sich als Bodenniveau — und bei 30 m
+Rasterweite hebt eine 5-m-Hecke ihre Zelle nur um ein bis zwei Meter.
+
+Was fehlt, verdeckt also **zusätzlich, nie weniger**. Daraus folgt:
+
+* `verdict: "blocked"` ist eine **Aussage**. Genauere Daten können den
+  Horizont nur anheben, nicht senken.
+* `verdict: "clear"` ist eine **Obergrenze**. `clearance` beziffert, wieviel
+  unmodelliertes Nahfeld das Urteil noch verträgt; `tight` markiert alles
+  unter 2°, wo eine einzelne Baumreihe genügt.
+
+Jede Näherung im Backend ist so gewählt, dass sie den Horizont eher zu
+niedrig ansetzt — Standhöhe, Strahlreichweite, Rasterrand. Ein zu strenges
+Urteil wäre der teurere Fehler, weil `blocked` als Tatsache gerendert wird.
+
+### Höhenraster
+
+Rund 3 GB Kacheln von `copernicus-dem-30m.s3.amazonaws.com`, verrechnet zu
+einem 2,85-GB-Mosaik auf dem Volume; Punktzugriff als memmap. Der Worker prüft
+beim Start, ob es vollständig ist, und holt sonst nach — wiederaufnehmbar, eine
+Kachel nach der anderen, jede wird nach dem Eintragen gelöscht. Bis dahin
+antworten beide Routen mit `503` und `/health` meldet `terrain: false`.
+
+Die Längenabtastung wechselt bei 50° N von 1″ auf 1,5″ — die Grenze läuft
+mitten durch Deutschland. Das Mosaik liegt deshalb einheitlich auf 1″.
 
 ## 🔜 GET /api/v1/clouds — Feld `climatology`
 
@@ -150,7 +195,9 @@ Ergebnis ist ein kleines Raster — kein Dienst zur Laufzeit.
 
 Bewertete Standorte im Umkreis, absteigend nach `score`, mit aufgeschlüsselten
 Teilwerten. Gewichtung: Horizontfreiheit 0,42 · Wolken 0,25 · Bedeckungsgrad
-0,18 · Zugänglichkeit 0,15. Hängt an `/horizon`.
+0,18 · Zugänglichkeit 0,15. Das Frontend setzt das derzeit aus einer
+`/horizon`-Abfrage je Standort zusammen; ein eigener Endpunkt lohnt erst mit
+mehr als den zwölf festen Orten.
 
 ## 🔜 POST /api/v1/spots
 

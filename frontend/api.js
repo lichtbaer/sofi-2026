@@ -102,6 +102,61 @@ function sample(s) {
   };
 }
 
+/* ── Horizont ──────────────────────────────────────────────────────────────
+   Aus Copernicus GLO-30, einem Oberflächenmodell: Gelände *und* Bewuchs. Was
+   fehlt, sind Gebäude und alles unter der 30-m-Rasterweite — eine einzelne
+   Hecke also. Der Fehler zeigt damit immer in dieselbe Richtung: die echte
+   Sicht ist nie besser als die gerechnete, oft schlechter.
+
+   Deshalb sind die beiden Urteile nicht gleichwertig, und die Oberfläche darf
+   sie nicht gleich rendern:
+
+     verdict === 'blocked'  belastbar. Mehr Daten können nur mehr verdecken.
+     verdict === 'clear'    Obergrenze. `clearance` sagt, wieviel Nahfeld sie
+                            noch verträgt; `tight` markiert die knappen Fälle.
+
+   Es gibt hier bewusst keinen Rückfall auf lokale Ersatzdaten. Ein erfundenes
+   Horizontprofil sieht aus wie ein Messergebnis und ist der schlechteste
+   Zustand von allen — schlechter als gar keine Angabe.                     */
+
+export async function horizon(lat, lon, options = {}) {
+  const data = await get(
+    '/horizon',
+    { lat: lat.toFixed(5), lon: lon.toFixed(5), observerHeight: options.observerHeight ?? 1.6 },
+    options,
+  );
+  const { start, step } = data.azimuth;
+  const m = data.at_maximum;
+  return {
+    ground: data.observer.ground,
+    source: data.source,
+    azimuthStart: start,
+    azimuthStep: step,
+    elevation: data.elevation,
+    sunAltitude: m.sun_altitude,
+    sunAzimuth: m.sun_azimuth,
+    horizon: m.horizon,
+    horizonFar: m.horizon_far,
+    clearance: m.clearance,
+    blocked: m.verdict === 'blocked',
+    tight: m.tight,
+  };
+}
+
+/** Horizonthöhe in Richtung az, linear zwischen den Stützstellen. */
+export function horizonAt(profile, az) {
+  const { azimuthStart: a0, azimuthStep: d, elevation: e } = profile;
+  const x = (az - a0) / d;
+  if (x <= 0) return e[0];
+  if (x >= e.length - 1) return e[e.length - 1];
+  const i = Math.floor(x);
+  const lo = e[i];
+  const hi = e[i + 1];
+  // null heißt „keine Höhendaten in dieser Richtung" — nicht „Horizont bei 0".
+  if (lo === null || hi === null) return lo ?? hi;
+  return lo + (hi - lo) * (x - i);
+}
+
 /** Verfügbare Kartenoverlays des jüngsten Laufs. */
 export async function cloudOverlays(options = {}) {
   const { overlays } = await get('/clouds/overlays', {}, options);

@@ -38,9 +38,40 @@ class Settings(BaseSettings):
     geonames_dump_url: str = "https://download.geonames.org/export/dump/DE.zip"
     geonames_postal_url: str = "https://download.geonames.org/export/zip/DE.zip"
 
+    #: Copernicus DEM GLO-30, offen und ohne Anmeldung auf S3.
+    dem_base_url: str = "https://copernicus-dem-30m.s3.amazonaws.com"
+
+    #: Kleinster Abstand, ab dem eine Zelle als Hindernis zählt. Bei 30 m
+    #: Rasterweite ist alles darunter das eigene Umfeld, nicht die Umgebung —
+    #: ohne diese Sperre meldet jede Nachbarzelle einen Horizont von 3–4°.
+    horizon_min_distance_m: int = 90
+    #: Reichweite eines Strahls. 800 m Überhöhung in 40 km sind 1,0°; jenseits
+    #: davon frisst die Erdkrümmung schneller, als das Gelände wächst.
+    horizon_max_distance_m: int = 40_000
+    #: Rand, den das Höhenraster über die Deutschland-Box hinaus abdeckt.
+    #: Bewusst kleiner als die Strahlreichweite: ein Strahl, der nahe der
+    #: Grenze aus dem Raster läuft, endet dort. Das verkürzt sein Fernfeld und
+    #: lässt den Horizont eher zu niedrig erscheinen — die unbedenkliche
+    #: Richtung. Den Rand auf 40 km zu ziehen kostete zwei Kachelspalten mehr.
+    dem_margin_m: int = 20_000
+    #: Schrittweite entlang eines Strahls. Kleiner als die Rasterweite, damit
+    #: keine Zelle übersprungen wird.
+    horizon_step_m: int = 20
+    #: Ausgewerteter Azimutsektor. Die Sonne steht von C1 bis zum Untergang
+    #: zwischen 275° und 300°; der Rand gibt Luft für die Darstellung.
+    horizon_azimuth_from: float = 240.0
+    horizon_azimuth_to: float = 330.0
+    horizon_azimuth_step: float = 0.25
+    #: Refraktionskoeffizient für die scheinbare Erdkrümmung (Standardatmosphäre).
+    horizon_refraction_k: float = 0.13
+
     @property
     def icon_dir(self) -> Path:
         return self.data_dir / "icon-d2"
+
+    @property
+    def dem_dir(self) -> Path:
+        return self.data_dir / "dem"
 
 
 @lru_cache

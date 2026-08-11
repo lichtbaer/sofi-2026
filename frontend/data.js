@@ -1,5 +1,5 @@
-// Ortsdatenbank (Demo-Auszug) und Mock der Backend-Endpunkte.
-// Ersetzt später durch /api/geocode, /api/horizon, /api/score — siehe api-spec.md.
+// Ortsdatenbank (Demo-Auszug als Rückfall) und die feste Standortliste.
+// Horizontprofile kommen aus /api/v1/horizon — siehe api-spec.md.
 
 export const CITIES = [
   ['Aachen', 50.7753, 6.0839, '52062'], ['Augsburg', 48.3705, 10.8978, '86150'],
@@ -51,56 +51,37 @@ export function geocode(q) {
 }
 
 /* ── Beobachtungsstandorte ────────────────────────────────────────────────────
-   Reale Orte und Koordinaten. Horizont-, Wolken- und Zugangswerte sind
-   Platzhalter, bis /api/horizon (HORAYZON, DOM1 + DGM) sie liefert.          */
+   Reale Orte und Koordinaten. Der Horizont steht hier *nicht* mehr: er kommt
+   aus /api/v1/horizon, gerechnet aus Copernicus GLO-30.
+
+   Bis 2026-08-11 stand hier ein Feld `hz` und darunter eine Funktion
+   `horizonProfile()`, die aus drei Sinustermen ein Profil erzeugte. Das sah
+   im Diagramm aus wie eine Geländesilhouette, ging mit 0,42 in den Score ein
+   und ergab für alle zwölf Standorte „sicher frei" — weil der Rauschterm bei
+   null geklemmt war und damit gar nicht verdecken konnte. Ein erfundener Wert
+   in der Form eines Messergebnisses ist schlechter als eine Lücke; wenn die
+   API nichts liefert, zeigt die Seite jetzt nichts.
+
+   `cloud` ist weiterhin ein Platzhalter (Klimatologie, CM SAF fehlt noch) und
+   als solcher gekennzeichnet.
+
+   Vier Koordinaten lagen neben dem Gipfel und sind gegen das Höhenmodell
+   nachgezogen: Hesselberg lag 93 m tiefer am Hang und wurde deshalb als
+   „verdeckt" bewertet — bei einem freistehenden Zeugenberg mit Rundumsicht.
+   Das Sinusprofil hat solche Fehler nie auffallen lassen, weil es die
+   Koordinate gar nicht benutzt hat.                                        */
 export const SITES = [
-  { id: 'brocken', name: 'Brocken', region: 'Harz, Sachsen-Anhalt', lat: 51.7991, lon: 10.6156, h: 1141,
-    hz: { base: 0.4, ridge: 1.1, dir: 120 }, cloud: 0.62, access: 'frei', accessNote: 'Nationalpark, Brockenbahn bis zum Gipfel, kein Pkw-Zugang.' },
-  { id: 'feldberg', name: 'Feldberg', region: 'Schwarzwald, Baden-Württemberg', lat: 47.8739, lon: 8.0044, h: 1493,
-    hz: { base: 0.5, ridge: 1.4, dir: 90 }, cloud: 0.48, access: 'frei', accessNote: 'Naturschutzgebiet – Wege nicht verlassen.' },
-  { id: 'wasserkuppe', name: 'Wasserkuppe', region: 'Rhön, Hessen', lat: 50.4983, lon: 9.9422, h: 950,
-    hz: { base: 0.3, ridge: 0.9, dir: 60 }, cloud: 0.5, access: 'frei', accessNote: 'Sternenpark Rhön, große Freiflächen, Parkplatz am Gipfel.' },
-  { id: 'kahlerasten', name: 'Kahler Asten', region: 'Sauerland, NRW', lat: 51.1817, lon: 8.4886, h: 841,
-    hz: { base: 0.6, ridge: 1.2, dir: 150 }, cloud: 0.55, access: 'frei', accessNote: 'Hochheide, markierte Wege.' },
-  { id: 'hohepeissenberg', name: 'Hoher Peißenberg', region: 'Oberbayern', lat: 47.8009, lon: 11.0111, h: 988,
-    hz: { base: 0.4, ridge: 1.0, dir: 180 }, cloud: 0.45, access: 'frei', accessNote: 'Wetterwarte, Aussichtsterrasse frei zugänglich.' },
-  { id: 'fichtelberg', name: 'Fichtelberg', region: 'Erzgebirge, Sachsen', lat: 50.4283, lon: 12.9542, h: 1215,
-    hz: { base: 0.5, ridge: 1.3, dir: 100 }, cloud: 0.58, access: 'frei', accessNote: 'Seilbahn und Straße zum Gipfel.' },
-  { id: 'hesselberg', name: 'Hesselberg', region: 'Mittelfranken, Bayern', lat: 49.0664, lon: 10.5247, h: 689,
-    hz: { base: 0.2, ridge: 0.5, dir: 200 }, cloud: 0.47, access: 'frei', accessNote: 'Freistehender Zeugenberg, Rundumsicht.' },
-  { id: 'kalmit', name: 'Kalmit', region: 'Pfälzerwald, Rheinland-Pfalz', lat: 49.3169, lon: 8.0678, h: 673,
-    hz: { base: 0.3, ridge: 0.7, dir: 110 }, cloud: 0.44, access: 'frei', accessNote: 'Blick über die Rheinebene nach Westen.' },
-  { id: 'stpeterording', name: 'St. Peter-Ording, Strand', region: 'Nordfriesland, Schleswig-Holstein', lat: 54.3, lon: 8.6167, h: 2,
-    hz: { base: 0.1, ridge: 0.2, dir: 90 }, cloud: 0.6, access: 'eingeschränkt', accessNote: 'Nationalpark Wattenmeer, Schutzzonen beachten; Strandzufahrt kostenpflichtig.' },
-  { id: 'darsser', name: 'Darßer Ort', region: 'Vorpommern, Mecklenburg-Vorpommern', lat: 54.4711, lon: 12.5044, h: 3,
-    hz: { base: 0.1, ridge: 0.3, dir: 120 }, cloud: 0.57, access: 'eingeschränkt', accessNote: 'Kernzone Nationalpark Vorpommersche Boddenlandschaft – Betretungsregeln prüfen.' },
-  { id: 'helgoland', name: 'Helgoland, Oberland', region: 'Nordsee, Schleswig-Holstein', lat: 54.1817, lon: 7.885, h: 58,
-    hz: { base: 0.0, ridge: 0.1, dir: 0 }, cloud: 0.63, access: 'frei', accessNote: 'Freier Seehorizont nach Westen; Anreise nur per Schiff.' },
-  { id: 'hohentwiel', name: 'Hohentwiel', region: 'Hegau, Baden-Württemberg', lat: 47.7639, lon: 8.8175, h: 686,
-    hz: { base: 0.3, ridge: 0.8, dir: 220 }, cloud: 0.46, access: 'eingeschränkt', accessNote: 'Festungsruine, Öffnungszeiten und Eintritt beachten.' },
+  { id: 'brocken', name: 'Brocken', region: 'Harz, Sachsen-Anhalt', lat: 51.7991, lon: 10.6156, h: 1141, cloud: 0.62, access: 'frei', accessNote: 'Nationalpark, Brockenbahn bis zum Gipfel, kein Pkw-Zugang.' },
+  { id: 'feldberg', name: 'Feldberg', region: 'Schwarzwald, Baden-Württemberg', lat: 47.8739, lon: 8.0044, h: 1493, cloud: 0.48, access: 'frei', accessNote: 'Naturschutzgebiet – Wege nicht verlassen.' },
+  { id: 'wasserkuppe', name: 'Wasserkuppe', region: 'Rhön, Hessen', lat: 50.4982, lon: 9.936, h: 950, cloud: 0.5, access: 'frei', accessNote: 'Sternenpark Rhön, große Freiflächen, Parkplatz am Gipfel.' },
+  { id: 'kahlerasten', name: 'Kahler Asten', region: 'Sauerland, NRW', lat: 51.1817, lon: 8.4886, h: 841, cloud: 0.55, access: 'frei', accessNote: 'Hochheide, markierte Wege.' },
+  { id: 'hohepeissenberg', name: 'Hoher Peißenberg', region: 'Oberbayern', lat: 47.8009, lon: 11.0111, h: 988, cloud: 0.45, access: 'frei', accessNote: 'Wetterwarte, Aussichtsterrasse frei zugänglich.' },
+  { id: 'fichtelberg', name: 'Fichtelberg', region: 'Erzgebirge, Sachsen', lat: 50.4283, lon: 12.9542, h: 1215, cloud: 0.58, access: 'frei', accessNote: 'Seilbahn und Straße zum Gipfel.' },
+  { id: 'hesselberg', name: 'Hesselberg', region: 'Mittelfranken, Bayern', lat: 49.0686, lon: 10.5276, h: 689, cloud: 0.47, access: 'frei', accessNote: 'Freistehender Zeugenberg, Rundumsicht.' },
+  { id: 'kalmit', name: 'Kalmit', region: 'Pfälzerwald, Rheinland-Pfalz', lat: 49.3188, lon: 8.0823, h: 673, cloud: 0.44, access: 'frei', accessNote: 'Blick über die Rheinebene nach Westen.' },
+  { id: 'stpeterording', name: 'St. Peter-Ording, Strand', region: 'Nordfriesland, Schleswig-Holstein', lat: 54.3, lon: 8.6167, h: 2, cloud: 0.6, access: 'eingeschränkt', accessNote: 'Nationalpark Wattenmeer, Schutzzonen beachten; Strandzufahrt kostenpflichtig.' },
+  { id: 'darsser', name: 'Darßer Ort', region: 'Vorpommern, Mecklenburg-Vorpommern', lat: 54.4711, lon: 12.5044, h: 3, cloud: 0.57, access: 'eingeschränkt', accessNote: 'Kernzone Nationalpark Vorpommersche Boddenlandschaft – Betretungsregeln prüfen.' },
+  { id: 'helgoland', name: 'Helgoland, Oberland', region: 'Nordsee, Schleswig-Holstein', lat: 54.1817, lon: 7.885, h: 58, cloud: 0.63, access: 'frei', accessNote: 'Freier Seehorizont nach Westen; Anreise nur per Schiff.' },
+  { id: 'hohentwiel', name: 'Hohentwiel', region: 'Hegau, Baden-Württemberg', lat: 47.7643, lon: 8.8186, h: 686, cloud: 0.46, access: 'eingeschränkt', accessNote: 'Festungsruine, Öffnungszeiten und Eintritt beachten.' },
 ];
 
-// Deterministisches Pseudo-Horizontprofil (Platzhalter für HORAYZON-Rasterauswertung).
-export function horizonProfile(site) {
-  const { base, ridge, dir } = site.hz || { base: 0.6, ridge: 1.5, dir: 90 };
-  const seed = site.lat * 1000 + site.lon * 137;
-  const prof = [];
-  for (let az = 0; az < 360; az += 2) {
-    const d = Math.cos(((az - dir) * Math.PI) / 180);
-    const noise =
-      0.35 * Math.sin(az * 0.11 + seed) +
-      0.22 * Math.sin(az * 0.29 + seed * 1.7) +
-      0.14 * Math.sin(az * 0.63 + seed * 0.4);
-    prof.push({ az, el: Math.max(0, base + ridge * Math.max(0, d) + noise * ridge * 0.8) });
-  }
-  return prof;
-}
-
-// Horizonthöhe in Richtung az (Grad), interpoliert
-export function horizonAt(prof, az) {
-  const a = ((az % 360) + 360) % 360;
-  const i = Math.floor(a / 2) % prof.length;
-  const j = (i + 1) % prof.length;
-  const f = (a - prof[i].az + 360) % 360 / 2;
-  return prof[i].el + (prof[j].el - prof[i].el) * Math.min(1, f);
-}

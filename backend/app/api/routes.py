@@ -5,6 +5,7 @@ from __future__ import annotations
 import math
 from datetime import datetime
 
+import numpy as np
 from fastapi import APIRouter, HTTPException, Query, Response
 from pydantic import BaseModel, Field
 
@@ -12,7 +13,9 @@ from ..config import get_settings
 from ..db import connection
 from ..eclipse import local_circumstances
 from ..services import clouds as clouds_service
+from ..services import dem as dem_service
 from ..services import geocode as geocode_service
+from ..services import horizon as horizon_service
 
 router = APIRouter(prefix="/api/v1")
 
@@ -26,10 +29,12 @@ class Health(BaseModel):
     status: str
     database: bool
     forecast_run: datetime | None = None
+    terrain: bool = Field(False, description="Höhenraster vollständig eingespielt")
 
 
 @router.get("/health", response_model=Health)
 async def health() -> Health:
+    terrain = dem_service.get_store(get_settings()).ready
     try:
         async with connection() as conn:
             row = await (
@@ -38,8 +43,8 @@ async def health() -> Health:
                 )
             ).fetchone()
     except Exception:
-        return Health(status="degraded", database=False)
-    return Health(status="ok", database=True, forecast_run=row["run_at"])
+        return Health(status="degraded", database=False, terrain=terrain)
+    return Health(status="ok", database=True, forecast_run=row["run_at"], terrain=terrain)
 
 
 # ── Ortssuche ───────────────────────────────────────────────────────────────
@@ -131,6 +136,124 @@ async def circumstances(
         c4=contact(c.c4) if c.c4 else None,
         sunset=c.sunset,
         ends_at_sunset=c.ends_at_sunset,
+    )
+
+
+# ── Gelände und Horizont ────────────────────────────────────────────────────
+
+class SourceOut(BaseModel):
+    model: str = "copernicus-glo30"
+    kind: str = Field("dsm", description="Oberflächenmodell — mit Bewuchs")
+    resolution_m: int = 30
+    contains_vegetation: bool = True
+    contains_buildings: bool = Field(
+        False, description="GLO-30 bildet Gebäude nicht ab; der Fehler zeigt nach oben"
+    )
+
+
+class ObserverOut(BaseModel):
+    ground: float = Field(..., description="Geländehöhe in Metern")
+    height: float = Field(..., description="Augenhöhe über Grund in Metern")
+
+
+class AzimuthRangeOut(BaseModel):
+    start: float
+    end: float
+    step: float
+
+
+class HorizonMaximumOut(BaseModel):
+    sun_altitude: float
+    sun_azimuth: float
+    horizon: float
+    horizon_far: float = Field(
+        ..., description="Horizont allein aus dem Fernfeld ab 2 km — die Differenz ist das Nahfeld"
+    )
+    clearance: float = Field(..., description="Sonnenhöhe minus Horizont, in Grad")
+    verdict: str = Field(..., description="'blocked' ist belastbar, 'clear' ist eine Obergrenze")
+    tight: bool = Field(..., description="Reserve unter 2° — ein Einzelhindernis kippt das Urteil")
+
+
+class HorizonOut(BaseModel):
+    lat: float
+    lon: float
+    source: SourceOut
+    observer: ObserverOut
+    azimuth: AzimuthRangeOut
+    elevation: list[float | None] = Field(
+        ..., description="Horizonthöhe je Azimut; null heißt: keine Höhendaten in dieser Richtung"
+    )
+    at_maximum: HorizonMaximumOut
+
+
+class ElevationOut(BaseModel):
+    lat: float
+    lon: float
+    elevation: float
+    source: SourceOut
+
+
+def _store():
+    return dem_service.get_store(get_settings())
+
+
+@router.get("/elevation", response_model=ElevationOut)
+def elevation(lat: float = Latitude, lon: float = Longitude) -> ElevationOut:
+    """Geländehöhe für die Beobachterhöhe in der Kontaktzeitberechnung."""
+    store = _store()
+    if not store.ready:
+        raise HTTPException(503, "Höhenraster noch nicht eingespielt")
+    value = store.sample(np.array([lat]), np.array([lon]))[0]
+    if not math.isfinite(value):
+        raise HTTPException(404, "kein Höhenwert an diesem Punkt")
+    return ElevationOut(lat=lat, lon=lon, elevation=round(float(value), 1), source=SourceOut())
+
+
+@router.get("/horizon", response_model=HorizonOut)
+def horizon(
+    lat: float = Latitude,
+    lon: float = Longitude,
+    observerHeight: float = Query(1.6, ge=0.0, le=100.0, description="Augenhöhe über Grund"),
+) -> HorizonOut:
+    """Horizontprofil im Westsektor, plus das Urteil zur Maximumszeit.
+
+    Die Auswertung ist synchron: ein 90°-Sektor aus dem 30-m-Raster liegt im
+    Bereich von Millisekunden. Die Route ist bewusst ``def`` und nicht ``async
+    def`` — die Rechnung ist CPU-gebunden und gehört in den Threadpool, nicht
+    in die Ereignisschleife.
+
+    ``verdict`` ist nicht symmetrisch zu lesen. ``blocked`` ist belastbar:
+    GLO-30 kennt Gelände und Bewuchs, was fehlt (Gebäude, einzelne Hecken)
+    verdeckt zusätzlich. ``clear`` ist dagegen eine Obergrenze — ``clearance``
+    sagt, wieviel unmodelliertes Nahfeld sie noch verträgt.
+    """
+    settings = get_settings()
+    try:
+        result = horizon_service.evaluate(_store(), settings, lat, lon, observerHeight)
+    except horizon_service.DemNotReady as exc:
+        raise HTTPException(503, str(exc)) from exc
+
+    p = result.profile
+    return HorizonOut(
+        lat=lat,
+        lon=lon,
+        source=SourceOut(),
+        observer=ObserverOut(ground=round(p.ground, 1), height=observerHeight),
+        azimuth=AzimuthRangeOut(
+            start=settings.horizon_azimuth_from,
+            end=settings.horizon_azimuth_to,
+            step=settings.horizon_azimuth_step,
+        ),
+        elevation=[None if not math.isfinite(v) else round(float(v), 2) for v in p.elevations],
+        at_maximum=HorizonMaximumOut(
+            sun_altitude=round(result.sun_altitude, 2),
+            sun_azimuth=round(result.sun_azimuth, 2),
+            horizon=round(result.horizon, 2),
+            horizon_far=round(result.horizon_far, 2),
+            clearance=round(result.clearance, 2),
+            verdict=result.verdict,
+            tight=result.tight,
+        ),
     )
 
 
