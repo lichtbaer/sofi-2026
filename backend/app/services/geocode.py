@@ -30,13 +30,16 @@ class Place:
 #: treffen — gewertet wird der beste Treffer, deshalb das ``min`` über den Rang.
 #: Bewusst keine Infix-Suche (``%key%``): sie wäre bei 80.000 Orten langsam und
 #: liefert für eine Autovervollständigung mehr Rauschen als Nutzen.
+#: Die LIKE-Muster kommen fertig escaped aus ``_like_prefix`` — ``%`` und ``_``
+#: aus der Eingabe wirken wörtlich, sonst erzwänge ``q=%`` einen Vollscan.
 _SEARCH_SQL = """
-WITH q AS (SELECT %(key)s::text AS key, %(alt)s::text AS alt),
+WITH q AS (SELECT %(key)s::text AS key, %(alt)s::text AS alt,
+                  %(key_like)s::text AS key_like, %(alt_like)s::text AS alt_like),
 matched AS (
     SELECT a.place_id,
            min(CASE WHEN a.name_key = q.key OR a.name_key_alt = q.alt THEN 0 ELSE 1 END) AS rank
     FROM place_alias a, q
-    WHERE a.name_key LIKE q.key || '%%' OR a.name_key_alt LIKE q.alt || '%%'
+    WHERE a.name_key LIKE q.key_like OR a.name_key_alt LIKE q.alt_like
     GROUP BY a.place_id
 ),
 hits AS (
@@ -45,7 +48,7 @@ hits AS (
     UNION ALL
     SELECT z.name, z.state, 0, NULL::integer, z.geom, 0, 'postal'
     FROM postal_code z, q
-    WHERE z.code LIKE q.key || '%%'
+    WHERE z.code LIKE q.key_like
 )
 SELECT h.name, h.state, h.population, h.elevation, h.rank, h.source,
        ST_Y(h.geom::geometry) AS lat,
@@ -59,15 +62,30 @@ LIMIT %(limit)s
 """
 
 
+def _like_prefix(value: str) -> str:
+    """Präfixmuster für LIKE, in dem die Eingabe wörtlich steht.
+
+    ``%``, ``_`` und ``\\`` sind in LIKE Metazeichen; unescaped würde ``q=%``
+    jedes Alias treffen und damit pro Anfrage einen Vollscan erzwingen.
+    """
+    escaped = value.replace("\\", "\\\\").replace("%", r"\%").replace("_", r"\_")
+    return escaped + "%"
+
+
 async def search(query: str, limit: int = 7) -> list[Place]:
     key, alt = search_keys(query)
     if not key:
         return []
 
+    params = {
+        "key": key,
+        "alt": alt,
+        "key_like": _like_prefix(key),
+        "alt_like": _like_prefix(alt),
+        "limit": limit,
+    }
     async with connection() as conn:
-        rows = await (
-            await conn.execute(_SEARCH_SQL, {"key": key, "alt": alt, "limit": limit})
-        ).fetchall()
+        rows = await (await conn.execute(_SEARCH_SQL, params)).fetchall()
 
     seen: set[tuple[str, int]] = set()
     places: list[Place] = []

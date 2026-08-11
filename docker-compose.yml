@@ -6,7 +6,9 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-sofi}
       POSTGRES_USER: ${POSTGRES_USER:-sofi}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sofi}
+      # Kein Fallback: ohne gesetztes Passwort soll der Start scheitern,
+      # nicht still mit „sofi" laufen (cp .env.example .env, Wert ändern).
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD in .env setzen}
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./db/init:/docker-entrypoint-initdb.d:ro
@@ -20,7 +22,7 @@ services:
   api:
     build: ./backend
     environment: &backend_env
-      SOFI_DATABASE_URL: postgresql://${POSTGRES_USER:-sofi}:${POSTGRES_PASSWORD:-sofi}@db:5432/${POSTGRES_DB:-sofi}
+      SOFI_DATABASE_URL: postgresql://${POSTGRES_USER:-sofi}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD in .env setzen}@db:5432/${POSTGRES_DB:-sofi}
       SOFI_DATA_DIR: /data
       TZ: Europe/Berlin
     volumes:

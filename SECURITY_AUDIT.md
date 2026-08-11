@@ -22,8 +22,13 @@ Die kritischen Lücken liegen nicht im Code, sondern **im Betrieb und im Rechtli
 | **K2** | Impressum und Datenschutzerklärung fehlen | DSGVO Art. 13 / DDG §5 |
 | **H1** | Access-Logs protokollieren IP + Suchbegriffe + Koordinaten | DSGVO / A09 |
 | **H2** | Kein Rate-Limiting, keine Lastabwehr — am Ereignistag riskant | A04 |
-| **H3** | LIKE-Wildcards in der Ortssuche nicht escaped | A03 (Injection-Klasse) |
-| **H4** | Default-Datenbankpasswort `sofi` als Fallback in docker-compose | A05 |
+| **H3** | LIKE-Wildcards in der Ortssuche nicht escaped — *behoben 11.8.* | A03 (Injection-Klasse) |
+| **H4** | Default-Datenbankpasswort `sofi` als Fallback in docker-compose — *behoben 11.8.* | A05 |
+
+**Umsetzungsstand:** H3, H4, M3, M6 und M7 sind auf diesem Branch behoben
+(inkl. Regressionstests in `backend/tests/test_api_validation.py`). Offen
+bleiben die Betriebs- und Rechtsthemen K1, K2, H1, H2 sowie die übrigen
+M-/N-Befunde.
 
 Kein Befund erlaubt Remote Code Execution, Datendiebstahl oder Kontenübernahme —
 die API ist lesend, hält keine Nutzerdaten und kennt keine Accounts. Die realen
@@ -171,6 +176,11 @@ def _escape_like(s: str) -> str:
 `search_keys` alles außer `[a-z0-9 .-]` verwerfen — das passt auch fachlich zu
 Ortsnamen und PLZs.
 
+> **Status: behoben (11.08.2026).** `_like_prefix()` in `geocode.py` escaped
+> `%`, `_` und `\`; die Muster gehen als eigene Parameter (`key_like`,
+> `alt_like`) ins SQL, die Exakt-Treffer-Wertung vergleicht weiter gegen die
+> rohen Schlüssel. Tests: `test_api_validation.py`.
+
 ### H4 — Default-Datenbankpasswort als Fallback (OWASP A05)
 
 `docker-compose.yml:9/23` fällt ohne `.env` auf `POSTGRES_PASSWORD=sofi` zurück.
@@ -187,6 +197,10 @@ POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD in .env setzen}
 
 (gleiches Muster in der `SOFI_DATABASE_URL`). `POSTGRES_DB`/`POSTGRES_USER`
 dürfen Defaults behalten.
+
+> **Status: behoben (11.08.2026).** Beide Stellen in `docker-compose.yml`
+> nutzen jetzt `${POSTGRES_PASSWORD:?…}`; `docker compose config` scheitert
+> ohne gesetztes Passwort (verifiziert) und läuft mit gesetztem Wert.
 
 ---
 
@@ -235,6 +249,10 @@ und ein Alarmrauschen-Generator.
 `all(math.isfinite(v) for v in parsed)`, Wertebereiche (±90/±180) und
 `lat_min < lat_max`, `lon_min < lon_max` — sonst 400 mit neutraler Meldung.
 
+> **Status: behoben (11.08.2026).** `_parse_bbox()` in `routes.py` prüft
+> Anzahl, Endlichkeit, Wertebereiche und Ordnung und antwortet einheitlich
+> mit 400. Tests: `test_api_validation.py`.
+
 ### M4 — Container-Härtung ausbaufähig (OWASP A05)
 
 Es fehlen: `cap_drop: [ALL]`, `security_opt: [no-new-privileges:true]`,
@@ -272,6 +290,9 @@ Seitenbesuch, nicht nur Kartennutzung.
 ohnehin erst mit der Karte; der gesparte Handshake ist den Datenabfluss nicht
 wert) oder dynamisch erst beim Karteninitialisieren setzen.
 
+> **Status: behoben (11.08.2026).** `preconnect` aus `Sofi.dc.html` entfernt;
+> die Verbindung zu OSM entsteht erst mit der tatsächlichen Karteninitialisierung.
+
 ### M7 — Legacy-Datei mit unpkg-Referenzen wird öffentlich ausgeliefert
 
 `frontend/SoFi 2026.dc.html` (die ältere Fassung) lädt Leaflet von
@@ -283,6 +304,10 @@ Crawler.
 
 **Empfehlung (Aufwand: klein):** Datei aus dem ausgelieferten Verzeichnis
 entfernen (oder in einen nicht gemounteten Ordner `archive/` verschieben).
+
+> **Status: behoben (11.08.2026).** Nach `archive/SoFi 2026.dc.html`
+> verschoben — Caddy mountet nur `./frontend`, die Datei wird nicht mehr
+> ausgeliefert.
 
 ### M8 — Monitoring/Alerting fehlt (OWASP A09)
 
@@ -386,15 +411,16 @@ Sprachpräferenz (localStorage, rein clientseitig).
 1. TLS aktivieren bzw. Terminierung klären + HSTS (K1)
 2. Impressum + Datenschutzerklärung einspielen (K2)
 3. Query-Strings aus Caddy-Log, `--no-access-log` für Uvicorn, Log-Rotation (H1)
-4. LIKE-Escaping in `geocode.search()` (H3 — drei Zeilen)
-5. `POSTGRES_PASSWORD` fail-hard (H4 — eine Zeile)
+4. ~~LIKE-Escaping in `geocode.search()` (H3)~~ ✔ erledigt
+5. ~~`POSTGRES_PASSWORD` fail-hard (H4)~~ ✔ erledigt
 6. Rate-Limit für `/geocode` + `overlay.png`, Overlay-Cache/ETag (H2)
 7. Uptime-Alarm auf `/health` mit `forecast_run`-Alter (M8)
-8. Legacy-HTML aus dem Webroot (M7), preconnect raus (M6)
+8. ~~Legacy-HTML aus dem Webroot (M7), preconnect raus (M6)~~ ✔ erledigt
 
 **Zeitnah (nächste Wochen):**
 
-9. bbox-Validierung inkl. `inf`/`nan` (M3) + Regressionstests (N6)
+9. ~~bbox-Validierung inkl. `inf`/`nan` (M3) + Regressionstests~~ ✔ erledigt
+   (Endpunkt-Tests gegen laufende Instanz stehen weiter aus, N6)
 10. Prune-Race abfangen, Cache leeren (M5)
 11. Container-Härtung: cap_drop, no-new-privileges, Limits (M4)
 12. Dockerfile auf `pip install .` + Lockfile, pip-audit/Dependabot in CI (M2)
