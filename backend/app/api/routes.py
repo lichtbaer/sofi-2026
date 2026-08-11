@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from datetime import datetime
 
 from fastapi import APIRouter, HTTPException, Query, Response
@@ -225,6 +226,26 @@ async def overlays() -> OverlaysOut:
     )
 
 
+def _parse_bbox(bbox: str) -> tuple[float, float, float, float]:
+    """Vier endliche Koordinaten mit min < max — sonst 400.
+
+    ``float()`` akzeptiert auch ``nan`` und ``inf``; ungefiltert liefe beides
+    bis in die Fensterrechnung und endete dort als 500er.
+    """
+    try:
+        parsed = tuple(float(v) for v in bbox.split(","))
+    except ValueError as exc:
+        raise HTTPException(400, "bbox nicht lesbar") from exc
+    if len(parsed) != 4:
+        raise HTTPException(400, "bbox braucht vier Werte")
+    if not all(math.isfinite(v) for v in parsed):
+        raise HTTPException(400, "bbox braucht endliche Zahlen")
+    lat_min, lon_min, lat_max, lon_max = parsed
+    if not (-90 <= lat_min < lat_max <= 90 and -180 <= lon_min < lon_max <= 180):
+        raise HTTPException(400, "bbox erwartet lat_min,lon_min,lat_max,lon_max mit min < max")
+    return parsed  # type: ignore[return-value]
+
+
 @router.get(
     "/clouds/overlay.png",
     response_class=Response,
@@ -243,15 +264,7 @@ async def overlay_png(
     Daten". Die Einfärbung passiert im Frontend.
     """
     settings = get_settings()
-    bounds = settings.germany_bbox
-    if bbox:
-        try:
-            parsed = tuple(float(v) for v in bbox.split(","))
-        except ValueError as exc:
-            raise HTTPException(400, "bbox nicht lesbar") from exc
-        if len(parsed) != 4:
-            raise HTTPException(400, "bbox braucht vier Werte")
-        bounds = parsed  # type: ignore[assignment]
+    bounds = _parse_bbox(bbox) if bbox else settings.germany_bbox
 
     fields = await clouds_service.current_fields()
     match = next((f for f in fields if f.variable == variable and f.valid_at == valid_at), None)
