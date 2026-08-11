@@ -11,10 +11,10 @@ Kontaktzeiten, Bedeckungsgrade, Isolinien, Wolkenprognose und Standortbewertung.
 | `frontend/eclipse.js` | Finsternisrechnung — Besselsche Elemente, lokale Umstände, Isolinien |
 | `frontend/api.js` | Client für die eigene API |
 | `frontend/config.js` | Kachelanbieter und API-Basis — die einzigen Betriebsknöpfe |
-| `frontend/data.js` | Ersatzdaten: 54 Städte als Rückfall, Standorte und Horizontprofile noch als Mock |
+| `frontend/data.js` | Ersatzdaten: 54 Städte als Rückfall, Standortliste |
 | `frontend/vendor/` | Leaflet, React, Schriften — selbst ausgeliefert |
 | `frontend/_ds/` | Design-System *Organic* (Tokens, Komponenten) |
-| `backend/` | FastAPI: Ortssuche, Wolkenprognose, lokale Umstände |
+| `backend/` | FastAPI: Ortssuche, Wolkenprognose, lokale Umstände, Horizont |
 | `db/init/` | PostGIS-Schema |
 | `web/Caddyfile` | Reverse Proxy, statische Auslieferung, CSP |
 | `api-spec.md` | Vertrag für das Backend, mit Stand je Endpunkt |
@@ -107,6 +107,35 @@ aussehenden, aber falschen Wert ergäbe.
 GRIB2 kommt als *simple packing* (Template 5.0, 16 bit) mit Bitmap. Dafür
 reicht `backend/app/grib2.py`; eccodes und GDAL bleiben aus dem Image.
 
+## Horizont
+
+`/api/v1/horizon` rechnet aus **Copernicus DEM GLO-30** (ESA, offen, ohne
+Anmeldung): ein Strahl je 0,25° Azimut über 240°–330°, bis 40 km hinaus, mit
+Erdkrümmung und Refraktion (k = 0,13). Rund 25 ms je Punkt — deshalb eine
+Punktabfrage on demand und keine vorberechnete Spalte, und deshalb funktioniert
+auch der Klick auf eine beliebige Stelle der Karte.
+
+GLO-30 ist ein *Oberflächenmodell* und enthält Bewuchs: gemessen an der Kachel
+N50/E008 liegt der Frankfurter Stadtwald 17 m über dem Vorfeld des Flughafens
+daneben. Gebäude enthält es nicht, und bei 30 m Rasterweite hebt eine 5-m-Hecke
+ihre Zelle nur um ein bis zwei Meter.
+
+Damit ist der Fehler einseitig, und die Oberfläche muss ihn einseitig
+darstellen: **„verdeckt" ist eine Aussage, „frei" ist eine Obergrenze.** Wer
+mehr Daten hinzufügt, kann den Horizont nur anheben. Jede Näherung im Backend
+ist entsprechend gewählt — Standhöhe aus dem Zellwert statt aus dem
+Umfeldminimum, damit ein Gipfel nicht in die Hangschulter rutscht und ein
+falsches „verdeckt" erzeugt.
+
+Ein DOM1 der Länder wäre im Nahfeld deutlich besser. Es liegt aber in sechzehn
+Formaten unter sechzehn Lizenzen vor, und der Aufwand dafür ist Integration,
+nicht Volumen — er schrumpft nicht, wenn man weniger Fläche braucht.
+
+Der Worker holt die rund 3 GB Kacheln beim Start, wenn sie fehlen, und
+verrechnet sie zu einem 2,85-GB-Mosaik auf dem Volume (int16, Dezimeter,
+memmap). Bis das steht, antwortet `/horizon` mit `503` und `/health` meldet
+`terrain: false`.
+
 ## Standort-Score
 
 ```
@@ -116,7 +145,9 @@ reicht `backend/app/grib2.py`; eccodes und GDAL bleiben aus dem Image.
 0,15 · Zugänglichkeit              (frei / eingeschränkt)
 ```
 
-Noch nicht im Backend — hängt an `/api/v1/horizon`.
+Ohne Horizontwert gibt es keinen Score: er wiegt 0,42, und die übrigen drei
+umzugewichten ergäbe eine Zahl, die wie eine Bewertung aussieht und die
+entscheidende Größe nicht kennt. Fehlt er, steht dort ein Strich.
 
 ## Datenschutz
 
@@ -166,10 +197,13 @@ richtig und spart hier 90 kB.
 - **Die Wolkenprognose hat noch keinen Platz im Design.** `frontend/api.js`
   liefert sie, aber die vorhandenen Slots auf der Standorte-Seite meinen
   Klimatologie („% klare Sicht im Mittel"), nicht Vorhersage.
-- Die Standortbewertung läuft weiter auf den erfundenen Horizontprofilen aus
-  `data.js` — hängt an `/api/v1/horizon`
-- `/api/v1/elevation` und `/api/v1/horizon` (Copernicus GLO-30, DOM1)
 - Wolkenklimatologie CM SAF
+- Die Koordinaten in `SITES` zeigen teils neben den Gipfel: Hesselberg liest
+  596 m statt 689 m, Kalmit 532 m statt 673 m. Mit dem Höhenmodell fällt das
+  jetzt auf — vorher hat das Mock-Profil jede Koordinate durchgewunken.
+- Nahfeld unter 30 m Rasterweite (einzelne Hecken, Gebäude). Kandidaten wären
+  OSM-Gebäudeumrisse und eine 10-m-Kronenhöhenkarte — beide bundesweit aus je
+  einer Quelle, anders als DOM1.
 - Englische Fassung (Umschalter ist angelegt, Texte fehlen)
 - Seiten Beobachtungstipps, Fotografie, FAQ, Impressum
 
@@ -177,5 +211,6 @@ richtig und spart hier 90 kB.
 
 Besselsche Elemente: NASA/GSFC Five Millennium Canon of Solar Eclipses,
 Fred Espenak. Wolken: Deutscher Wetterdienst, ICON-D2 (Open Data).
+Höhenmodell: Copernicus DEM GLO-30, ESA / Copernicus Programme.
 Orte: GeoNames (CC BY 4.0). Karten: OpenStreetMap-Mitwirkende, CARTO.
 Design-System: *Organic*.
