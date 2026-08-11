@@ -147,7 +147,13 @@ class SourceOut(BaseModel):
     resolution_m: int = 30
     contains_vegetation: bool = True
     contains_buildings: bool = Field(
-        False, description="GLO-30 bildet Gebäude nicht ab; der Fehler zeigt nach oben"
+        False,
+        description=(
+            "Auf Gebäude ist kein Verlass: über dem Frankfurter Bankenviertel liegt "
+            "der höchste Rasterwert bei 127 m, das Dach des Commerzbank-Turms bei "
+            "rund 360 m. Für flache Bebauung ist ungeprüft, was ankommt — deshalb "
+            "false, die für den Aufrufer sichere Richtung. Der Fehler zeigt nach oben."
+        ),
     )
 
 
@@ -217,10 +223,14 @@ def horizon(
 ) -> HorizonOut:
     """Horizontprofil im Westsektor, plus das Urteil zur Maximumszeit.
 
-    Die Auswertung ist synchron: ein 90°-Sektor aus dem 30-m-Raster liegt im
-    Bereich von Millisekunden. Die Route ist bewusst ``def`` und nicht ``async
-    def`` — die Rechnung ist CPU-gebunden und gehört in den Threadpool, nicht
-    in die Ereignisschleife.
+    Die Auswertung läuft synchron. Die Route ist bewusst ``def`` und nicht
+    ``async def`` — sie gehört in den Threadpool, nicht in die Ereignisschleife.
+
+    Was ein Aufruf kostet, ist auf der Zielmaschine zu messen und hier bewusst
+    nicht beziffert: 361 Azimute mal 477 Distanzen sind 172 197 Zugriffe auf ein
+    Memmap von knapp 3 GB. Ob die Seiten im Cache liegen, entscheidet über
+    Größenordnungen, und unter Parallellast konkurrieren die Abfragen um
+    denselben Cache. Eine Zahl aus einem Entwicklungscontainer trägt hier nicht.
 
     ``verdict`` ist nicht symmetrisch zu lesen. ``blocked`` ist belastbar:
     GLO-30 kennt Gelände und Bewuchs, was fehlt (Gebäude, einzelne Hecken)

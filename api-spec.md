@@ -129,7 +129,12 @@ Horizontprofil im Westsektor. Die Spec sah ursprünglich 360° in 1°- bzw.
 im Maximum bundesweit zwischen 285° und 290°, über den ganzen Verlauf von C1
 bis zum Untergang zwischen etwa 275° und 300°, und die Höhe bleibt unter 15°.
 Geliefert wird deshalb 240°–330° in 0,25°-Schritten. Damit fällt auch die
-asynchrone Job-Mechanik (`202 Accepted`) weg: ein Punkt kostet **rund 25 ms**.
+asynchrone Job-Mechanik (`202 Accepted`) weg — die Antwort kommt direkt.
+
+Was ein Punkt kostet, steht hier nicht: 361 Azimute mal 477 Distanzen sind
+172 197 Zugriffe auf ein Memmap von knapp 3 GB, und ob die Seiten im Cache
+liegen, entscheidet über Größenordnungen. Die Zahl ist auf der Zielmaschine zu
+messen, kalt und warm getrennt.
 
 ```json
 { "lat": 50.1553, "lon": 8.6394,

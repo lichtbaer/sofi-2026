@@ -38,9 +38,28 @@ Aussichtspunkten feuert, verschweigt mehr, als sie meldet.
 
 ── Der Fehler bleibt einseitig ──────────────────────────────────────────────
 
-GLO-30 enthält Bewuchs, aber keine Gebäude, und bei 30 m Rasterweite hebt eine
-fünf Meter hohe Hecke ihre Zelle nur um ein bis zwei Meter an. Was fehlt,
-verdeckt also zusätzlich — nie weniger. Daraus folgt die Semantik, die
+GLO-30 ist ein Oberflächenmodell und enthält Bewuchs. Auf Gebäude ist dennoch
+kein Verlass — nachgemessen an der Kachel N50/E008: über dem Frankfurter
+Bankenviertel liegt der höchste Wert in einem 1,2-km-Feld bei 127 m, der Median
+bei 106 m. Das Dach des Commerzbank-Turms steht bei rund 360 m über NN. Ein
+259-m-Hochhaus ist also nicht in den Daten. Die Georeferenzierung der Messung
+ist gegengeprüft: Großer Feldberg 871 m, Kachelmaximum 885 m am Gipfel.
+
+Warum, lässt sich aus einer Kachel nicht beweisen. Naheliegend ist nicht
+„herausgerechnet", sondern „nie gemessen": TanDEM-X ist ein interferometrisches
+Radar, dichte Hochhausbebauung erzeugt Layover und Radarschatten, die
+betroffenen Zellen werden zu Datenlücken, und deren Füllung interpoliert aus
+der Umgebung. Für flache Bebauung ist ungeprüft, was ankommt — ein Schnitt über
+ein Dorf in der Wetterau war nicht auswertbar, weil dort 32 m Geländeanstieg
+auf 3 km jeden Objektbeitrag überdecken.
+
+Unabhängig davon greift die Flächenmittelung: Eine 5 m hohe, 3 m breite Hecke
+hebt ihre 30-m-Zelle um 0,5 m an, eine 20 m hohe und 10 m breite Baumreihe um
+6,7 m. Das Signal wird gedämpft, der Höhenfehler des Rasters nicht — deshalb
+holt auch ein kleinerer Mindestabstand als die 90 m oben die Information nicht
+zurück. Sie steckt nicht in den Daten.
+
+Was fehlt, verdeckt zusätzlich — nie weniger. Daraus folgt die Semantik, die
 ``verdict`` liefert:
 
 * ``blocked`` — der Horizont steht bereits über der Sonne. Das ist eine

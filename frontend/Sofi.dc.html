@@ -412,8 +412,8 @@
 <sc-if value="{{ isStandorte }}" hint-placeholder-val="{{ false }}">
 <div style="max-width:1180px;margin:0 auto;padding:36px 20px 64px">
   <h1 style="font-family:'Caprasimo',serif;font-size:clamp(30px,5vw,44px);margin:0 0 8px;letter-spacing:-0.02em"><span data-l="de">Beste Standorte</span><span data-l="en">Best Locations</span></h1>
-  <p data-l="de" style="font-size:16px;color:rgba(32,30,29,0.62);max-width:64ch;margin:0 0 20px">Bewertet wird, was bei dieser Finsternis zählt: ob die Sonne zum Maximum über der realen Horizontlinie steht. Die Horizontprofile werden aus Copernicus GLO-30 gerechnet — einem Oberflächenmodell mit 30 m Rasterweite, das Bewuchs enthält, Gebäude aber nicht. Ein „frei“ ist deshalb eine Obergrenze, ein „verdeckt“ eine Aussage.</p>
-  <p data-l="en" style="font-size:16px;color:rgba(32,30,29,0.62);max-width:64ch;margin:0 0 20px">The rating measures what counts for this eclipse: whether the Sun at maximum clears the real horizon line. Horizon profiles are computed from Copernicus GLO-30, a 30 m surface model that includes vegetation but not buildings. A “clear” is therefore an upper bound; a “blocked” is a statement.</p>
+  <p data-l="de" style="font-size:16px;color:rgba(32,30,29,0.62);max-width:64ch;margin:0 0 20px">Bewertet wird, was bei dieser Finsternis zählt: ob die Sonne zum Maximum über der realen Horizontlinie steht. Die Horizontprofile werden aus Copernicus GLO-30 gerechnet — einem Oberflächenmodell mit 30 m Rasterweite. Bewuchs ist enthalten, auf Gebäude ist kein Verlass, und eine einzelne Hecke geht in der Rasterweite unter. Ein „frei“ ist deshalb eine Obergrenze, ein „verdeckt“ eine Aussage.</p>
+  <p data-l="en" style="font-size:16px;color:rgba(32,30,29,0.62);max-width:64ch;margin:0 0 20px">The rating measures what counts for this eclipse: whether the Sun at maximum clears the real horizon line. Horizon profiles are computed from Copernicus GLO-30, a 30 m surface model. Vegetation is included, buildings cannot be relied upon, and a single hedge disappears in the grid spacing. A “clear” is therefore an upper bound; a “blocked” is a statement.</p>
 
   <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;background:#ebddc5;border-radius:28px;padding:12px 20px;margin-bottom:22px">
     <span style="font-size:13px;color:rgba(32,30,29,0.65)"><span data-l="de">Umkreis um</span><span data-l="en">Radius around</span> <strong>{{ locName }}</strong></span>
@@ -495,8 +495,8 @@
       </div>
 
       <div style="background:rgba(198,113,57,0.12);border-radius:20px;padding:16px 20px;font-size:12px;line-height:1.55;color:rgba(32,30,29,0.72)">
-        <span data-l="de"><strong>Datenstand:</strong> Bedeckungsgrad und Sonnenstand rechnet der Browser. Der Horizont kommt aus Copernicus GLO-30 über <code>/api/v1/horizon</code>: Gelände und Bewuchs sind erfasst, Gebäude und alles unterhalb von 30 m Rasterweite nicht — die wirkliche Sicht ist nie besser als die angezeigte. Wolkenklimatologie und Zugangshinweise sind weiterhin Beispielwerte.</span>
-        <span data-l="en"><strong>Data status:</strong> obscuration and sun position are computed in your browser. The horizon comes from Copernicus GLO-30 via <code>/api/v1/horizon</code>: terrain and vegetation are modelled, buildings and anything below the 30 m grid are not — the real view is never better than the one shown. Cloud climatology and access notes are still sample values.</span>
+        <span data-l="de"><strong>Datenstand:</strong> Bedeckungsgrad und Sonnenstand rechnet der Browser. Der Horizont kommt aus Copernicus GLO-30 über <code>/api/v1/horizon</code>: Gelände und Bewuchs sind erfasst; auf Gebäude ist kein Verlass, und alles unterhalb von 30 m Rasterweite geht in der Mittelung unter — die wirkliche Sicht ist nie besser als die angezeigte. Wolkenklimatologie und Zugangshinweise sind weiterhin Beispielwerte.</span>
+        <span data-l="en"><strong>Data status:</strong> obscuration and sun position are computed in your browser. The horizon comes from Copernicus GLO-30 via <code>/api/v1/horizon</code>: terrain and vegetation are modelled; buildings cannot be relied upon, and anything below the 30 m grid is averaged away — the real view is never better than the one shown. Cloud climatology and access notes are still sample values.</span>
       </div>
     </div>
   </div>
@@ -991,11 +991,11 @@ const T = {
     facA: 'Zugang', accFree: 'frei zugänglich', accLtd: 'eingeschränkt',
     // Die beiden Richtungen sind nicht gleichwertig, und das steht so im Text:
     // „verdeckt" ist eine Aussage, „frei" ist eine Obergrenze. Das Geländemodell
-    // kennt Bewuchs, aber keine Gebäude und nichts unter 30 m Rasterweite —
-    // was fehlt, verdeckt zusätzlich, nie weniger.
+    // kennt Bewuchs; auf Gebäude ist kein Verlass, und nichts unter 30 m
+    // Rasterweite überlebt die Mittelung — was fehlt, verdeckt zusätzlich.
     vBlocked: (c) => `Verdeckt: Gelände und Bewuchs stehen im Maximum ${c}° über der Sonne. Das ist belastbar — genauere Daten können nur mehr verdecken, nicht weniger.`,
-    vTight: (c) => `Höchstens ${c}° Reserve über der Geländekante. Knapp: erfasst sind Gelände und Bewuchs, nicht aber Gebäude oder eine einzelne Baumreihe — davon reicht hier schon eine.`,
-    vClear: (c) => `Frei bis höchstens ${c}° Reserve über Gelände und Bewuchs. Gebäude und Einzelhindernisse unter 30 m Rasterweite sind nicht erfasst: vor Ort den Westhorizont prüfen.`,
+    vTight: (c) => `Höchstens ${c}° Reserve über der Geländekante. Knapp: erfasst sind Gelände und Bewuchs, nicht verlässlich aber Gebäude, und eine einzelne Baumreihe gar nicht — davon reicht hier schon eine.`,
+    vClear: (c) => `Frei bis höchstens ${c}° Reserve über Gelände und Bewuchs. Auf Gebäude ist kein Verlass, Einzelhindernisse unter 30 m Rasterweite fehlen ganz: vor Ort den Westhorizont prüfen.`,
     hzLoading: 'Horizontprofil wird geladen …',
     hzMissing: 'Kein Horizontprofil verfügbar. Das Höhenmodell ist noch nicht eingespielt oder der Dienst antwortet nicht — hier steht bewusst keine geschätzte Zahl.',
     tl: (r) => [
@@ -1043,8 +1043,8 @@ const T = {
     facO: 'Obscuration', facOV: (o) => `${o} % at maximum`,
     facA: 'Access', accFree: 'freely accessible', accLtd: 'restricted',
     vBlocked: (c) => `Blocked: terrain and vegetation stand ${c}° above the Sun at maximum. This one holds — better data can only add obstruction, never remove it.`,
-    vTight: (c) => `At most ${c}° of clearance above the terrain edge. Tight: terrain and vegetation are modelled, buildings and a single tree line are not — and one would be enough here.`,
-    vClear: (c) => `Clear, with at most ${c}° above terrain and vegetation. Buildings and obstacles below the 30 m grid are not modelled: check your western horizon on site.`,
+    vTight: (c) => `At most ${c}° of clearance above the terrain edge. Tight: terrain and vegetation are modelled, buildings not reliably, a single tree line not at all — and one would be enough here.`,
+    vClear: (c) => `Clear, with at most ${c}° above terrain and vegetation. Buildings cannot be relied upon and obstacles below the 30 m grid are missing entirely: check your western horizon on site.`,
     hzLoading: 'Loading horizon profile …',
     hzMissing: 'No horizon profile available. The elevation model is not ingested yet, or the service is not responding — no estimated number is shown here on purpose.',
     tl: (r) => [

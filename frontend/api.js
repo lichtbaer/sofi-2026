@@ -113,10 +113,12 @@ function sample(s) {
 }
 
 /* ── Horizont ──────────────────────────────────────────────────────────────
-   Aus Copernicus GLO-30, einem Oberflächenmodell: Gelände *und* Bewuchs. Was
-   fehlt, sind Gebäude und alles unter der 30-m-Rasterweite — eine einzelne
-   Hecke also. Der Fehler zeigt damit immer in dieselbe Richtung: die echte
-   Sicht ist nie besser als die gerechnete, oft schlechter.
+   Aus Copernicus GLO-30, einem Oberflächenmodell: Gelände *und* Bewuchs. Auf
+   Gebäude ist kein Verlass — über dem Frankfurter Bankenviertel misst das
+   Raster 127 m, wo der Commerzbank-Turm bei rund 360 m steht. Und alles unter
+   der 30-m-Rasterweite geht in der Flächenmittelung unter: eine 5-m-Hecke hebt
+   ihre Zelle um einen halben Meter. Der Fehler zeigt damit immer in dieselbe
+   Richtung: die echte Sicht ist nie besser als die gerechnete, oft schlechter.
 
    Deshalb sind die beiden Urteile nicht gleichwertig, und die Oberfläche darf
    sie nicht gleich rendern:

@@ -111,14 +111,54 @@ reicht `backend/app/grib2.py`; eccodes und GDAL bleiben aus dem Image.
 
 `/api/v1/horizon` rechnet aus **Copernicus DEM GLO-30** (ESA, offen, ohne
 Anmeldung): ein Strahl je 0,25° Azimut über 240°–330°, bis 40 km hinaus, mit
-Erdkrümmung und Refraktion (k = 0,13). Rund 25 ms je Punkt — deshalb eine
-Punktabfrage on demand und keine vorberechnete Spalte, und deshalb funktioniert
-auch der Klick auf eine beliebige Stelle der Karte.
+Erdkrümmung und Refraktion (k = 0,13). Eine Punktabfrage on demand statt einer
+vorberechneten Spalte — deshalb funktioniert auch der Klick auf eine beliebige
+Stelle der Karte.
 
-GLO-30 ist ein *Oberflächenmodell* und enthält Bewuchs: gemessen an der Kachel
-N50/E008 liegt der Frankfurter Stadtwald 17 m über dem Vorfeld des Flughafens
-daneben. Gebäude enthält es nicht, und bei 30 m Rasterweite hebt eine 5-m-Hecke
-ihre Zelle nur um ein bis zwei Meter.
+Was ein Aufruf kostet, steht hier bewusst nicht. Ein Aufruf tastet 361 Azimute
+mal 477 Distanzen ab, also 172 197 Zellen eines Memmaps von knapp 3 GB. Das ist
+kein CPU-Maß, sondern eines für den Seitencache: kalt und warm liegen
+Größenordnungen auseinander, und unter Parallellast konkurrieren die Abfragen
+um denselben Cache. Wer die Zahl braucht — für eine Vorberechnung etwa — misst
+sie auf der Zielmaschine, kalt und warm getrennt.
+
+### Was GLO-30 zeigt und was nicht
+
+Es ist ein *Oberflächenmodell* und enthält Bewuchs. **Auf Gebäude ist dennoch
+kein Verlass.** Nachgemessen an der Kachel N50/E008, Frankfurter Bankenviertel,
+1,2-km-Feld:
+
+| | |
+| --- | --- |
+| Median | 106 m |
+| höchster Wert | 127 m |
+| Dach des Commerzbank-Turms | ~360 m über NN |
+
+Ein 259-m-Hochhaus ist nicht in den Daten. Die Georeferenzierung der Messung
+ist gegengeprüft: Großer Feldberg 871 m, Kachelmaximum 885 m am Gipfel.
+
+Warum, lässt sich aus einer Kachel nicht belegen. Naheliegend ist nicht
+„herausgerechnet", sondern „nie gemessen": TanDEM-X ist ein interferometrisches
+Radar, dichte Hochhausbebauung erzeugt Layover und Radarschatten, die Zellen
+werden zu Datenlücken, und deren Füllung interpoliert aus der Umgebung. Für
+flache Bebauung ist **ungeprüft**, was ankommt — ein Schnitt über ein Dorf in
+der Wetterau war nicht auswertbar, weil dort 32 m Geländeanstieg auf 3 km
+jeden Objektbeitrag überdecken.
+
+Dazu kommt die Flächenmittelung, und die ist reine Arithmetik:
+
+| Objekt | Anhebung seiner 30-m-Zelle |
+| --- | --- |
+| Hecke 5 m hoch, 3 m breit | 0,5 m |
+| Hecke 5 m hoch, 10 m breit | 1,7 m |
+| Baumreihe 20 m hoch, 10 m breit | 6,7 m |
+
+Das Signal wird gedämpft, der Höhenfehler des Rasters nicht. Ein Höhenfehler
+von 2 m entspricht in 90 m Entfernung bereits 1,27° — mehr als die gesamte
+Sonnenhöhe in München. Deshalb holt auch ein kleinerer Mindestabstand als die
+90 m aus `horizon_min_distance_m` die Information nicht zurück: **sie steckt
+nicht in den Daten.** Das Nahfeld unter etwa 600 m braucht eine andere Quelle,
+keine andere Schwelle.
 
 Damit ist der Fehler einseitig, und die Oberfläche muss ihn einseitig
 darstellen: **„verdeckt" ist eine Aussage, „frei" ist eine Obergrenze.** Wer
