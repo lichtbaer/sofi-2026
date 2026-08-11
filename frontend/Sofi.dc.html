@@ -699,29 +699,145 @@
 <sc-if value="{{ isImpressum }}" hint-placeholder-val="{{ false }}">
 <div style="max-width:720px;margin:0 auto;padding:36px 20px 64px">
   <h1 style="font-family:'Caprasimo',serif;font-size:clamp(30px,5vw,44px);margin:0 0 24px;letter-spacing:-0.02em"><span data-l="de">Impressum</span><span data-l="en">Legal Notice</span></h1>
+
+  <!-- Alle noch zu füllenden Felder tragen data-fill="1". Ein Griff findet sie:
+       grep -c 'data-fill' frontend/Sofi.dc.html — solange die Zahl über null
+       liegt, ist die Seite nicht veröffentlichungsreif. -->
   <div style="background:rgba(198,113,57,0.14);border-radius:20px;padding:18px 22px;margin-bottom:32px;font-size:14px;line-height:1.6">
-    <span data-l="de">Diese Angaben sind noch auszufüllen. Nach § 5 DDG sind Name, Anschrift, E-Mail-Adresse und — bei journalistisch-redaktionellen Inhalten — eine verantwortliche Person nach § 18 Abs. 2 MStV erforderlich.</span>
-    <span data-l="en">These details still need filling in. German law (§ 5 DDG) requires name, postal address, e-mail, and — for editorial content — a responsible person under § 18 (2) MStV.</span>
+    <span data-l="de"><strong>Noch auszufüllen.</strong> Die hervorgehobenen Felder sind Platzhalter. § 5 DDG verlangt Name, ladungsfähige Anschrift und eine schnelle elektronische Kontaktmöglichkeit; bei journalistisch-redaktionellen Inhalten kommt eine verantwortliche Person nach § 18 Abs. 2 MStV hinzu. Diese Vorlage ist eine Struktur, keine Rechtsberatung — bitte vor der Veröffentlichung prüfen lassen.</span>
+    <span data-l="en"><strong>Still to be completed.</strong> The highlighted fields are placeholders. German law (§ 5 DDG) requires name, a postal address at which legal service is possible, and a means of rapid electronic contact; editorial content additionally requires a responsible person under § 18 (2) MStV. This template is a structure, not legal advice — please have it reviewed before publishing.</span>
   </div>
 
-  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Angaben gemäß § 5 DDG</span><span data-l="en">Provider information</span></h2>
-  <p style="font-size:15px;line-height:1.7;color:rgba(32,30,29,0.6);margin:0 0 28px">Name<br>Straße und Hausnummer<br>PLZ Ort<br>E-Mail</p>
+  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Diensteanbieter</span><span data-l="en">Service provider</span></h2>
+  <p style="font-size:15px;line-height:1.9;margin:0 0 10px">
+    <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic"><span data-l="de">Vor- und Nachname bzw. Firma</span><span data-l="en">Full name or company</span></span><br>
+    <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic"><span data-l="de">Straße und Hausnummer</span><span data-l="en">Street and number</span></span><br>
+    <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic"><span data-l="de">PLZ und Ort</span><span data-l="en">Postcode and town</span></span><br>
+    <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic"><span data-l="de">Land</span><span data-l="en">Country</span></span>
+  </p>
+  <p data-l="de" style="font-size:13px;line-height:1.6;color:rgba(32,30,29,0.55);margin:0 0 28px">Bei juristischen Personen zusätzlich die Vertretungsberechtigten, das Register und die Registernummer. Ein Postfach genügt nicht — die Anschrift muss ladungsfähig sein.</p>
+  <p data-l="en" style="font-size:13px;line-height:1.6;color:rgba(32,30,29,0.55);margin:0 0 28px">Legal entities must additionally name their authorised representatives, the register and the registration number. A PO box is not sufficient — the address must allow legal service.</p>
+
+  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Kontakt</span><span data-l="en">Contact</span></h2>
+  <p style="font-size:15px;line-height:1.9;margin:0 0 10px">
+    <span data-l="de">E-Mail:</span><span data-l="en">E-mail:</span>
+    <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic"><span data-l="de">Adresse eintragen</span><span data-l="en">enter address</span></span><br>
+    <span data-l="de">Telefon:</span><span data-l="en">Telephone:</span>
+    <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic"><span data-l="de">optional, aber empfohlen</span><span data-l="en">optional, but recommended</span></span>
+  </p>
+  <p data-l="de" style="font-size:13px;line-height:1.6;color:rgba(32,30,29,0.55);margin:0 0 28px">Die E-Mail-Adresse muss echt und erreichbar sein; ein reines Kontaktformular reicht nach der Rechtsprechung nicht aus.</p>
+  <p data-l="en" style="font-size:13px;line-height:1.6;color:rgba(32,30,29,0.55);margin:0 0 28px">The e-mail address must be genuine and monitored; German case law holds that a contact form alone is not sufficient.</p>
+
+  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Redaktionell verantwortlich</span><span data-l="en">Editorially responsible</span></h2>
+  <p style="font-size:15px;line-height:1.9;margin:0 0 10px">
+    <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic"><span data-l="de">Name und vollständige Anschrift nach § 18 Abs. 2 MStV</span><span data-l="en">Name and full address under § 18 (2) MStV</span></span>
+  </p>
+  <p data-l="de" style="font-size:13px;line-height:1.6;color:rgba(32,30,29,0.55);margin:0 0 28px">Nötig, sobald die Seite journalistisch-redaktionelle Inhalte anbietet. Die erklärenden Texte zu Beobachtung, Fotografie und Sicherheit dürften darunterfallen; bei reinen Rechenergebnissen wäre das anders zu bewerten.</p>
+  <p data-l="en" style="font-size:13px;line-height:1.6;color:rgba(32,30,29,0.55);margin:0 0 28px">Required as soon as the site offers editorial content. The explanatory texts on observing, photography and safety are likely to qualify; purely computed results would be assessed differently.</p>
+
+  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Umsatzsteuer</span><span data-l="en">VAT</span></h2>
+  <p style="font-size:15px;line-height:1.7;margin:0 0 28px">
+    <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic"><span data-l="de">USt-IdNr. nach § 27a UStG — nur falls vorhanden, sonst diesen Abschnitt löschen</span><span data-l="en">VAT ID under § 27a UStG — only if one exists, otherwise delete this section</span></span>
+  </p>
+
+  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Verbraucherstreitbeilegung</span><span data-l="en">Consumer dispute resolution</span></h2>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen (§ 36 VSBG). <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic">Prüfen und ggf. anpassen — bei einem reinen Informationsangebot ohne Verträge mit Verbrauchern greift § 36 VSBG in der Regel gar nicht.</span></p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">We are neither willing nor obliged to take part in dispute resolution proceedings before a consumer arbitration board (§ 36 VSBG). <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic">Review and adjust — for a purely informational site without consumer contracts, § 36 VSBG usually does not apply at all.</span></p>
 
   <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Haftung für Inhalte</span><span data-l="en">Liability for content</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">Die astronomischen Angaben werden nach bestem Wissen berechnet, ersetzen aber keine eigene Prüfung vor Ort. Für Augenschäden durch unsachgemäße Beobachtung wird keine Haftung übernommen — beachten Sie die <a href="#/sicherheit">Sicherheitshinweise</a>.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">The astronomical figures are computed to the best of our knowledge but do not replace checking conditions on site. No liability is accepted for eye damage from improper observation — please read the <a href="#/sicherheit">safety notes</a>.</p>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">Die astronomischen Angaben werden nach bestem Wissen berechnet, ersetzen aber keine eigene Prüfung vor Ort. Die Wolkenprognose ist eine Modellvorhersage und kann von der tatsächlichen Bewölkung abweichen. Für Augenschäden durch unsachgemäße Beobachtung wird keine Haftung übernommen — beachten Sie die <a href="#/sicherheit">Sicherheitshinweise</a>.</p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">The astronomical figures are computed to the best of our knowledge but do not replace checking conditions on site. The cloud forecast is a model prediction and may differ from the actual sky. No liability is accepted for eye damage from improper observation — please read the <a href="#/sicherheit">safety notes</a>.</p>
+
+  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Haftung für Links</span><span data-l="en">Liability for links</span></h2>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">Für die Inhalte verlinkter externer Seiten sind deren Betreiber verantwortlich. Zum Zeitpunkt der Verlinkung waren keine Rechtsverstöße erkennbar; bei Bekanntwerden entfernen wir solche Links umgehend.</p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">The operators of linked external sites are responsible for their content. No infringements were apparent at the time of linking; should any become known, such links will be removed without delay.</p>
 
   <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Datenquellen und Lizenzen</span><span data-l="en">Data sources and licences</span></h2>
-  <ul style="font-size:15px;line-height:1.7;color:rgba(32,30,29,0.75);margin:0 0 28px;padding-left:20px">
+  <ul style="font-size:15px;line-height:1.7;color:rgba(32,30,29,0.75);margin:0 0 12px;padding-left:20px">
     <li><span data-l="de">Besselsche Elemente: NASA/GSFC Five Millennium Canon of Solar Eclipses, Fred Espenak</span><span data-l="en">Besselian elements: NASA/GSFC Five Millennium Canon of Solar Eclipses, Fred Espenak</span></li>
-    <li><span data-l="de">Kartendaten: OpenStreetMap-Mitwirkende (ODbL), Kacheln von CARTO</span><span data-l="en">Map data: OpenStreetMap contributors (ODbL), tiles by CARTO</span></li>
+    <li><span data-l="de">Kartendaten und Kacheln: OpenStreetMap-Mitwirkende (ODbL)</span><span data-l="en">Map data and tiles: OpenStreetMap contributors (ODbL)</span></li>
+    <li><span data-l="de">Ortsverzeichnis: GeoNames (CC BY 4.0)</span><span data-l="en">Place index: GeoNames (CC BY 4.0)</span></li>
+    <li><span data-l="de">Wolkenprognose: Deutscher Wetterdienst, ICON-D2 (Open Data)</span><span data-l="en">Cloud forecast: Deutscher Wetterdienst, ICON-D2 (open data)</span></li>
+    <li><span data-l="de">Schriften: Caprasimo und Figtree (SIL Open Font License 1.1)</span><span data-l="en">Typefaces: Caprasimo and Figtree (SIL Open Font License 1.1)</span></li>
     <li><span data-l="de">Geländemodelle DOM1 und DGM: Landesvermessungsämter, Auswertung mit HORAYZON</span><span data-l="en">Terrain models DOM1 and DGM: state survey authorities, evaluated with HORAYZON</span></li>
     <li><span data-l="de">Wolkenklimatologie: CM SAF / EUMETSAT</span><span data-l="en">Cloud climatology: CM SAF / EUMETSAT</span></li>
   </ul>
+  <p data-l="de" style="font-size:13px;line-height:1.6;color:rgba(32,30,29,0.55);margin:0 0 28px">Die letzten beiden Einträge nennen Quellen, die noch nicht ausgewertet werden. Vor der Veröffentlichung entweder streichen oder als geplant kennzeichnen.</p>
+  <p data-l="en" style="font-size:13px;line-height:1.6;color:rgba(32,30,29,0.55);margin:0 0 28px">The last two entries name sources that are not yet evaluated. Before publishing, either remove them or mark them as planned.</p>
 
   <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">Datenschutz</span><span data-l="en">Privacy</span></h2>
-  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0">Die Finsternisrechnung läuft vollständig im Browser. Standortkoordinaten werden nur zur Beantwortung einer Anfrage verwendet und nicht gespeichert. Kartenkacheln und Schriften werden von externen Servern geladen, die dabei Ihre IP-Adresse verarbeiten.</p>
-  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0">The eclipse computation runs entirely in the browser. Location coordinates are used only to answer a request and are not stored. Map tiles and fonts load from external servers, which process your IP address in doing so.</p>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0">Wie diese Seite mit personenbezogenen Daten umgeht, steht in der <a href="#/datenschutz">Datenschutzerklärung</a>.</p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0">How this site handles personal data is set out in the <a href="#/datenschutz">privacy policy</a>.</p>
+</div>
+</sc-if>
+
+<!-- ══ DATENSCHUTZ ══════════════════════════════════════════════════════════
+     Die technischen Angaben sind aus dem Code abgeleitet und stimmen mit dem
+     Stand des Repositorys überein: ein einziger Fremdhost (Kartenkacheln),
+     Ortssuche und Wolkenprognose gegen den eigenen Server, keine Cookies,
+     kein Tracking. Was von der Person und vom Betrieb abhängt — Verantwortlicher,
+     Hoster, Aufbewahrungsfristen, Aufsichtsbehörde — steht als data-fill.  -->
+<sc-if value="{{ isDatenschutz }}" hint-placeholder-val="{{ false }}">
+<div style="max-width:720px;margin:0 auto;padding:36px 20px 64px">
+  <h1 style="font-family:'Caprasimo',serif;font-size:clamp(30px,5vw,44px);margin:0 0 24px;letter-spacing:-0.02em"><span data-l="de">Datenschutzerklärung</span><span data-l="en">Privacy Policy</span></h1>
+
+  <div style="background:rgba(198,113,57,0.14);border-radius:20px;padding:18px 22px;margin-bottom:32px;font-size:14px;line-height:1.6">
+    <span data-l="de"><strong>Noch auszufüllen.</strong> Die technischen Angaben unten beschreiben, was diese Seite tatsächlich tut — sie sind aus dem Quelltext abgeleitet. Hervorgehoben sind die Felder, die von Ihnen und Ihrem Hoster abhängen. Diese Vorlage ist eine Struktur, keine Rechtsberatung.</span>
+    <span data-l="en"><strong>Still to be completed.</strong> The technical statements below describe what this site actually does — they are derived from the source code. Highlighted are the fields that depend on you and your host. This template is a structure, not legal advice.</span>
+  </div>
+
+  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">1. Verantwortlicher</span><span data-l="en">1. Controller</span></h2>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">Verantwortlich im Sinne von Art. 4 Nr. 7 DSGVO ist die im <a href="#/impressum">Impressum</a> genannte Stelle. <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic">Falls ein Datenschutzbeauftragter bestellt ist, hier Name und Kontakt ergänzen — sonst diesen Satz löschen.</span></p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">The controller within the meaning of Art. 4 (7) GDPR is the entity named in the <a href="#/impressum">legal notice</a>. <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic">If a data protection officer has been appointed, add name and contact here — otherwise delete this sentence.</span></p>
+
+  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">2. Hosting und Server-Protokolle</span><span data-l="en">2. Hosting and server logs</span></h2>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 12px">Beim Abruf der Seite verarbeitet der Server technisch notwendige Verbindungsdaten: IP-Adresse, Zeitpunkt, angeforderte Adresse einschließlich Abfrageparameter, Statuscode, übertragene Datenmenge, Referrer und Browserkennung. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO — das berechtigte Interesse am sicheren und störungsfreien Betrieb.</p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 12px">When the site is accessed, the server processes technically necessary connection data: IP address, time, the requested address including query parameters, status code, volume transferred, referrer and browser identification. The legal basis is Art. 6 (1)(f) GDPR — the legitimate interest in secure and trouble-free operation.</p>
+  <p style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">
+    <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic"><span data-l="de">Hoster mit Name und Anschrift eintragen, Auftragsverarbeitungsvertrag nach Art. 28 DSGVO abschließen, Speicherdauer der Protokolle festlegen und hier nennen.</span><span data-l="en">Enter the hosting provider with name and address, conclude a data processing agreement under Art. 28 GDPR, decide on a log retention period and state it here.</span></span>
+  </p>
+
+  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">3. Kartenkacheln von OpenStreetMap</span><span data-l="en">3. Map tiles from OpenStreetMap</span></h2>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 12px">Die Karte lädt ihre Kacheln von <code>tile.openstreetmap.org</code>. Das ist der einzige fremde Server, mit dem Ihr Browser auf dieser Seite spricht — Programmbibliotheken, Schriften, Ortssuche und Wolkendaten kommen alle vom eigenen Server.</p>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 12px">Dabei erfährt die OpenStreetMap Foundation Ihre IP-Adresse und, aus den angeforderten Kachelnummern, den betrachteten Kartenausschnitt — also ungefähr den Ort, für den Sie sich interessieren. Auf einer Seite, deren Kerninteraktion die Eingabe eines Standorts ist, ist das die aussagekräftigste Spur nach außen. Übermittelt wird außerdem die Herkunft dieser Seite als Referrer: die Kachelrichtlinie verlangt das ausdrücklich, weshalb die Referrer-Policy <code>strict-origin-when-cross-origin</code> lautet und nicht <code>no-referrer</code>. Der aufgerufene Pfad wird dabei nicht übertragen.</p>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 12px">Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO; das berechtigte Interesse ist die Darstellung der Karte, ohne die die Seite ihren Zweck nicht erfüllt.</p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 12px">The map loads its tiles from <code>tile.openstreetmap.org</code>. This is the only external server your browser contacts on this site — libraries, fonts, place search and cloud data all come from our own server.</p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 12px">In doing so, the OpenStreetMap Foundation learns your IP address and, from the requested tile numbers, the map section you are viewing — that is, roughly the place you are interested in. On a site whose core interaction is entering a location, this is the most telling trace leaving it. The origin of this site is also transmitted as the referrer: the tile usage policy expressly requires this, which is why the referrer policy is <code>strict-origin-when-cross-origin</code> and not <code>no-referrer</code>. The path you are on is not transmitted.</p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 12px">The legal basis is Art. 6 (1)(f) GDPR; the legitimate interest is displaying the map, without which the site cannot serve its purpose.</p>
+  <p style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">
+    <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic"><span data-l="de">Sitz der OpenStreetMap Foundation und die Frage der Drittlandübermittlung prüfen und hier einordnen. Wird der Kachelanbieter gewechselt (in config.js vorbereitet), muss dieser Abschnitt mitgeändert werden.</span><span data-l="en">Check the seat of the OpenStreetMap Foundation and the question of third-country transfer, and state the assessment here. If the tile provider is switched (prepared in config.js), this section must be changed accordingly.</span></span>
+  </p>
+
+  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">4. Ortssuche</span><span data-l="en">4. Place search</span></h2>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">Was Sie in das Suchfeld tippen, wird an unseren eigenen Server geschickt und dort gegen ein lokal vorgehaltenes Ortsverzeichnis beantwortet. Es wird kein fremder Geocoding-Dienst befragt — jede Tastatureingabe würde sonst zu einem Dritten abfließen. Die Anfrage erscheint im Server-Protokoll nach Abschnitt 2. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO.</p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">What you type into the search field is sent to our own server and answered there from a locally held place index. No external geocoding service is queried — otherwise every keystroke would flow to a third party. The request appears in the server log described in section 2. The legal basis is Art. 6 (1)(f) GDPR.</p>
+
+  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">5. Standortermittlung und Wolkenprognose</span><span data-l="en">5. Location and cloud forecast</span></h2>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 12px">Ihr Standort wird nur ermittelt, wenn Sie „Mein Standort" anklicken und Ihr Browser Sie um Erlaubnis gefragt hat. Ohne diesen Klick greift die Seite nicht auf die Standortdienste zu.</p>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 12px">Für den gewählten Ort — ob eingegeben, angeklickt oder vom Gerät ermittelt — werden die Koordinaten an unseren Server übertragen, um die Wolkenprognose für diesen Punkt zu berechnen. Die Koordinaten werden dort nicht dauerhaft gespeichert, erscheinen aber als Teil der Adresse im Server-Protokoll nach Abschnitt 2. <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic">Derzeit werden sie mit fünf Nachkommastellen übertragen, was etwa einem Meter entspricht. Entweder die Genauigkeit vor dem Senden verringern, die Abfrageparameter aus dem Protokoll ausnehmen — oder diesen Umstand hier offen benennen.</span></p>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">Kontaktzeiten, Bedeckungsgrad und die Isolinien auf der Karte rechnet ausschließlich Ihr Browser. Diese Werte verlassen Ihr Gerät nicht.</p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 12px">Your position is only determined if you click “My location” and your browser has asked you for permission. Without that click the site does not access location services.</p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 12px">For the selected place — whether typed, clicked on the map or determined by your device — the coordinates are transmitted to our server in order to compute the cloud forecast for that point. They are not stored there permanently, but they do appear as part of the address in the server log described in section 2. <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic">They are currently transmitted with five decimal places, which corresponds to about one metre. Either reduce the precision before sending, exclude query parameters from the log — or state the fact openly here.</span></p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">Contact times, obscuration and the contour lines on the map are computed solely by your browser. Those values never leave your device.</p>
+
+  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">6. Speicherung im Browser</span><span data-l="en">6. Storage in your browser</span></h2>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">Diese Seite setzt keine Cookies. Gespeichert wird allein Ihre Sprachwahl unter dem Schlüssel <code>sofi26-lang</code> im lokalen Speicher Ihres Browsers, damit die Seite beim nächsten Besuch in derselben Sprache erscheint. Der Wert verlässt Ihr Gerät nicht und lässt keinen Rückschluss auf Ihre Person zu. Sie können ihn jederzeit über die Einstellungen Ihres Browsers löschen.</p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">This site sets no cookies. The only thing stored is your language choice under the key <code>sofi26-lang</code> in your browser's local storage, so that the site appears in the same language on your next visit. The value never leaves your device and permits no inference about your identity. You can delete it at any time through your browser settings.</p>
+
+  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">7. Keine Analyse, keine Weitergabe</span><span data-l="en">7. No analytics, no disclosure</span></h2>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">Es findet keine Reichweitenmessung statt, es sind keine Analyse- oder Werbedienste eingebunden, und es werden keine Profile gebildet. Eine Weitergabe personenbezogener Daten an Dritte erfolgt nicht — mit Ausnahme der in Abschnitt 3 beschriebenen, technisch unvermeidbaren Übermittlung an den Kachelserver und der Verarbeitung durch den Hoster nach Abschnitt 2. Eine automatisierte Entscheidungsfindung findet nicht statt.</p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">There is no audience measurement, no analytics or advertising services are embedded, and no profiles are created. Personal data is not passed to third parties — with the exception of the technically unavoidable transmission to the tile server described in section 3 and the processing by the host described in section 2. No automated decision-making takes place.</p>
+
+  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">8. Ihre Rechte</span><span data-l="en">8. Your rights</span></h2>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 12px">Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) sowie das Recht, der Verarbeitung auf Grundlage berechtigter Interessen aus Gründen Ihrer besonderen Situation zu widersprechen (Art. 21). Wenden Sie sich dafür an die im <a href="#/impressum">Impressum</a> genannte Adresse.</p>
+  <p data-l="de" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">Außerdem steht Ihnen ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde zu (Art. 77 DSGVO). <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic">Zuständige Behörde des eigenen Bundeslandes mit Anschrift eintragen.</span></p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 12px">You have the right to information (Art. 15 GDPR), rectification (Art. 16), erasure (Art. 17), restriction of processing (Art. 18), data portability (Art. 20), and the right to object, on grounds relating to your particular situation, to processing based on legitimate interests (Art. 21). Please contact the address given in the <a href="#/impressum">legal notice</a>.</p>
+  <p data-l="en" style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0 0 28px">You also have the right to lodge a complaint with a data protection supervisory authority (Art. 77 GDPR). <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic">Enter the competent authority for your federal state, with address.</span></p>
+
+  <h2 style="font-family:'Caprasimo',serif;font-size:22px;margin:0 0 10px"><span data-l="de">9. Stand</span><span data-l="en">9. Version</span></h2>
+  <p style="font-size:15px;line-height:1.65;color:rgba(32,30,29,0.75);margin:0">
+    <span data-fill="1" style="background:rgba(198,113,57,0.2);border-radius:4px;padding:1px 7px;font-style:italic"><span data-l="de">Datum eintragen. Bei Änderungen an Kachelanbieter, Hoster oder Protokollierung mit anpassen.</span><span data-l="en">Enter a date. Update it whenever the tile provider, host or logging changes.</span></span>
+  </p>
 </div>
 </sc-if>
 
@@ -744,6 +860,7 @@
       <a href="#/sicherheit" style="color:rgba(245,234,216,0.75);text-decoration:none"><span data-l="de">Sicherheit</span><span data-l="en">Safety</span></a>
       <a href="#/faq" style="color:rgba(245,234,216,0.75);text-decoration:none">FAQ</a>
       <a href="#/impressum" style="color:rgba(245,234,216,0.75);text-decoration:none"><span data-l="de">Impressum</span><span data-l="en">Legal Notice</span></a>
+      <a href="#/datenschutz" style="color:rgba(245,234,216,0.75);text-decoration:none"><span data-l="de">Datenschutz</span><span data-l="en">Privacy</span></a>
     </div>
   </div>
 </footer>
@@ -754,7 +871,7 @@
 const LEVELS = [83, 84, 85, 86, 87, 88, 89, 90, 91];
 const LEVEL_COLORS = ['#e1eecc', '#ccdbb2', '#aebf92', '#8fa073', '#f6a06b', '#d67f48', '#c67139', '#b2622d', '#8c491a'];
 const DEFAULT_LOC = { name: 'Frankfurt am Main', lat: 50.1109, lon: 8.6821 };
-const PAGES = ['start', 'zeiten', 'standorte', 'tipps', 'foto', 'sicherheit', 'faq', 'impressum'];
+const PAGES = ['start', 'zeiten', 'standorte', 'tipps', 'foto', 'sicherheit', 'faq', 'impressum', 'datenschutz'];
 
 const T = {
   de: {
@@ -1037,6 +1154,7 @@ class Component extends DCLogic {
       isStart: S.page === 'start', isZeiten: S.page === 'zeiten', isStandorte: S.page === 'standorte',
       isTipps: S.page === 'tipps', isFoto: S.page === 'foto', isSicherheit: S.page === 'sicherheit',
       isFaq: S.page === 'faq', isImpressum: S.page === 'impressum',
+      isDatenschutz: S.page === 'datenschutz',
       navOpen: S.navOpen, q: S.q, sug: [], hasSug: false, locName: S.loc.name,
       locCoords: `${S.loc.lat.toFixed(4)}° N, ${S.loc.lon.toFixed(4)}° ${S.lang === 'en' ? 'E' : 'O'}`,
       radius, radiusLabel: `${radius} km`, searchPlaceholder: t.search,
